@@ -1,0 +1,86 @@
+import gmpy2
+from gmpy2 import *
+import random
+from cartesian import *
+from colour import *
+from matrix import *
+from light import *
+from output import *
+from shape import *
+from view import *
+from scene import *
+from quadraticshapes import *
+from planarshapes import *
+import os
+from timeit import *
+ 
+from lightingModel import *
+                                                                              
+get_context().precision = 32
+
+scene = Scene()
+view = view_create(-15, {'left':0,'right':300,'top':0,'bottom':300},
+	#{'left':.1,'right':.1,'top':.1,'bottom':.1}),
+	{'left':-5,'right':5,'top':-5,'bottom':5})
+
+scene.addView(view, 'view')	
+
+sphere2 = shape_sphere_create(colour_create(1,1,1),colour_create(0,0,0))
+
+shape_setTransform(sphere2,
+	Transform({'scale':{'x':1, 'y':2.0, 'z':1},
+	'translate':{'x':2, 'y':0, 'z':0},
+	'rotate':{'vector':cartesian_create(0,1, 0), 'angle':91}
+	}))
+
+tetra_data = {
+	'points':[cartesian_create(-1,-1,1),
+		cartesian_create(1,-1,1),
+		cartesian_create(1,1,1),
+		cartesian_create(-1,1,1),
+		cartesian_create(0,0,0)],
+
+	'polygon_point_indices':[[0,1,2,3],
+		[4,0,1],
+		[4,1,2],
+		[4,2,3],
+		[4,3,0]],
+				
+	'face_diffuse_colours': [colour_create(0,1,0),
+		colour_create(1,1,1),
+		colour_create(0,0,1),
+		colour_create(0,1,1),
+		colour_create(1,0,0)],
+		}
+poly_mesh =shape_polymesh_create(tetra_data)
+
+
+shape_setTransform(poly_mesh,Transform( {
+	'scale':{'x':1.0, 'y':3.0, 'z':2.0},
+	'rotate':{'vector':cartesian_create(1,0,0), 'angle':90},
+	'translate':{'x':3, 'y':0, 'z':0}
+	}))
+
+poly_data ={
+	'colour' : colour_create(1,0,1),
+	'points':[cartesian_create(-1,-1,5),
+		cartesian_create(1,-1,5),
+		cartesian_create(1,1,5),
+		cartesian_create(-1,1,5)]}				
+		
+polygon = shape_polygon_create (poly_data)
+shape_setTransform(polygon, Transform({
+	'scale':{'x':2.0, 'y':1.0, 'z':1.0},
+	'rotate':{'vector':cartesian_create(1,0,0), 'angle':30},
+	}))
+
+
+scene.addShape(poly_mesh,'triMesh')
+scene.addShape(sphere2,'sph2')
+
+
+scene.addLight(light_point_light_create(cartesian_create(0,0,-8),colour_create(1,1,1)),'light1')
+
+image = scene.render('view')
+image.show()
+
