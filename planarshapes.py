@@ -134,7 +134,7 @@ def shape_polygon_intersect(shape, ray):
 
 def shape_polygon_create(data={}):
 
-    shape = shape_emptyShape()
+    shape = shape_empty_shape()
     shape[SHAPE_INTERSECT_FUNC] = shape_polygon_intersect
 
     colours = data['colour']
@@ -306,7 +306,7 @@ def shape_triangle_intersect(shape, ray):
 
 
 def shape_triangle_create(points, colours, reflections=None):
-    shape = shape_emptyShape()
+    shape = shape_empty_shape()
     shape[SHAPE_INTERSECT_FUNC] = shape_triangle_intersect
     shape[SHAPE_DIFFUSECOLOUR_FUNC] = shape_triangle_diffuseColour
     shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_triangle_specularColour
@@ -384,7 +384,7 @@ def shape_polymesh_intersect(shape, ray):
 
 
 def shape_polymesh_create(data):
-    shape = shape_emptyShape()
+    shape = shape_empty_shape()
     shape[SHAPE_INTERSECT_FUNC] = shape_polymesh_intersect
     shape[SHAPE_DIFFUSECOLOUR_FUNC] = shape_polymesh_diffuseColour
     shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_polymesh_specularColour

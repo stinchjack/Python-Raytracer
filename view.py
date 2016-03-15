@@ -103,7 +103,7 @@ def view_create (eye_z,  physical_rectangle, view_rectangle, transform=None):
 	view_rectangle['left'] = mpfr(view_rectangle['left'])
 	view_rectangle['bottom'] = mpfr(view_rectangle['bottom'])
 	view_rectangle['right'] = mpfr(view_rectangle['right'])
-	view = ['view', lightingModel_basic_create(),None,
+	view = ['view', lightingmodel_basic_create(),None,
 			physical_rectangle,view_rectangle,{},transform,mpfr(eye_z),
 			 cartesian_create((view_rectangle['left']+view_rectangle['right'])/mpfr(2.0),(view_rectangle['top']+view_rectangle['bottom'])/mpfr(2.0),eye_z),
 			 {}, None, None]

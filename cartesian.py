@@ -135,6 +135,20 @@ def cartesian_cross(c1, c2):
 	"""
     return ('cartesian', (c1[2] * c2[3]) - (c1[3] * c2[2]), (c1[3] * c2[1]) - (c1[1] * c2[3]), (c1[1] * c2[2]) - (c1[2] * c2[1]), None, None)
 
+	
+def transform_matrix_mul_cartesian(matrix, cartesian):
+	"""Multiplies a matrix by a cartesian, resulting in a transformed cartesian.
+	
+	matrix: a matrix
+	cartesian: a cartesian tuple
+	
+	Returns: cartesian
+	
+	"""
+	return ('cartesian',(matrix[0][0]*cartesian[1])+(matrix[0][1]*cartesian[2])+(matrix[0][2]*cartesian[3]),
+						(matrix[1][0]*cartesian[1])+(matrix[1][1]*cartesian[2])+(matrix[1][2]*cartesian[3]),
+						(matrix[2][0]*cartesian[1])+(matrix[2][1]*cartesian[2])+(matrix[2][2]*cartesian[3]))	
+	
 # ['ray',cartesian,cartesian,False]
 RAY_START = 1
 RAY_VECTOR = 2

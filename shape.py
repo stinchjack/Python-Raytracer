@@ -73,7 +73,7 @@ SHAPE_TRANSFORM = 8
 SHAPE_DATA = 9
 
 
-def shape_setTransform(shape, transform):
+def shape_set_transform(shape, transform):
     if isinstance(transform, Transform):
         shape[SHAPE_TRANSFORM] = transform
     elif type(transform) is dict:
@@ -82,24 +82,27 @@ def shape_setTransform(shape, transform):
         shape[SHAPE_TRANSFORM] = None
 
 
-def shape_diffuseColour(shape, intersectResult):
-    return shape[SHAPE_DIFFUSECOLOUR]
+def shape_diffuse_colour(shape, intersectResult):
+	if 'colour' in shape[SHAPE_DIFFUSECOLOUR]:
+		return shape[SHAPE_DIFFUSECOLOUR]
+	else:
+		return None
 
+def shape_reflect_colour(shape, intersectResult):
+	if 'colour' in shape[SHAPE_SPECULARCOLOUR]:
+		return shape[SHAPE_SPECULARCOLOUR]
+	else:
+		return None
 
-def shape_refelectColour(shape, intersectResult):
-    return shape[SHAPE_SPECULARCOLOUR]
+def shape_empty_shape():
+    return ['shape', None, None, None, None, None, shape_diffuse_colour, shape_reflect_colour, None, {}]
 
-
-def shape_emptyShape():
-    return ['shape', None, None, None, None, None, shape_diffuseColour, shape_refelectColour, None, {}]
-
-
-def shape_pointInside(shape, cartersian):
+def shape_point_inside(shape, cartesian):
     if shape[SHAPE_INSIDE_FUNC] != None:
         return shape[SHAPE_INSIDE_FUNC](cartesian)
 
 
-def shape_testIntersect(shape, ray):
+def shape_test_intersect(shape, ray):
     if shape[SHAPE_TRANSFORM] != None:
         result = shape[SHAPE_INTERSECT_FUNC](
             shape, shape[SHAPE_TRANSFORM].transform(ray))
@@ -108,8 +111,7 @@ def shape_testIntersect(shape, ray):
 
     return result
 
-
-def shape_reverseTransform(result):
+def shape_reverse_transform(result):
     shape = result['shape']
     if shape[SHAPE_TRANSFORM] != None:
         if 'raw_point' in result:
@@ -119,7 +121,15 @@ def shape_reverseTransform(result):
         if 'raw_normal' in result:
             if not result['ray'][RAY_ISSHADOW]:
                 result['normal'] = cartesian_normalise(
-                    shape[SHAPE_TRANSFORM].inverseTransform(result['raw_normal']))
+                    shape[SHAPE_TRANSFORM].inverse_transform(result['raw_normal']))
+                #print ("result['normal']:")
+                #print(result['normal'])
+                #print ("result['raw_normal']")
+                #print(result['raw_normal'])
+
+                #print ("result['raw_point']")
+                #print(result['raw_point'])	
+                #banana
     else:
         if 'raw_normal' in result:
             result['normal'] = result['raw_normal']
