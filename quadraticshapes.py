@@ -56,13 +56,14 @@ def shape_sphere_create(colour, specular, transform=None):
 	specular: the reflective colour of the sphere.
 	transform: the transformation to apply to the sphere.
 	
+	returns: a tuple containg data to redner a sphere
 	"""
     shape = shape_emptyShape()
     shape[SHAPE_SHAPE]='sphere'
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_INTERSECT_FUNC] = shape_sphere_intersect
-    shape_setTransform(shape, transform)
+    shape_set_transform(shape, transform)
     return shape
 
 def shape_cylinder_intersect(shape, ray):
