@@ -2,10 +2,18 @@ import gmpy2
 from gmpy2 import mpfr
 from cartesian import *
 
+"""Support for matrix maths."""
 
 class Matrix:
-
+    """A generic 4x4 maths matrix for transformation purposes."""
     def __init__(self):
+        """Constructor for a Matrix object.  The stored matrix is:
+		
+		1 0 0 0
+		0 1 0 0 
+		0 0 1 0
+		0 0 0 1
+		"""
         self.matrix = [[mpfr(1), mpfr(0), mpfr(0), mpfr(0)],
                        [mpfr(0), mpfr(1), mpfr(0), mpfr(0)],
                        [mpfr(0), mpfr(0), mpfr(1), mpfr(0)],
@@ -18,6 +26,11 @@ class Matrix:
 
     def __mul__(self, matrix):
 
+        """Matrix multiplier operator.
+		
+		matrix: a matrix to multiply with. This can either be a Matrix instance
+		or a cartesian tuple, with the coressponding return type."""
+	
         if isinstance(matrix, Matrix):
 
             new_matrix = Matrix()
@@ -38,7 +51,6 @@ class Matrix:
 
             return new_matrix
 
-        # elif isinstance (matrix, Cartesian):
         elif 'cartesian' in matrix:
             m = self.matrix
 
@@ -63,9 +75,8 @@ class Matrix:
             return None
 
     def inversed(self):
+        """Returns the inverse matrix."""
         m = Matrix()
-        #m.matrix = deepcopy(self.inverse)
-        #m.inverse = deepcopy(self.matrix)
 
         m.matrix = (self.inverse)
         m.inverse = (self.matrix)
@@ -74,8 +85,18 @@ class Matrix:
 
 
 class ScaleMatrix(Matrix):
-
+    """A matrix for scaling."""
     def __init__(self, x, y, z):
+        """Constructor for ScaleMatrix. The generated matrix is:
+		
+			x 0 0 0
+			0 y 0 0 
+			0 0 z 0
+			0 0 0 1
+		
+		x: the amount to scale on X axis
+		y: the amount to scale on Y axis
+		z: the amount to scale on Z axis """
         x = mpfr(x)
         y = mpfr(y)
         z = mpfr(z)
@@ -96,8 +117,19 @@ class ScaleMatrix(Matrix):
 
 
 class TranslationMatrix(Matrix):
-
+    """A matrix for translation"""
     def __init__(self, value):
+        """Constructor for TranslationMatrix. The generated matrix is:
+		
+			1 0 0 x
+			0 1 0 y 
+			0 0 1 z
+			0 0 0 1
+		
+		value: a dictionary with the following elements:
+			'x': the amount to translate in the X dimension
+			'y': the amount to translate in the Y dimension
+			'z': the amount to translate in the Z dimension"""	
         x = value
         if not isinstance(x, Cartesian):
             x = mpfr(value['x'])
@@ -119,9 +151,11 @@ class TranslationMatrix(Matrix):
 
 
 class RotationZMatrix(Matrix):
-
+    """A matrix for rotation about the Z axis."""
     def __init__(self, angle):
-        #rad = mpfr(angle) * (self.pi/mpfr(180))
+        """Class constructor for RotationMatrix.
+		angle: the amount of rotation, in degrees."""	
+
         rad = radians(angle)
         costh = cos(rad)
         sinth = sin(rad)
@@ -139,11 +173,14 @@ class RotationZMatrix(Matrix):
 
 
 class RotationMatrix (Matrix):
-
-    # See http://math.kennesaw.edu/~plaval/math4490/rotgen.pdf
+    """A matrix for rotation about an arbitrary axis.
+	See http://math.kennesaw.edu/~plaval/math4490/rotgen.pdf"""
 
     def __init__(self, vector, angle):
-
+        """Class constructor for RotationMatrix.
+		
+		vector: a cartesian vector as an axis.
+		angle: the amount of rotation about the axis, in degrees."""
         #rad = mpfr(angle) * (self.pi/mpfr(180))
         rad = radians(angle)
         one = mpfr(1)

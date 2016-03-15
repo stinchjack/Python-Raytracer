@@ -66,7 +66,7 @@ class Scene:
         for shape in self.shapes:
             #print (shape)
             sh = self.shapes[shape]
-            intersect_result = shape_testIntersect(sh, ray)
+            intersect_result = shape_test_intersect(sh, ray)
             if intersect_result != False and intersect_result != None:
                 intersect_result['shape'] = sh
 

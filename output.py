@@ -9,11 +9,7 @@ class Output:
     """Abstract class covering all types of output."""
 
     def setRectangle(self, rectangle):
-		"""Sets the rectangle for the output.
-		
-		rectangle: a dictionary with 'top','left','bottom', and 'right' values
-		
-		"""
+        """Sets the rectangle for the output. rectangle: a dictionary with 'top','left','bottom', and 'right' values"""
         if not type(rectangle) is dict:
             return None
         if rectangle['left'] != 0:
@@ -27,19 +23,18 @@ class Output:
         self.rectangle = rectangle
 
     def setPixel(self, x, y, colour):
-		"""
-		Placeholder method for setting a colour at a specified co-ordinate 
+        """Placeholder method for setting a colour at a specified co-ordinate 
 		
 		x: the x co-ordinate of the colour to set.
 		y: the y co-ordinate of the colour to set.
 		colour: the colour to set
 		
 		Returns: False
-		"""
+        """
         return False
 
     def getOutput(self):
-		"""
+        """
 		Placeholder method for getting a generated image 
 
 		Returns: None
@@ -62,7 +57,7 @@ class PIL_Output(Output):
         self.pixels = self.image.load()
 
     def setPixel(self, x, y, colour):
-		""" Sets a colour at a specified co-ordinate 
+        """ Sets a colour at a specified co-ordinate 
 		
 		x: the x co-ordinate of the colour to set.
 		y: the y co-ordinate of the colour to set.

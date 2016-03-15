@@ -1,9 +1,16 @@
 """Lighting module functions.
 
-The rationale of this module is to allow for more than one lighting model, where simpler
-lighting models can be used for quicker rendering.
+The rationale of this module is to allow for more than one lighting model, where
+simpler lighting models can be used for quicker rendering. A lighting model tuple
+has the following elements:
 
-To do: Implement reflections
+* The string 'lightingModel' as an identifier.
+* A string identifying the lighting model type, e.g. 'basic'
+* A reference to the calculation function for the lighting model.
+* The ambient light colour
+* The maximum number of reflections
+
+To do: Implement reflections for the basic lighting model.
  
 """
 
@@ -24,12 +31,24 @@ def lightingmodel_calculate(lightingmodel, scene_obj, result):
 
 
 def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
+    """Calculates the colour where a ray intersects with an object.
+	
+	lightingmodel: a lighting model tuple.
+	scene_obj: the Scene object
+	result: the intersection test results
+	
+	Returns: a tuple of colour information
+	
+	To do: Implement reflections.
+	
+	
+	"""
     if not type(result) is dict:
         return None
     if not isinstance(scene_obj, scene.Scene):
         return None
 
-    result = shape_reverseTransform(result)
+    result = shape_reverse_transform(result)
 
     if not 'point' in result:
         ray = result['ray']
@@ -37,10 +56,10 @@ def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
         #result['point'] = cartesian_add (ray.start, cartesian_scale(ray.vector, result['t']))
         result['point'] = ray_calc_pt(ray, result['t'])
 
-    diffuseColour = result['shape'][
+    diffuse_colour = result['shape'][
         SHAPE_DIFFUSECOLOUR_FUNC](result['shape'], result)
 
-    end_colour = colour_mul(lightingModel[3], diffuseColour)
+    end_colour = lightingmodel[LIGHTINGMODEL_BASIC_AMBIENT]
 
     lights = scene_obj.getLights()
 
@@ -83,9 +102,26 @@ def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
             #if d<0: d= 0-d
             diff = colour_scale(
                 light[LIGHT_POINT_COLOUR], cartesian_dot(light_ray, norml))
+            #print (light_ray)
+            #print (norml)
+            #print (cartesian_dot(light_ray, norml))
+            #print("--==--==-=-	")
 
             end_colour = colour_add(
-                end_colour, colour_mul(diff, diffuseColour))
+                end_colour, colour_mul(diff, diffuse_colour))
+
+#            if 'shape_part' in result and result['shape_part']=='bottomcap_result':
+#                print ("diffuse_colour:")
+#                print (diffuse_colour)
+#                print ("diff:")
+#                print (diff)
+#                print ("result[raw_normal]:")
+#                print (result['raw_normal'])				
+#                print ("norml:")
+#                print (norml)
+                
+#                banana			
+			
             #end_colour = colour_add (end_colour, colour_mul(colour_scale(light[LIGHT_POINT_COLOUR],cartesian_dot (cartesian_normalise(cartesian_sub(light[LIGHT_POINT_POINT],result['point'])), norml)),diffuseColour ))
         # else:
         #	print (shadow_ray)
@@ -94,8 +130,12 @@ def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
 
 
 def lightingmodel_basic_create(ambient_light=None, max_reflect=5):
-	"""Creates a tuple with data for basic lighting model.
+    """Creates a tuple with data for basic lighting model.
 	
+	ambient_light: The colour of the ambient light to apply
+	max_reflect: the maximum number of recrusive reflections to allow
+	
+	Returns: a lighting model tuple
 	
 	"""
     if ambient_light == None:

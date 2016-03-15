@@ -25,12 +25,16 @@ view = view_create(-15, {'left':0,'right':300,'top':0,'bottom':300},
 
 scene.addView(view, 'view')	
 
-sphere2 = shape_sphere_create(colour_create(1,1,1),colour_create(0,0,0))
+sphere2 = shape_cone_create(
+			colour_create(1,.6,1),
+			colour_create(0,0,0),
+			1,2
+			)
 
-shape_setTransform(sphere2,
-	Transform({'scale':{'x':1, 'y':2.0, 'z':1},
-	'translate':{'x':2, 'y':0, 'z':0},
-	'rotate':{'vector':cartesian_create(0,1, 0), 'angle':91}
+shape_set_transform(sphere2,
+	Transform({'scale':{'x':2, 'y':2.0, 'z':2},
+	'translate':{'x':0, 'y':0, 'z':0},
+	'rotate':{'vector':cartesian_create(1,0, 0), 'angle':180}
 	}))
 
 tetra_data = {
@@ -55,7 +59,7 @@ tetra_data = {
 poly_mesh =shape_polymesh_create(tetra_data)
 
 
-shape_setTransform(poly_mesh,Transform( {
+shape_set_transform(poly_mesh,Transform( {
 	'scale':{'x':1.0, 'y':3.0, 'z':2.0},
 	'rotate':{'vector':cartesian_create(1,0,0), 'angle':90},
 	'translate':{'x':3, 'y':0, 'z':0}
@@ -69,17 +73,17 @@ poly_data ={
 		cartesian_create(-1,1,5)]}				
 		
 polygon = shape_polygon_create (poly_data)
-shape_setTransform(polygon, Transform({
+shape_set_transform(polygon, Transform({
 	'scale':{'x':2.0, 'y':1.0, 'z':1.0},
 	'rotate':{'vector':cartesian_create(1,0,0), 'angle':30},
 	}))
 
 
-scene.addShape(poly_mesh,'triMesh')
+#scene.addShape(poly_mesh,'triMesh')
 scene.addShape(sphere2,'sph2')
 
 
-scene.addLight(light_point_light_create(cartesian_create(0,0,-8),colour_create(1,1,1)),'light1')
+scene.addLight(light_point_light_create(cartesian_create(0,0,-1.5),colour_create(1,1,1)),'light1')
 
 image = scene.render('view')
 image.show()
