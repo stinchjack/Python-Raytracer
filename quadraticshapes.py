@@ -7,13 +7,14 @@ from shape import *
 """Functions for quadratic shapes: spheres, cylinders, cones, capped cylinders,
 capped cones."""
 
+
 def shape_sphere_intersect(shape, ray):
     """Intersection test function for a sphere. An untranslated sphere is
 	located at X=0, Y=0, Z=0, with a radius of 1.
-	
+
 	shape: the shape tuple for the sphere
 	ray: the ray to perform the intersection test with
-	
+
 	Returns: False if no intersection, or a dictionary of results when
 		there is an intersection.
 	"""
@@ -51,27 +52,28 @@ def shape_sphere_intersect(shape, ray):
 
 def shape_sphere_create(colour, specular, transform=None):
     """Creates a tuple with the data necessary to render a sphere.
-	
+
 	colour: the colour of the sphere.
 	specular: the reflective colour of the sphere.
 	transform: the transformation to apply to the sphere.
-	
+
 	returns: a tuple containg data to redner a sphere
 	"""
     shape = shape_emptyShape()
-    shape[SHAPE_SHAPE]='sphere'
+    shape[SHAPE_SHAPE] = 'sphere'
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_INTERSECT_FUNC] = shape_sphere_intersect
     shape_set_transform(shape, transform)
     return shape
 
+
 def shape_cylinder_intersect(shape, ray):
 	"""Intersection test function for a cylinder.
-	
+
 	shape: the shape tuple for the cylinder
 	ray: the ray to perform the intersection test with
-	
+
 	Returns: False if no intersection, or a dictionary of results when
 		there is an intersection.
 	"""
@@ -128,34 +130,36 @@ def shape_cylinder_intersect(shape, ray):
 		if (result['raw_point'][2] > mpfr(0.5) or
 			result['raw_point'][2] < mpfr(-0.5)):
 			result = False
-	return result	
-	
+	return result
+
+
 def shape_cylinder_create(colour, specular, transform=None):
     """Creates a cylinder tuple.
-	
+
 	colour: the colour of the cylinder.
 	specular: the reflective colour of the cylinder.
 	transform: the transformation to apply to the cylinder.
-	
+
 	"""
     shape = shape_empty_shape()
-    shape[SHAPE_SHAPE]='cylinder'
+    shape[SHAPE_SHAPE] = 'cylinder'
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_INTERSECT_FUNC] = shape_cylinder_intersect
     shape_set_transform(shape, transform)
     return shape
 
+
 def shape_capped_cylinder_diffuse_colour(shape, intersect_result):
 	"""Returns the diffuse colour at the intersection point with a capped
 	cylinder.
-	
+
 	shape: the capped cylinder
-	intersect_result: the intersection results	
-	
+	intersect_result: the intersection results
+
 	Returns: a colour tuple
 	"""
-	#print ("intersectResult %s"%intersectResult)
+	# print ("intersectResult %s"%intersectResult)
 	default = False
 	if not 'shape_part' in intersect_result:
 		return shape[SHAPE_DIFFUSECOLOUR]
@@ -169,17 +173,18 @@ def shape_capped_cylinder_diffuse_colour(shape, intersect_result):
 		return shape[SHAPE_DATA]['bottomcap']['diffuse_colour']
 	else:
 		return shape[SHAPE_DIFFUSECOLOUR]
-		
+
+
 def shape_capped_cylinder_specular_colour(shape, intersect_result):
 	"""Returns the specular colour at the intersection point with a capped
 	cylinder.
-	
+
 	shape: the capped cylinder
-	intersect_result: the intersection results	
-	
+	intersect_result: the intersection results
+
 	Returns: a colour tuple
 	"""
-	#print ("intersectResult %s"%intersectResult)
+	# print ("intersectResult %s"%intersectResult)
 	default = False
 	if not 'shape_part' in intersect_result:
 		return shape[SHAPE_SPECULARCOLOUR]
@@ -194,24 +199,24 @@ def shape_capped_cylinder_specular_colour(shape, intersect_result):
 	else:
 		return shape[SHAPE_SPECULARCOLOUR]
 
+
 def shape_capped_cylinder_intersect(shape, ray):
 	"""Intersection test function for a capped cylinder.
-	
+
 	shape: the shape tuple for the capped cylinder
 	ray: the ray to perform the intersection test with
-	
+
 	Returns: False if no intersection, or a dictionary of results when
 		there is an intersection.s
-		
+
 	To do: implement optionality for caps
 	"""
 	if ray[RAY_VECTOR][2] == 0:
 		topcap_result = False
 		bottomcap_result = False
 	else:
-		
 
-		#Test for an intersection with the 'top' cap of the cylinder
+		# Test for an intersection with the 'top' cap of the cylinder
 		d = ray[RAY_VECTOR]
 		topcap_t = (mpfr(-0.5) + (0 - ray[RAY_START][2])) / d[2]
 		if topcap_t > 0:
@@ -225,8 +230,8 @@ def shape_capped_cylinder_intersect(shape, ray):
 				topcap_result = False
 		else:
 			topcap_result = False
-		
-		#Test for an intersection with the 'bottom' cap of the cylinder
+
+		# Test for an intersection with the 'bottom' cap of the cylinder
 		d = ray[RAY_VECTOR]
 		bottomcap_t = (mpfr(0.5) + (0 - ray[RAY_START][2])) / d[2]
 		if bottomcap_t > 0:
@@ -241,14 +246,14 @@ def shape_capped_cylinder_intersect(shape, ray):
 		else:
 			bottomcap_result = False
 
-	#Get results for the cylinder and both caps into a dictionary
+	# Get results for the cylinder and both caps into a dictionary
 	results = {'cyl_result': shape_cylinder_intersect(shape, ray),
 			   'topcap_result': topcap_result,
 			   'bottomcap_result': bottomcap_result,
 			   }
 
-	#Determine the result, being lowest value for t, or False if there
-	#are no intersections
+	# Determine the result, being lowest value for t, or False if there
+	# are no intersections
 	final_result = False
 	for key in results:
 		result = results[key]
@@ -262,11 +267,12 @@ def shape_capped_cylinder_intersect(shape, ray):
 				final_result['shape_part'] = key
 
 	return final_result
-		
-def shape_capped_cylinder_create (colour, specular, topcap={}, bottomcap={},\
-	transform=None): 
+
+
+def shape_capped_cylinder_create(colour, specular, topcap={}, bottomcap={},
+	transform=None):
 	"""Creates a capped cylinder tuple.
-	
+
 	colour: the colour of the cylinder
 	specular: the reflective colour of the cylinder
 	topcap: a dictionary with the following two optional members
@@ -274,13 +280,13 @@ def shape_capped_cylinder_create (colour, specular, topcap={}, bottomcap={},\
 		'specular_colour': the specular colour for the 'top' cap of the cylinder
 	bottomcap: a dictionary with the following two optional members
 		'diffuse_colour': the diffuse colour for the 'bottom' cap of the cylinder
-		'specular_colour': the specular colour for the 'bottom' cap of the cylinder		
+		'specular_colour': the specular colour for the 'bottom' cap of the cylinder
 	transform: the transformation to apply to the cylinder
-	
+
 	Returns: a tuple with data for rendering a capped cylinder
 	"""
 	shape = shape_empty_shape()
-	shape[SHAPE_SHAPE]='capped_cylinder'
+	shape[SHAPE_SHAPE] = 'capped_cylinder'
 	shape[SHAPE_DIFFUSECOLOUR] = colour
 	shape[SHAPE_SPECULARCOLOUR] = specular
 	shape[SHAPE_INTERSECT_FUNC] = shape_capped_cylinder_intersect
@@ -289,31 +295,31 @@ def shape_capped_cylinder_create (colour, specular, topcap={}, bottomcap={},\
 	shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_capped_cylinder_specular_colour
 	shape_set_transform(shape, transform)
 	return shape
-	
+
+
 def shape_cone_test_point(shape, point):
 	"""Tests if a point transformed into cone-space is inside the Y-dimensions
 	of the cone.
-	
+
 	shape: the cone to test against
 	point: the point to test
-	
+
 	returns: Boolean
 	"""
-	r1 = point[2] > shape[SHAPE_DATA]['y_bottom'] 
+	r1 = point[2] > shape[SHAPE_DATA]['y_bottom']
 	r2 = point[2] < shape[SHAPE_DATA]['y_top']
 	return not(r1 or r2)
 
 
-	
 def shape_cone_intersect(shape, ray):
 	"""Intersection test function for a cone.
-	
+
 	shape: the shape tuple for the capped cylinder
 	ray: the ray to perform the intersection test with
-	
+
 	Returns: False if no intersection, or a dictionary of results when
 		there is an intersection.
-	
+
 	To do: Needs thourough checking for all cases"""
 	zero = mpfr(0)
 
@@ -322,8 +328,8 @@ def shape_cone_intersect(shape, ray):
 	if (shape[SHAPE_DATA]['y_top'] > zero and
 		ray[RAY_VECTOR][3] == zero and ray[RAY_VECTOR][1] == zero):
 		return False
-	
-	#print (ray)
+
+	# print (ray)
 	one = mpfr(1)
 	four = mpfr(4)
 	two = mpfr(2)
@@ -331,12 +337,12 @@ def shape_cone_intersect(shape, ray):
 	o = ray[RAY_START]
 	d = ray[RAY_VECTOR]
 
-	#if shape[SHAPE_DATA]['y_top'] > zero:
+	# if shape[SHAPE_DATA]['y_top'] > zero:
 	#	d = cartesian_add (d, cartesian_create(\
 	#		0,shape[SHAPE_DATA]['y_top'] ,0))
-	#a = (d.x*d.x)+(d.z*d.z)-(d.y*d.y)
-	#b = (2.0*(d.x*o.x)) + (2.0*(o.z*d.z)) - (2.0*(d.y*o.y))
-	#c = (o.x*o.x)+(o.z*o.z)-(o.y*o.y)
+	# a = (d.x*d.x)+(d.z*d.z)-(d.y*d.y)
+	# b = (2.0*(d.x*o.x)) + (2.0*(o.z*d.z)) - (2.0*(d.y*o.y))
+	# c = (o.x*o.x)+(o.z*o.z)-(o.y*o.y)
 
 	a = (d[1] * d[1]) + (d[3] * d[3]) - (d[2] * d[2])
 	b = (2.0 * (d[1] * o[1])) + \
@@ -351,54 +357,53 @@ def shape_cone_intersect(shape, ray):
 
 	two_a = two * a
 	t_vals = {'t1': [((zero - b) + sqroot) / (two_a), None],
-		't2': [((zero - b) - sqroot) / (two_a),None]}
+		't2': [((zero - b) - sqroot) / (two_a), None]}
 
-	
 	for t_key in t_vals:
-		if t_vals[t_key][0] <=0:
+		if t_vals[t_key][0] <= 0:
 			t_vals[t_key] = False
 		else:
-			raw_point = ray_calc_pt(ray, t_vals[t_key][0]) 
+			raw_point = ray_calc_pt(ray, t_vals[t_key][0])
 			t_vals[t_key][1] = raw_point
 			if not shape_cone_test_point(shape, raw_point):
 				t_vals[t_key] = False
 
-	t  = None
+	t = None
 	if t_vals['t1'] == False and t_vals['t2'] == False:
 		return False
 	if t_vals['t1'] == False and t_vals['t2'] != False:
-		t= t_vals['t2'][0]
+		t = t_vals['t2'][0]
 		raw_point = t_vals['t2'][1]
 	if t_vals['t2'] == False and t_vals['t1'] != False:
 		t = t_vals['t1'][0]
 		raw_point = t_vals['t1'][1]
 	if t_vals['t2'] != False and t_vals['t1'] != False:
-		if t_vals['t2'][0]<t_vals['t1'][0]:	
+		if t_vals['t2'][0] < t_vals['t1'][0]:
 			t = t_vals['t2'][0]
 			raw_point = t_vals['t2'][1]
 		else:
 			t = t_vals['t1'][0]
 			raw_point = t_vals['t1'][1]
-	
+
 	result = {'t': t}
 	result['raw_point'] = ray_calc_pt(ray, t)
 
-	#result['raw_normal'] = cartesian_normalise(cartesian_create(
+	# result['raw_normal'] = cartesian_normalise(cartesian_create(
 	#	result['raw_point'][1], 0, result['raw_point'][3]))
 	result['raw_normal'] = cartesian_create(
 		result['raw_point'][1], 0, result['raw_point'][3])
-	
+
 	return result
-	
-	
-def shape_cone_create(colour, specular, y_top=None, y_bottom=None,\
+
+
+def shape_cone_create(colour, specular, y_top=None, y_bottom=None,
 	transform=None):
 	"""Creates a tuple with the necessary data for rendering a cone.  An
 	untransformed cone is in parallel to the Y axis, having a radius
 	equal to the Y position. The apex of the untransformed cone is at X=0,
 	Y=0, Z=0. Optionally, the minumum and maximum values of Y for the rendered
 	cone can be specified.
-	
+
 	colour: the colour of the cylinder.
 	specular: the reflective colour of the cylinder.
 
@@ -407,20 +412,19 @@ def shape_cone_create(colour, specular, y_top=None, y_bottom=None,\
 	y_bottom: The maximum Y value in an untransformed cone. If this parameter
 		is None, the default of 1 will be used.
 	transform: the transformation to apply to the cylinder.
-	
+
 	Returns: a tuple with the data needed to render a cone.
 	"""
 	shape = shape_empty_shape()
 
-
 	shape[SHAPE_DIFFUSECOLOUR] = colour
-	shape[SHAPE_SPECULARCOLOUR] = specular	
+	shape[SHAPE_SPECULARCOLOUR] = specular
 	shape[SHAPE_DATA] = {}
 	if y_top != None:
 		shape[SHAPE_DATA]['y_top'] = mpfr(y_top)
 	else:
 		shape[SHAPE_DATA]['y_top'] = 0
-		
+
 	if y_bottom != None:
 		shape[SHAPE_DATA]['y_bottom'] = mpfr(y_bottom)
 	else:
@@ -434,28 +438,31 @@ def shape_cone_create(colour, specular, y_top=None, y_bottom=None,\
 	shape_set_transform(shape, transform)
 	return shape
 
+
 def shape_cone_ytop(shape):
 	"""Returns the minimum Y value in an untransformed cone.
-	
+
 	shape: the cone to query
 	Returns: the minimum Y value in an untransformed cone."""
 	return shape[SHAPE_DATA]['y_top']
 
+
 def shape_cone_ybottom(shape):
     """Returns the maximum Y value in an untransformed cone.
-	
+
 	shape: the cone to query
 	Returns: the maximum Y value in an untransformed cone."""
-    return shape[SHAPE_DATA]['y_bottom']	
+    return shape[SHAPE_DATA]['y_bottom']
+
 
 def shape_capped_cone_diffuse_colour(shape, intersect_result):
 	"""Returns the diffuse colour for an intersection point with a capped
 	cone. This function is needed because different colours can be specified
 	for cylinder body and both caps.
-	
+
 	shape: the cone to query
 	intersect_result: a dictionary of intersection results
-	
+
 	Returns: the diffuse colour for the specified intersection
 	"""
 	default = False
@@ -466,20 +473,21 @@ def shape_capped_cone_diffuse_colour(shape, intersect_result):
 			if 'diffuse_colour' in shape[SHAPE_DATA]['topcap']:
 				return shape[SHAPE_DATA]['topcap']['diffuse_colour']
 	elif intersect_result['shape_part'] == 'bottomcap_result':
-		if  shape[SHAPE_DATA]['bottomcap'] != None:
+		if shape[SHAPE_DATA]['bottomcap'] != None:
 			if 'diffuse_colour' in shape[SHAPE_DATA]['bottomcap']:
 				return shape[SHAPE_DATA]['bottomcap']['diffuse_colour']
 	else:
-		return shape[SHAPE_DIFFUSECOLOUR]			
+		return shape[SHAPE_DIFFUSECOLOUR]
+
 
 def shape_capped_cone_specular_colour(shape, intersect_result):
 	"""Returns the specular colour for an intersection point with a capped
-	cone. This function is needed because specular colours can be specified   
+	cone. This function is needed because specular colours can be specified
 	for cylinder body and both caps.
-	
+
 	shape: the cone to query
 	intersect_result: a dictionary of intersection results
-	
+
 	Returns: a colour
 	"""
 	default = False
@@ -494,56 +502,57 @@ def shape_capped_cone_specular_colour(shape, intersect_result):
 			if 'specular_colour' in shape[SHAPE_DATA]['bottomcap']:
 				return shape[SHAPE_DATA]['bottomcap']['specular_colour']
 	else:
-		return shape[SHAPE_SPECULARCOLOUR]	
+		return shape[SHAPE_SPECULARCOLOUR]
+
 
 def shape_capped_cone_intersect(shape, ray):
 	"""Intersection test function for a capped cone.
-	
+
 	shape: the shape tuple for the capped cylinder
 	ray: the ray to perform the intersection test with
 
 	Returns: False if no intersection, or a dictionary of results when
 	there is an intersection.
-	
+
 	To do: Implement optionality for cap intersection test. Thourough checking
 	for all instances needed.
 	"""
 )
-	zero = mpfr(0)
-	ytop =  shape[SHAPE_DATA]['y_top']
-	do_top_cap = (ytop > zero)
+	zero=mpfr(0)
+	ytop=shape[SHAPE_DATA]['y_top']
+	do_top_cap=(ytop > zero)
 	if ray[RAY_VECTOR][2] == zero:
-		topcap_result = False
-		bottomcap_result = False
+		topcap_result=False
+		bottomcap_result=False
 	else:
-		d = ray[RAY_VECTOR]
+		d=ray[RAY_VECTOR]
 
-		ytop_r2 = (ytop * ytop)
-		ybottom = shape[SHAPE_DATA]['y_ybottom']
-		ybottom_r2 = (ybottom * ybottom)
+		ytop_r2=(ytop * ytop)
+		ybottom=shape[SHAPE_DATA]['y_ybottom']
+		ybottom_r2=(ybottom * ybottom)
 
 		if do_top_cap:
-			topcap_t = (ytop + (zero - ray[RAY_START][2])) / d[2]
-		bottomcap_t = (ybottom + (zero - ray[RAY_START][2])) / d[2]
+			topcap_t=(ytop + (zero - ray[RAY_START][2])) / d[2]
+		bottomcap_t=(ybottom + (zero - ray[RAY_START][2])) / d[2]
 		if do_top_cap and topcap_t > zero:
-			topcap_result = {'raw_normal': cartesian_create(
+			topcap_result={'raw_normal': cartesian_create(
 				0, -1, 0), 'shape': shape,  't': topcap_t}
 
-			topcap_result['point'] = ray_calc_pt(ray, topcap_t)
-			d = (topcap_result['raw_point'][1] * topcap_result['point'][1]
+			topcap_result['point']=ray_calc_pt(ray, topcap_t)
+			d=(topcap_result['raw_point'][1] * topcap_result['point'][1]
 				 ) + (topcap_result['point'][3] * topcap_result['point'][3])
 			if d > ytop_r2:
-				topcap_result = False
+				topcap_result=False
 		else:
-			topcap_result = False
-			
-		d = ray[RAY_VECTOR]
+			topcap_result=False
+
+		d=ray[RAY_VECTOR]
 		if bottomcap_t > zero:
-			bottomcap_result = {'raw_normal': cartesian_create(
+			bottomcap_result={'raw_normal': cartesian_create(
 				0, 1, 0), 'shape': shape, 't': bottomcap_t}
 
-			bottomcap_result['point'] = ray_calc_pt(ray, bottomcap_t)
-			d = (bottomcap_result['raw_point'][1] * 
+			bottomcap_result['point']=ray_calc_pt(ray, bottomcap_t)
+			d=(bottomcap_result['raw_point'][1] *
 				bottomcap_result['raw_point'][1]) + (
 				bottomcap_result['raw_point'][3] *
 				bottomcap_result['raw_point'][3])

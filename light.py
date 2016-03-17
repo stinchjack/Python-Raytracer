@@ -95,11 +95,11 @@ def light_tubelight_create(colour, transform):
 def light_tube_is_inside(point):
     """Tests if a point is inside a cone. The cylinder is defined as 
     having a radius of 1, where Y is between 0 and 1.
-	
+
     point: A cartesian as a point to test
 
     Returns: Boolean	
-	"""
+        """
     p = light[LIGHT_CONE_TRANSFORM].transformPoint(point)
     if p[3] <= 0:
         return False

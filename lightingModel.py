@@ -32,17 +32,17 @@ def lightingmodel_calculate(lightingmodel, scene_obj, result):
 
 def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
     """Calculates the colour where a ray intersects with an object.
-	
-	lightingmodel: a lighting model tuple.
-	scene_obj: the Scene object
-	result: the intersection test results
-	
-	Returns: a tuple of colour information
-	
-	To do: Implement reflections.
-	
-	
-	"""
+
+        lightingmodel: a lighting model tuple.
+        scene_obj: the Scene object
+        result: the intersection test results
+
+        Returns: a tuple of colour information
+
+        To do: Implement reflections.
+
+
+        """
     if not type(result) is dict:
         return None
     if not isinstance(scene_obj, scene.Scene):
@@ -105,7 +105,7 @@ def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
             #print (light_ray)
             #print (norml)
             #print (cartesian_dot(light_ray, norml))
-            #print("--==--==-=-	")
+            # print("--==--==-=-	")
 
             end_colour = colour_add(
                 end_colour, colour_mul(diff, diffuse_colour))
@@ -116,12 +116,12 @@ def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
 #                print ("diff:")
 #                print (diff)
 #                print ("result[raw_normal]:")
-#                print (result['raw_normal'])				
+#                print (result['raw_normal'])
 #                print ("norml:")
 #                print (norml)
-                
-#                banana			
-			
+
+#                banana
+
             #end_colour = colour_add (end_colour, colour_mul(colour_scale(light[LIGHT_POINT_COLOUR],cartesian_dot (cartesian_normalise(cartesian_sub(light[LIGHT_POINT_POINT],result['point'])), norml)),diffuseColour ))
         # else:
         #	print (shadow_ray)
@@ -131,13 +131,13 @@ def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
 
 def lightingmodel_basic_create(ambient_light=None, max_reflect=5):
     """Creates a tuple with data for basic lighting model.
-	
-	ambient_light: The colour of the ambient light to apply
-	max_reflect: the maximum number of recrusive reflections to allow
-	
-	Returns: a lighting model tuple
-	
-	"""
+
+        ambient_light: The colour of the ambient light to apply
+        max_reflect: the maximum number of recrusive reflections to allow
+
+        Returns: a lighting model tuple
+
+        """
     if ambient_light == None:
         ambient_light = colour_create(0, 0, 0)
     return ('lightingModel', 'basic', lightingmodel_basic_calculate, ambient_light, max_reflect)
