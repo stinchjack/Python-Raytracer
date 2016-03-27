@@ -1,0 +1,324 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>planarshapes module &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-planarshapes">
+<span id="planarshapes-module"></span><h1>planarshapes module<a class="headerlink" href="#module-planarshapes" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="planarshapes.shape_disc_create">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_disc_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_disc_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a disc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the disc.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the disc.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the disc.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to render a disc</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_disc_intersect">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_disc_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_disc_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a disc. An untranslated disc is
+located at X=0, Y=0, Z=0, sits on the XY plane, and has a radius        of 1 in both X and Y.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the disc</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_polygon_convert2d">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_polygon_convert2d</code><span class="sig-paren">(</span><em>shape</em>, <em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_polygon_convert2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a point in 3D space and flattens it without perspective into
+2D space. (The 2D points are used for inside/outside tests).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the polygon related to the point</li>
+<li><strong>point</strong> &#8211; a cartesian point to flatten</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple with a 2D co-oridnate</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_polygon_create">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_polygon_create</code><span class="sig-paren">(</span><em>data={}</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_polygon_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a polygon.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the polygon.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the polygon.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Transform:</th><td class="field-body"><p class="first">the transformation to apply to the polygon.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to render a polygon</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_polygon_intersect">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_polygon_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_polygon_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a polygon.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the rectangle</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_polymesh_create">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_polymesh_create</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_polymesh_create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_polymesh_diffuseColour">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_polymesh_diffuseColour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersectResult</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_polymesh_diffuseColour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_polymesh_intersect">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_polymesh_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_polymesh_intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_polymesh_shapes">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_polymesh_shapes</code><span class="sig-paren">(</span><em>data</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_polymesh_shapes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_polymesh_specularColour">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_polymesh_specularColour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersectResult</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_polymesh_specularColour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_rectangle_create">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_rectangle_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>bounds</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_rectangle_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a rectangle.
+An untransformed rectangle sits on the XY plane, at Z=0, with the
+minimum and maximum bounds for X and Y set by the bounds parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the rectangle.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the rectangle</li>
+<li><strong>bounds</strong> &#8211; a dictionary with the following values
+&#8216;top&#8217;: the minimum Y value of the rectangle
+&#8216;bottom&#8217;: the maximum Y value of the rectangle
+&#8216;left&#8217;: the minimum X value of the rectangle
+&#8216;right&#8217;: the maximum X value of the rectangle</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the rectangle.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to render a rectangle</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_rectangle_intersect">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_rectangle_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_rectangle_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a rectangle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the rectangle</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_triangle_create">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_triangle_create</code><span class="sig-paren">(</span><em>points</em>, <em>colours</em>, <em>reflections=None</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_triangle_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a triangle.</p>
+<p>colour: the colour of the triangle.
+specular: the reflective colour of the triangle.
+points: a list or tuple of three cartesians points,
+being the vertices ofthe triangle</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colours</strong> &#8211; </li>
+<li><strong>reflections</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to render a triangle</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_triangle_diffuse_colour">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_triangle_diffuse_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersectResult</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_triangle_diffuse_colour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_triangle_intersect">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_triangle_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_triangle_intersect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="planarshapes.shape_triangle_specular_colour">
+<code class="descclassname">planarshapes.</code><code class="descname">shape_triangle_specular_colour</code><span class="sig-paren">(</span><em>self</em>, <em>intersectResult</em><span class="sig-paren">)</span><a class="headerlink" href="#planarshapes.shape_triangle_specular_colour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/planarshapes.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/planarshapes.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

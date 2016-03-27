@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>transformation module &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-transformation">
+<span id="transformation-module"></span><h1>transformation module<a class="headerlink" href="#module-transformation" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="transformation.Transform">
+<em class="property">class </em><code class="descclassname">transformation.</code><code class="descname">Transform</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#transformation.Transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class to support matrix transformations of rays and cartesians.</p>
+<dl class="method">
+<dt id="transformation.Transform.inverse_transform">
+<code class="descname">inverse_transform</code><span class="sig-paren">(</span><em>normal</em>, <em>translate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#transformation.Transform.inverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies inverse transformation to a vector. (Used for normals.)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>normal</strong> &#8211; a cartesian to transform</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the transformed vector.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="transformation.Transform.matrix">
+<code class="descname">matrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#transformation.Transform.matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the calculated matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Matrix object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="transformation.Transform.no_transform">
+<code class="descname">no_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#transformation.Transform.no_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the transform would not result in any change to a
+ray or cartesian, else False</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="transformation.Transform.options">
+<code class="descname">options</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#transformation.Transform.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of transformation options.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="transformation.Transform.set_options">
+<code class="descname">set_options</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#transformation.Transform.set_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets transformation options.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>options</strong> &#8211; <p>a dictionary with the following optional elements:</p>
+<dl class="docutils">
+<dt>&#8216;translate&#8217;: a dictionary with the following elements:</dt>
+<dd>&#8216;x&#8217;: the distance to translate in the X dimension
+&#8216;y&#8217;: the distance to translate in the Y dimension
+&#8216;z&#8217;: the distance to translate in the Z dimension</dd>
+<dt>&#8216;scale&#8217;: a dictionary with the following elements:</dt>
+<dd>&#8216;x&#8217;: the amount to scale in the X dimension
+&#8216;y&#8217;: the amount to scale in the Y dimension
+&#8216;z&#8217;: the amount to scale in the Z dimension</dd>
+<dt>&#8216;rotation&#8217;: a dictionary with the following elements:</dt>
+<dd><dl class="first last docutils">
+<dt>&#8216;vector&#8217;: a cartesian vector to use as an axis to</dt>
+<dd>rotate about</dd>
+<dt>&#8216;angle&#8217;: the angle to rotate about the vector,</dt>
+<dd>in degrees</dd>
+</dl>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="transformation.Transform.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#transformation.Transform.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a given ray.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> &#8211; a ray to transform.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ray, transformed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="transformation.Transform.transform_point">
+<code class="descname">transform_point</code><span class="sig-paren">(</span><em>point</em>, <em>inverse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#transformation.Transform.transform_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a point. (A point can only be transformed by
+translation.)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>point</strong> &#8211; a cartesian to transform</li>
+<li><strong>inverse</strong> &#8211; A boolean. If True the inverse transformation is
+applied</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the translated point.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/transformation.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/transformation.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

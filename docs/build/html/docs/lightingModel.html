@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>lightingModel module &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-lightingModel">
+<span id="lightingmodel-module"></span><h1>lightingModel module<a class="headerlink" href="#module-lightingModel" title="Permalink to this headline">¶</a></h1>
+<p>Lighting module functions.</p>
+<p>The rationale of this module is to allow for more than one lighting model,
+where simpler lighting models can be used for quicker rendering. A lighting
+model tuple has the following elements:</p>
+<ul class="simple">
+<li>The string &#8216;lightingModel&#8217; as an identifier.</li>
+<li>A string identifying the lighting model type, e.g. &#8216;basic&#8217;</li>
+<li>A reference to the calculation function for the lighting model.</li>
+<li>The ambient light colour</li>
+<li>The maximum number of reflections</li>
+</ul>
+<p>To do: Implement reflections for the basic lighting model.</p>
+<dl class="function">
+<dt id="lightingModel.lightingmodel_basic_calculate">
+<code class="descclassname">lightingModel.</code><code class="descname">lightingmodel_basic_calculate</code><span class="sig-paren">(</span><em>lightingmodel</em>, <em>scene_obj</em>, <em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#lightingModel.lightingmodel_basic_calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the colour where a ray intersects with an object.</p>
+<p>lightingmodel: a lighting model tuple.
+:param scene_obj: the Scene object
+:param result: the intersection test results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a tuple of colour information</td>
+</tr>
+</tbody>
+</table>
+<p>To do: Implement reflections.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lightingModel.lightingmodel_basic_create">
+<code class="descclassname">lightingModel.</code><code class="descname">lightingmodel_basic_create</code><span class="sig-paren">(</span><em>ambient_light=None</em>, <em>max_reflect=5</em><span class="sig-paren">)</span><a class="headerlink" href="#lightingModel.lightingmodel_basic_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with data for basic lighting model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ambient_light</strong> &#8211; The colour of the ambient light to apply</li>
+<li><strong>max_reflect</strong> &#8211; the maximum number of recrusive reflections
+to allow</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: a lighting model tuple</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lightingModel.lightingmodel_calculate">
+<code class="descclassname">lightingModel.</code><code class="descname">lightingmodel_calculate</code><span class="sig-paren">(</span><em>lightingmodel</em>, <em>scene_obj</em>, <em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#lightingModel.lightingmodel_calculate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/lightingModel.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/lightingModel.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

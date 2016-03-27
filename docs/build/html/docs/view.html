@@ -1,0 +1,234 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>view module &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-view">
+<span id="view-module"></span><h1>view module<a class="headerlink" href="#module-view" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="view.view_create">
+<code class="descclassname">view.</code><code class="descname">view_create</code><span class="sig-paren">(</span><em>eye_z</em>, <em>physical_rectangle</em>, <em>view_rectangle</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a view.</p>
+<blockquote>
+<div><p>eye_z: The Z-position of the eye point. This should be a negative value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param physical_rectangle:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The rectangle of the physical output to draw
+onto. This is value is a dictionary:
+&#8216;left&#8217;: the left-hand edge of the physical output to draw onto
+&#8216;right&#8217;: the right-hand edge of the physical output to draw onto
+&#8216;top&#8217;: the top edge of the physical output to draw onto
+&#8216;bottom&#8217;: the bottom edge of the physical output to draw onto</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">param view_rectangle:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">The rectangle of the logical view to draw at
+where z=0. This is a dictionary:
+&#8216;left&#8217;: the left-hand edge
+&#8216;right&#8217;: the right-hand edge
+&#8216;top&#8217;: the top edge
+&#8216;bottom&#8217;: the bottom edge</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transformation</strong> &#8211; A transformation to apply to the view(optional)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of view parameters, or None on failure.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_render">
+<code class="descclassname">view.</code><code class="descname">view_render</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>output_type</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders a view of a scene.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to render</li>
+<li><strong>scene_obj</strong> &#8211; The scene to render</li>
+<li><strong>output_type</strong> &#8211; An instance of class Output</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_render_pixel">
+<code class="descclassname">view.</code><code class="descname">view_render_pixel</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>physical_x</em>, <em>physical_y</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_render_pixel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders one pixel of a view</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to render</li>
+<li><strong>scene_obj</strong> &#8211; The scene to render</li>
+<li><strong>physical_x</strong> &#8211; The X co-ordinate of the pixel</li>
+<li><strong>physical_y</strong> &#8211; The Y co-ordinate of the pixel</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_set_antialias">
+<code class="descclassname">view.</code><code class="descname">view_set_antialias</code><span class="sig-paren">(</span><em>view</em>, <em>on=False</em>, <em>x=1</em>, <em>y=1</em>, <em>stochastic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_set_antialias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the antialias parameters for a view.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>on</strong> &#8211; Boolean value dictating to using antialias while rendering
+or not</li>
+<li><strong>stochastic</strong> &#8211; Boolean value dictating use of stochastic/random
+antialiasing</li>
+<li><strong>x</strong> &#8211; How many times to divide a pixel on the horizontal axis</li>
+<li><strong>y</strong> &#8211; How many times to divide a pixel on the vertical axis</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_set_lighting_model">
+<code class="descclassname">view.</code><code class="descname">view_set_lighting_model</code><span class="sig-paren">(</span><em>view</em>, <em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_set_lighting_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the lighting model for a view</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>model</strong> &#8211; Lighting model to use while rendering the scene</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_set_transform">
+<code class="descclassname">view.</code><code class="descname">view_set_transform</code><span class="sig-paren">(</span><em>view</em>, <em>transform</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_set_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set or change the transformation for a view.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>transform</strong> &#8211; The transformation to apply</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/view.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/view.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

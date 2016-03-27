@@ -12,7 +12,7 @@ class Matrix:
         """Constructor for a Matrix object.  The stored matrix is:
 
                 1 0 0 0
-                0 1 0 0 
+                0 1 0 0
                 0 0 1 0
                 0 0 0 1
                 """
@@ -29,8 +29,9 @@ class Matrix:
     def __mul__(self, matrix):
         """Matrix multiplier operator.
 
-                matrix: a matrix to multiply with. This can either be a Matrix instance
-                or a cartesian tuple, with the coressponding return type."""
+                :param matrix: a matrix to multiply with. This can either
+                be a Matrix instance or a cartesian tuple, with the
+                coressponding return type."""
 
         if isinstance(matrix, Matrix):
 
@@ -67,10 +68,11 @@ class Matrix:
             return new_vector
 
 
-#        [M11 M12 M13 M14]   [V.x]   [M11 * V.x + M12 * V.y + M13 * V.z + M14 * V.h]
-# M * V = [M21 M22 M23 M24] * [V.y] = [M21 * V.x + M22 * V.y + M23 * V.z + M24 * V.h]
-#        [M31 M32 M33 M34]   [V.z]   [M31 * V.x + M32 * V.y + M33 * V.z + M34 * V.h]
-#        [M41 M42 M43 M44]   [V.h]   [M41 * V.x + M42 * V.y + M43 * V.z + M44 * V.h]
+# [M11 M12 M13 M14]   [V.x]   [M11 * V.x + M12 * V.y + M13 * V.z + M14 * V.h]
+# M * V = [M21 M22 M23 M24] * [V.y]
+#       = [M21 * V.x + M22 * V.y + M23 * V.z + M24 * V.h]
+# [M31 M32 M33 M34]   [V.z]   [M31 * V.x + M32 * V.y + M33 * V.z + M34 * V.h]
+# [M41 M42 M43 M44]   [V.h]   [M41 * V.x + M42 * V.y + M43 * V.z + M44 * V.h]
 
         else:
             return None
@@ -92,13 +94,13 @@ class ScaleMatrix(Matrix):
         """Constructor for ScaleMatrix. The generated matrix is:
 
                         x 0 0 0
-                        0 y 0 0 
+                        0 y 0 0
                         0 0 z 0
                         0 0 0 1
 
-                x: the amount to scale on X axis
-                y: the amount to scale on Y axis
-                z: the amount to scale on Z axis """
+                :param x: the amount to scale on X axis
+                :param y: the amount to scale on Y axis
+                :param z: the amount to scale on Z axis """
         x = mpfr(x)
         y = mpfr(y)
         z = mpfr(z)
@@ -125,11 +127,11 @@ class TranslationMatrix(Matrix):
         """Constructor for TranslationMatrix. The generated matrix is:
 
                         1 0 0 x
-                        0 1 0 y 
+                        0 1 0 y
                         0 0 1 z
                         0 0 0 1
 
-                value: a dictionary with the following elements:
+                :param value: a dictionary with the following elements:
                         'x': the amount to translate in the X dimension
                         'y': the amount to translate in the Y dimension
                         'z': the amount to translate in the Z dimension"""
@@ -158,7 +160,7 @@ class RotationZMatrix(Matrix):
 
     def __init__(self, angle):
         """Class constructor for RotationMatrix.
-                angle: the amount of rotation, in degrees."""
+                :param angle: the amount of rotation, in degrees."""
 
         rad = radians(angle)
         costh = cos(rad)
@@ -176,16 +178,17 @@ class RotationZMatrix(Matrix):
                         [mpfr(0), mpfr(0), mpfr(0), mpfr(1)]]
 
 
-class RotationMatrix (Matrix):
+class RotationMatrix(Matrix):
     """A matrix for rotation about an arbitrary axis.
         See http://math.kennesaw.edu/~plaval/math4490/rotgen.pdf"""
 
     def __init__(self, vector, angle):
         """Class constructor for RotationMatrix.
 
-                vector: a cartesian vector as an axis.
-                angle: the amount of rotation about the axis, in degrees."""
-        #rad = mpfr(angle) * (self.pi/mpfr(180))
+                :param vector: a cartesian vector as an axis.
+                :param angle: the amount of rotation about the axis,
+                in degrees."""
+        # rad = mpfr(angle) *(self.pi/mpfr(180))
         rad = radians(angle)
         one = mpfr(1)
         zero = mpfr(0)

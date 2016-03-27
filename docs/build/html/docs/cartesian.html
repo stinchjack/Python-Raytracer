@@ -1,0 +1,396 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>cartesian module &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-cartesian">
+<span id="cartesian-module"></span><h1>cartesian module<a class="headerlink" href="#module-cartesian" title="Permalink to this headline">¶</a></h1>
+<p>Functions for dealing with cartesian values and rays.
+A cartesian is stored as a tuple, with the first element being the
+string &#8216;cartesian&#8217; as an identifier, and the last three being X, Y and Z
+values. A cartesian can be used for either vectors (directions) or points.</p>
+<p>A ray is a tuple with four elements, the first being the string &#8216;ray&#8217; as an
+identifier, the second is a cartesian being the start point of the ray,
+the third is a cartesian being the direction of the ray, and the fourth is
+a boolean indicating weather the ray is a shadow-ray.</p>
+<p>A lineseg2d is a tuple used to store a line segment, where that line is in
+two dimensions, the thrid being discarded. (Used for polygon intersection
+tests).</p>
+<p>Authour: Jack Stinchcombe &lt;<a class="reference external" href="mailto:stinchjack&#37;&#52;&#48;gmail&#46;com">stinchjack<span>&#64;</span>gmail<span>&#46;</span>com</a>&gt;</p>
+<dl class="function">
+<dt id="cartesian.cartesian_add">
+<code class="descclassname">cartesian.</code><code class="descname">cartesian_add</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.cartesian_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds two cartesians together</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; a cartesian</li>
+<li><strong>c2</strong> &#8211; a cartesian</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a cartesian, the result of adding c1 and c2</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.cartesian_copy">
+<code class="descclassname">cartesian.</code><code class="descname">cartesian_copy</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.cartesian_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a copy of a cartesian</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>c</strong> &#8211; a cartesian to copy</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a copy of c</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.cartesian_create">
+<code class="descclassname">cartesian.</code><code class="descname">cartesian_create</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.cartesian_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cartesian tuple</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; The x part of the co-ordinate</li>
+<li><strong>y</strong> &#8211; The y part of the co-ordinate</li>
+<li><strong>z</strong> &#8211; The z part of the co-ordinate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple representing a cartesian</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.cartesian_cross">
+<code class="descclassname">cartesian.</code><code class="descname">cartesian_cross</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.cartesian_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the cross product of two cartesians.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; a cartesian</li>
+<li><strong>c2</strong> &#8211; a cartesian</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">cross-product of c1 and c2</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.cartesian_dot">
+<code class="descclassname">cartesian.</code><code class="descname">cartesian_dot</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.cartesian_dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the dot product of cartesians c1 and c2
+:param c1: a cartesian
+:param c2: a cartesian
+:return: the dot product of cartesians c1 and c2</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.cartesian_len">
+<code class="descclassname">cartesian.</code><code class="descname">cartesian_len</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.cartesian_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the length of given cartesian.   Useful for vectors.</p>
+<p>c1: a cartesian
+:return: the length of given c1</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.cartesian_normalise">
+<code class="descclassname">cartesian.</code><code class="descname">cartesian_normalise</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.cartesian_normalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cartesian with a length of 1 from the given
+cartesian. Useful for Vectors</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param c:</th><td class="field-body">a cartesian</td>
+</tr>
+<tr class="field-even field"><th class="field-name">return:</th><td class="field-body">a normalised cartesian</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.cartesian_scale">
+<code class="descclassname">cartesian.</code><code class="descname">cartesian_scale</code><span class="sig-paren">(</span><em>c1</em>, <em>scale</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.cartesian_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiples the cartesian by the scalar value given. Useful for Vectors</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; a cartesian</li>
+<li><strong>scale</strong> &#8211; the value to scale/multiply the c1 by.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">c1 multiplied by scale</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.cartesian_sub">
+<code class="descclassname">cartesian.</code><code class="descname">cartesian_sub</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.cartesian_sub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts cartesian c2 from cartesian c1</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; a cartesian</li>
+<li><strong>c2</strong> &#8211; a cartesian</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a cartesian, the result of subtracting c2 from c1</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.lineseg2d_ccw">
+<code class="descclassname">cartesian.</code><code class="descname">lineseg2d_ccw</code><span class="sig-paren">(</span><em>A</em>, <em>B</em>, <em>C</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.lineseg2d_ccw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Line intersection code derived from
+<a class="reference external" href="http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/">http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.lineseg2d_create">
+<code class="descclassname">cartesian.</code><code class="descname">lineseg2d_create</code><span class="sig-paren">(</span><em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.lineseg2d_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a lineseg2d tuple</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.lineseg2d_intersect">
+<code class="descclassname">cartesian.</code><code class="descname">lineseg2d_intersect</code><span class="sig-paren">(</span><em>ls1</em>, <em>ls2</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.lineseg2d_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if two line segments intersect with each other.
+(Used for polygon intersection tests).</p>
+<p>Line intersection code derived from
+<a class="reference external" href="http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/">http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.ray_calc_pt">
+<code class="descclassname">cartesian.</code><code class="descname">ray_calc_pt</code><span class="sig-paren">(</span><em>ray</em>, <em>t</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.ray_calc_pt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculatesa point along a ray, returning a cartesian. The vector
+part of the the ray is scaled by t and added to the start point of the
+array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ray</strong> &#8211; a ray tuple</li>
+<li><strong>t</strong> &#8211; the position along the ray, proportional to the vector
+component of the ray.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><em>a cartesian, calculated by the expression
+ray start + (ray vector * t)</em></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.ray_create">
+<code class="descclassname">cartesian.</code><code class="descname">ray_create</code><span class="sig-paren">(</span><em>start</em>, <em>vector</em>, <em>shadow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.ray_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a ray tuple</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> &#8211; a cartesian point, being the start of the ray</li>
+<li><strong>vector</strong> &#8211; a cartesian vector, being the direction of the ray</li>
+<li><strong>shadow</strong> &#8211; a boolean, indicating if the ray is being used for
+shadow detection.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a ray tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.ray_is_shadow">
+<code class="descclassname">cartesian.</code><code class="descname">ray_is_shadow</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.ray_is_shadow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the ray is used for shadow detection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> &#8211; a ray tuple</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the fourth element from the tuple, being a boolean.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.ray_scale">
+<code class="descclassname">cartesian.</code><code class="descname">ray_scale</code><span class="sig-paren">(</span><em>ray</em>, <em>scale</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.ray_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiples the lenth of the ray by the given scale</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ray</strong> &#8211; a ray tuple</li>
+<li><strong>scale</strong> &#8211; the value to scale the length by</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a new ray, being the a ray with the same
+start point as the given ray, and the vector from the
+given ray but scaled by the given amount</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="cartesian.transform_matrix_mul_cartesian">
+<code class="descclassname">cartesian.</code><code class="descname">transform_matrix_mul_cartesian</code><span class="sig-paren">(</span><em>matrix</em>, <em>cartesian</em><span class="sig-paren">)</span><a class="headerlink" href="#cartesian.transform_matrix_mul_cartesian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplies a matrix by a cartesian, resulting in a transformed
+cartesian.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>matrix</strong> &#8211; a matrix</li>
+<li><strong>cartesian</strong> &#8211; a cartesian tuple</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">cartesian</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/cartesian.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/cartesian.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

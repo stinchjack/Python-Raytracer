@@ -1,18 +1,21 @@
 """Functions for dealing with lights
- 
+
 A point light is stored as a tuple, with the first two elements being the
 stringd 'light', 'point' as an identifiers, and the last two being a cartesian
 point and the colour.
 
-A directional light is defined as an area within a hollow shape that lit. For a cone,
-the cone is defined as having a base at x=0, y=0, z=0, having a height of 1, and a radius 
-of 1 at that height. For a tube (cylinder), it is defined as having a radius of 1, where
-Y is between 0 and 1. Therefore a transformation is necessary for these types of lights
-to be located elsewhere and in other proportions in the scene.
+A directional light is defined as an area within a hollow shape that lit.
+For a cone, the cone is defined as having a base at x=0, y=0, z=0, having
+a height of 1, and a radius of 1 at that height. For a tube (cylinder), it is
+defined as having a radius of 1, where Y is between 0 and 1. Therefore a
+transformation is necessary for these types of lights to be located elsewhere
+and in other proportions in the scene.
 
-A directional light is also stored as a tuple. The tuple elements are two identifying
-strings as per point lights, a function to test if a point is inside the shape, a
-colour, and a transformation of the shape. """
+A directional light is also stored as a tuple. The tuple elements are two
+identifying strings as per point lights, a function to test if a point is
+inside the shape, a colour, and a transformation of the shape. """
+
+
 import gmpy2
 from gmpy2 import *
 from cartesian import *
@@ -35,10 +38,10 @@ LIGHT_TUBE_TRANSFORM = 4
 def light_point_light_create(point, colour):
     """Creates a point light.
 
-     point: A cartesian point (see cartesian module documentation)
-     colour: A colour (see cartesian module documentation)
+    :param point: A cartesian point (see cartesian module documentation)
+    :param colour: A colour (see cartesian module documentation)
 
-    Returns: A tuple of light parameters
+    :return: A tuple of light parameters
 
     """
     return ('light', 'point', point, colour)
@@ -49,22 +52,22 @@ def light_directional_is_inside(light, point):
     calls the function stored in the directional light tuple for testing
     inside/outside.
 
-     light: The directional light
-     point: A cartesian as a point to test
+    :param light: The directional light
+    :param point: A cartesian as a point to test
 
-    Returns: Boolean"""
+    :return: Boolean"""
     return light[2](light, point)
 
 
 def light_cone_is_inside(light, point):
     """Tests if a point is inside a cone. The cone is defined as
-    having a base at x=0, y=0, z=0, having a height of 1, and a radius 
+    having a base at x=0, y=0, z=0, having a height of 1, and a radius
     of 1 at that height.
 
      light: The cone light
      point: A cartesian as a point to test
 
-    Returns: Boolean"""
+    :return: Boolean"""
 
     p = light[LIGHT_CONE_TRANSFORM].transformPoint(point)
     if p[3] <= 0:
@@ -84,21 +87,21 @@ def light_conelight_create(colour, transform):
 def light_tubelight_create(colour, transform):
     """Creates a tube/cylinder shaped light
 
-     light: The cone light
-     point: A cartesian as a point to test
+    :param light: The cone light
+    :param point: A cartesian as a point to test
 
-    Returns: a tuple respresenting a directional light"""
+    :return: a tuple respresenting a directional light"""
 
     return ('light', 'tube', light_tube_is_inside, colour, transform)
 
 
 def light_tube_is_inside(point):
-    """Tests if a point is inside a cone. The cylinder is defined as 
+    """Tests if a point is inside a cone. The cylinder is defined as
     having a radius of 1, where Y is between 0 and 1.
 
-    point: A cartesian as a point to test
+    :param point: A cartesian as a point to test
 
-    Returns: Boolean	
+    :return: Boolean
         """
     p = light[LIGHT_CONE_TRANSFORM].transformPoint(point)
     if p[3] <= 0:

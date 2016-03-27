@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>matrix module &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-matrix">
+<span id="matrix-module"></span><h1>matrix module<a class="headerlink" href="#module-matrix" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="matrix.Matrix">
+<em class="property">class </em><code class="descclassname">matrix.</code><code class="descname">Matrix</code><a class="headerlink" href="#matrix.Matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A generic 4x4 maths matrix for transformation purposes.</p>
+<dl class="method">
+<dt id="matrix.Matrix.inversed">
+<code class="descname">inversed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#matrix.Matrix.inversed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the inverse matrix.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="matrix.RotationMatrix">
+<em class="property">class </em><code class="descclassname">matrix.</code><code class="descname">RotationMatrix</code><span class="sig-paren">(</span><em>vector</em>, <em>angle</em><span class="sig-paren">)</span><a class="headerlink" href="#matrix.RotationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#matrix.Matrix" title="matrix.Matrix"><code class="xref py py-class docutils literal"><span class="pre">matrix.Matrix</span></code></a></p>
+<p>A matrix for rotation about an arbitrary axis.
+See <a class="reference external" href="http://math.kennesaw.edu/~plaval/math4490/rotgen.pdf">http://math.kennesaw.edu/~plaval/math4490/rotgen.pdf</a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="matrix.RotationZMatrix">
+<em class="property">class </em><code class="descclassname">matrix.</code><code class="descname">RotationZMatrix</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="headerlink" href="#matrix.RotationZMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#matrix.Matrix" title="matrix.Matrix"><code class="xref py py-class docutils literal"><span class="pre">matrix.Matrix</span></code></a></p>
+<p>A matrix for rotation about the Z axis.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="matrix.ScaleMatrix">
+<em class="property">class </em><code class="descclassname">matrix.</code><code class="descname">ScaleMatrix</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="headerlink" href="#matrix.ScaleMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#matrix.Matrix" title="matrix.Matrix"><code class="xref py py-class docutils literal"><span class="pre">matrix.Matrix</span></code></a></p>
+<p>A matrix for scaling.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="matrix.TranslationMatrix">
+<em class="property">class </em><code class="descclassname">matrix.</code><code class="descname">TranslationMatrix</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#matrix.TranslationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#matrix.Matrix" title="matrix.Matrix"><code class="xref py py-class docutils literal"><span class="pre">matrix.Matrix</span></code></a></p>
+<p>A matrix for translation</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/matrix.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/matrix.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>quadraticshapes module &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-quadraticshapes">
+<span id="quadraticshapes-module"></span><h1>quadraticshapes module<a class="headerlink" href="#module-quadraticshapes" title="Permalink to this headline">¶</a></h1>
+<p>Functions for quadratic shapes: spheres, cylinders, cones, capped cylinders,
+capped cones.</p>
+<dl class="function">
+<dt id="quadraticshapes.shape_capped_cone_create">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_capped_cone_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>topcap={}</em>, <em>bottomcap={}</em>, <em>y_top=None</em>, <em>y_bottom=None</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_capped_cone_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the necessary data for rendering a capped cone. An
+untransformed cone is in parallel to the Y axis, having a radius
+equal to the Y position. The apex of the untransformed cone is at X=0,
+Y=0, Z=0. Optionally, the minumum and maximum values of Y for the rendered
+cone can be specified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the cylinder.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the cylinder.</li>
+<li><strong>topcap</strong> &#8211; a dictionary with the following two optional members
+&#8216;diffuse_colour&#8217;: the diffuse colour for the &#8216;top&#8217; cap of the cylinder
+&#8216;specular_colour&#8217;: the specular colour for the &#8216;top&#8217; cap of the
+cylinder</li>
+<li><strong>bottomcap</strong> &#8211; a dictionary with the following two optional members
+&#8216;diffuse_colour&#8217;: the diffuse colour for the &#8216;bottom&#8217; cap of the
+cylinder
+&#8216;specular_colour&#8217;: the specular colour for the &#8216;bottom&#8217; cap of the
+cylinder</li>
+<li><strong>y_top</strong> &#8211; The minimum Y value in an untransformed cone. If this
+parameter is None, the default of 0 will be used.</li>
+<li><strong>y_bottom</strong> &#8211; The maximum Y value in an untransformed cone. If this
+parameter is None, the default of 1 will be used.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the cylinder.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple with the data needed to render a capped cone.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_capped_cone_diffuse_colour">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_capped_cone_diffuse_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_capped_cone_diffuse_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diffuse colour for an intersection point with a capped
+cone. This function is needed because different colours can be specified
+for cylinder body and both caps.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the cone to query</li>
+<li><strong>intersect_result</strong> &#8211; a dictionary of intersection results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the diffuse colour for the specified intersection</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_capped_cone_intersect">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_capped_cone_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_capped_cone_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a capped cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the capped cylinder</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>To do: Implement optionality for cap intersection test. Thourough checking</dt>
+<dd>for all instances needed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_capped_cone_specular_colour">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_capped_cone_specular_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_capped_cone_specular_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specular colour for an intersection point with a capped
+cone. This function is needed because specular colours can be specified
+for cylinder body and both caps.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the cone to query</li>
+<li><strong>intersect_result</strong> &#8211; a dictionary of intersection results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_capped_cylinder_create">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_capped_cylinder_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>topcap={}</em>, <em>bottomcap={}</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_capped_cylinder_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a capped cylinder tuple.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the cylinder</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the cylinder</li>
+<li><strong>topcap</strong> &#8211; a dictionary with the following two optional members
+&#8216;diffuse_colour&#8217;: the diffuse colour for the &#8216;top&#8217; cap
+of the cylinder
+&#8216;specular_colour&#8217;: the specular colour for the &#8216;top&#8217; cap
+of the cylinder</li>
+<li><strong>bottomcap</strong> &#8211; a dictionary with the following two optional members
+&#8216;diffuse_colour&#8217;: the diffuse colour for the &#8216;bottom&#8217;
+cap of the cylinder
+&#8216;specular_colour&#8217;: the specular colour for the &#8216;bottom&#8217;
+cap of the cylinder</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the cylinder</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple with data for rendering a capped cylinder</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_capped_cylinder_diffuse_colour">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_capped_cylinder_diffuse_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_capped_cylinder_diffuse_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diffuse colour at the intersection point with a capped
+cylinder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the capped cylinder</li>
+<li><strong>intersect_result</strong> &#8211; the intersection results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_capped_cylinder_intersect">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_capped_cylinder_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_capped_cylinder_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a capped cylinder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the capped cylinder</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.s</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>To do: implement optionality for caps</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_capped_cylinder_specular_colour">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_capped_cylinder_specular_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_capped_cylinder_specular_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specular colour at the intersection point with a capped
+cylinder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the capped cylinder</li>
+<li><strong>intersect_result</strong> &#8211; the intersection results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_cone_create">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_cone_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>y_top=None</em>, <em>y_bottom=None</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_cone_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the necessary data for rendering a cone.  An
+untransformed cone is in parallel to the Y axis, having a radius
+equal to the Y position. The apex of the untransformed cone is at X=0,
+Y=0, Z=0. Optionally, the minumum and maximum values of Y for the rendered
+cone can be specified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the cylinder.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the cylinder.</li>
+<li><strong>y_top</strong> &#8211; The minimum Y value in an untransformed cone. If this
+parameter is None, the default of 0 will be used.</li>
+<li><strong>y_bottom</strong> &#8211; The maximum Y value in an untransformed cone. If
+this parameter is None, the default of 1 will be used.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the cylinder.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple with the data needed to render a cone.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_cone_intersect">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_cone_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_cone_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the capped cylinder</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_cone_test_point">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_cone_test_point</code><span class="sig-paren">(</span><em>shape</em>, <em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_cone_test_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a point transformed into cone-space is inside the Y-dimensions
+of the cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the cone to test against</li>
+<li><strong>point</strong> &#8211; the point to test</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Boolean</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_cone_ybottom">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_cone_ybottom</code><span class="sig-paren">(</span><em>shape</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_cone_ybottom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the maximum Y value in an untransformed cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shape</strong> &#8211; the cone to query</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the maximum Y value in an untransformed cone.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_cone_ytop">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_cone_ytop</code><span class="sig-paren">(</span><em>shape</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_cone_ytop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the minimum Y value in an untransformed cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shape</strong> &#8211; the cone to query</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the minimum Y value in an untransformed cone.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_cylinder_create">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_cylinder_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_cylinder_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cylinder tuple.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>colour</strong> &#8211; the colour of the cylinder.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the cylinder.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the cylinder.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_cylinder_intersect">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_cylinder_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_cylinder_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a cylinder.</p>
+<p>shape: the shape tuple for the cylinder
+ray: the ray to perform the intersection test with</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">False if no intersection, or a dictionary of results when
+there is an intersection.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_sphere_create">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_sphere_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_sphere_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a sphere.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the sphere.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the sphere.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the sphere.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to redner a sphere</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="quadraticshapes.shape_sphere_intersect">
+<code class="descclassname">quadraticshapes.</code><code class="descname">shape_sphere_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#quadraticshapes.shape_sphere_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a sphere. An untranslated sphere is
+located at X=0, Y=0, Z=0, with a radius of 1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the sphere</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/quadraticshapes.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/quadraticshapes.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

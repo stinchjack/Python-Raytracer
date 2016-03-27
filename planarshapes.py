@@ -6,28 +6,28 @@ from shape import *
 """Functions for planar shapes: discs, rectangles, polygons, triangles,
 and polygon meshes.
 
-To do: complete docstrings, restest all functions.
+..to do: complete docstrings, restest all functions.
 """
 
 
 def shape_disc_intersect(shape, ray):
     """Intersection test function for a disc. An untranslated disc is
-	located at X=0, Y=0, Z=0, sits on the XY plane, and has a radius of 1 in
-	both X and Y.
+        located at X=0, Y=0, Z=0, sits on the XY plane, and has a radius\
+        of 1 in both X and Y.
 
-	shape: the shape tuple for the disc
-	ray: the ray to perform the intersection test with
+        :param shape: the shape tuple for the disc
+        :param ray: the ray to perform the intersection test with
 
-	Returns: False if no intersection, or a dictionary of results when
-		there is an intersection.
-	"""
+        :return: False if no intersection, or a dictionary of results when
+                there is an intersection.
+        """
     if ray[RAY_VECTOR][3] == 0:
         return False
     t = (0 - ray[RAY_START][3]) / (ray[RAY_VECTOR])[3]
     if t < zero():
         return False
     point = ray_calc_pt(ray, t)
-    if not (point[1] * point[1]) + (point[2] * point[2]) <= mpfr(1):
+    if not(point[1] * point[1]) + (point[2] * point[2]) <= mpfr(1):
         return False
 
     return {'t': t,
@@ -39,12 +39,13 @@ def shape_disc_intersect(shape, ray):
 def shape_disc_create(colour, specular, transform=None):
     """Creates a tuple with the data necessary to render a disc.
 
-	colour: the colour of the disc.
-	specular: the reflective colour of the disc.
-	transform: the transformation to apply to the disc.
+        :param colour: the colour of the disc.
+        :param specular: the reflective colour of the disc.
+        :param transform: the transformation to apply to the disc.
 
-	returns: a tuple containg data to redner a disc
-	"""
+        :return: a tuple containg data to render a disc
+
+        """
     shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'disc'
     shape[SHAPE_DIFFUSECOLOUR] = colour
@@ -57,19 +58,19 @@ def shape_disc_create(colour, specular, transform=None):
 def shape_rectangle_intersect(shape, ray):
     """Intersection test function for a rectangle.
 
-	shape: the shape tuple for the rectangle
-	ray: the ray to perform the intersection test with
+        :param shape: the shape tuple for the rectangle
+        :param ray: the ray to perform the intersection test with
 
-	returns: False if no intersection, or a dictionary of results when
-		there is an intersection."""
+        :return: False if no intersection, or a dictionary of results when
+                there is an intersection."""
     if ray[RAY_VECTOR][3] == 0:
         return False
     t = (0 - ray[RAY_START][3]) / ray[RAY_VECTOR][3]
     point = ray_calc_pt(ray, t)
-    if (not(point[1] >= shape[SHAPE_DATA]['left'] and
-        point[1] <= shape[SHAPE_DATA]['right'] and
-        point[2] >= shape[SHAPE_DATA]['top'] and
-		point[2] <= shape[SHAPE_DATA]['bottom'])):
+    if(not(point[1] >= shape[SHAPE_DATA]['left'] and
+            point[1] <= shape[SHAPE_DATA]['right'] and
+            point[2] >= shape[SHAPE_DATA]['top'] and
+            point[2] <= shape[SHAPE_DATA]['bottom'])):
         return False
     return {'t': t,
             'raw_point': point,
@@ -79,28 +80,28 @@ def shape_rectangle_intersect(shape, ray):
 
 def shape_rectangle_create(colour, specular, bounds, transform=None):
     """Creates a tuple with the data necessary to render a rectangle.
-	An untransformed rectangle sits on the XY plane, at Z=0, with the
-	minimum and maximum bounds for X and Y set by the bounds parameter.
+        An untransformed rectangle sits on the XY plane, at Z=0, with the
+        minimum and maximum bounds for X and Y set by the bounds parameter.
 
-	colour: the colour of the rectangle.
-	specular: the reflective colour of the rectangle
-	bounds: a dictionary with the following values
-		'top': the minimum Y value of the rectangle
-		'bottom': the maximum Y value of the rectangle
-		'left': the minimum X value of the rectangle
-		'right': the maximum X value of the rectangle
-	transform: the transformation to apply to the rectangle.
+        :param colour: the colour of the rectangle.
+        :param specular: the reflective colour of the rectangle
+        :param bounds: a dictionary with the following values
+                'top': the minimum Y value of the rectangle
+                'bottom': the maximum Y value of the rectangle
+                'left': the minimum X value of the rectangle
+                'right': the maximum X value of the rectangle
+        :param transform: the transformation to apply to the rectangle.
 
-	returns: a tuple containg data to render a rectangle
-	"""
+        :returns: a tuple containg data to render a rectangle
+        """
     shape = shape_emptyShape()
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_INTERSECT_FUNC] = shape_rectangle_intersect
     shape_set_transform(shape, transform)
 
-    if (not 'left' in bounds or not 'right' in bounds or
-		not 'top' in bounds or not 'bottom' in bounds):
+    if('left' not in bounds or 'right' not in bounds or
+            'top' not in bounds or 'bottom' not in bounds):
         return None
 
     if bounds['left'] > bounds['right']:
@@ -122,14 +123,13 @@ def shape_rectangle_create(colour, specular, bounds, transform=None):
 
 def shape_polygon_convert2d(shape, point):
     """Takes a point in 3D space and flattens it without perspective into
-	2D space. (The 2D points are used for inside/outside tests).
+        2D space. (The 2D points are used for inside/outside tests).
 
-	shape: the polygon related to the point
-	point: a cartesian point to flatten
+        :param shape: the polygon related to the point
+        :param point: a cartesian point to flatten
+        :return: a tuple with a 2D co-oridnate
 
-	returns: a tuple with a 2D co-oridnate
-
-	"""
+        """
     for axis2d in shape[SHAPE_DATA]['kept_axes']:
 
         if shape[SHAPE_DATA]['kept_axes'][axis2d] == 'X':
@@ -143,24 +143,24 @@ def shape_polygon_convert2d(shape, point):
             u = d
         else:
             v = d
-    return (u, v)
+    return(u, v)
 
 
 def shape_polygon_intersect(shape, ray):
-    """Intersection test function for a polygon. 
-	
-	shape: the shape tuple for the rectangle
-	ray: the ray to perform the intersection test with
-	
-	returns: False if no intersection, or a dictionary of results when
-		there is an intersection."""
+    """Intersection test function for a polygon.
+
+        :param shape: the shape tuple for the rectangle
+        :param ray: the ray to perform the intersection test with
+
+        :return: False if no intersection, or a dictionary of results when
+                there is an intersection."""
     denom = cartesian_dot(ray[2], shape[SHAPE_DATA]['normal'])
     if denom == 0:
         return False
-    elif (denom > 0):
+    elif(denom > 0):
         normal = cartesian_create(0 - shape[SHAPE_DATA]['normal'][1],
-								0 - shape[SHAPE_DATA]['normal'][2],
-								0 - shape[SHAPE_DATA]['normal'][3])
+                                  0 - shape[SHAPE_DATA]['normal'][2],
+                                  0 - shape[SHAPE_DATA]['normal'][3])
 
     t = cartesian_dot(cartesian_sub(shape[SHAPE_DATA]['centre'], ray[
                       1]), shape[SHAPE_DATA]['normal']) / denom
@@ -180,7 +180,7 @@ def shape_polygon_intersect(shape, ray):
         if lineseg2d_intersect(testSeg, outerLineSeg):
             count = count + 1
 
-    if count > 0 and (count % 2) == 1:
+    if count > 0 and(count % 2) == 1:
         result['raw_normal'] = shape[SHAPE_DATA]['normal']
         return result
     else:
@@ -189,13 +189,13 @@ def shape_polygon_intersect(shape, ray):
 
 def shape_polygon_create(data={}):
     """Creates a tuple with the data necessary to render a polygon.
-	
-	colour: the colour of the polygon.
-	specular: the reflective colour of the polygon.
-	transform: the transformation to apply to the polygon.
-	
-	returns: a tuple containg data to render a polygon
-	"""
+
+        :param colour: the colour of the polygon.
+        :param specular: the reflective colour of the polygon.
+        :transform: the transformation to apply to the polygon.
+
+        :return: a tuple containg data to render a polygon
+        """
     shape = shape_empty_shape()
     shape[SHAPE_INTERSECT_FUNC] = shape_polygon_intersect
 
@@ -219,11 +219,10 @@ def shape_polygon_create(data={}):
         mpfr(points[0][1]), mpfr(points[0][3]), mpfr(points[0][3]))
     # Normal is calculated as per triangle
 
-
     shape[SHAPE_DATA]['normal'] = cartesian_normalise(cartesian_cross(
         cartesian_sub(points[1], points[0]), cartesian_sub(
-		points[2], points[0])))
-    # print ("self.normal %s"%self.normal.normalise())
+            points[2], points[0])))
+    # print("self.normal %s"%self.normal.normalise())
     ex = shape[SHAPE_DATA]['normal'][1]
     if ex < 0:
         ex = zero() - ex
@@ -248,17 +247,17 @@ def shape_polygon_create(data={}):
         discard_axis = 'X'
         kept_axes = {'u': 'Y', 'v': 'Z'}
     shape[SHAPE_DATA]['kept_axes'] = kept_axes
-    # print ("self.kept_axes %s"%self.kept_axes)
+    # print("self.kept_axes %s"%self.kept_axes)
     # create a set of point with one axis discarded
     shape[SHAPE_DATA]['points2d'] = []
     # print("points2d:  ")
 
     for i in range(len(points)):
         p2d = shape_polygon_convert2d(shape, points[i])
-        # print (p2d)
+        # print(p2d)
         shape[SHAPE_DATA]['points2d'].append(p2d)
 
-    # print ("polygon line segments")
+    # print("polygon line segments")
     shape[SHAPE_DATA]['polygon_line_segs'] = []
     min_u = None
     min_v = None
@@ -271,11 +270,11 @@ def shape_polygon_create(data={}):
                 len(shape[SHAPE_DATA]['points2d']) - 1]
         ls = lineseg2d_create(p0, p1)
         shape[SHAPE_DATA]['polygon_line_segs'].append(ls)
-        # print (ls)
-        if min_u == None or p0[0] < min_u:
+        # print(ls)
+        if min_u is None or p0[0] < min_u:
             min_u = p0[0]
 
-        if min_v == None or p0[1] < min_v:
+        if min_v is None or p0[1] < min_v:
             min_v = p0[1]
 
     shape[SHAPE_DATA]['outside_point'] = (min_u - 1.0, min_v - 1.0)
@@ -283,9 +282,9 @@ def shape_polygon_create(data={}):
     return shape
 
 
-###################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Code for a triangle
-###################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 def shape_triangle_diffuse_colour(shape, intersectResult):
     if not shape[SHAPE_DATA]['colorShade']:
@@ -341,7 +340,7 @@ def shape_triangle_intersect(shape, ray):
     if det == zero():
         return False
     # if(det > mpfr("-0.000001") and det < mpfr("0.000001")):
-    #	return False
+    # return False
 
     inv_det = 1.0 / det
 
@@ -353,12 +352,12 @@ def shape_triangle_intersect(shape, ray):
 
     # q = s.cross(self.e1)
     q = cartesian_cross(s, shape[SHAPE_DATA]['e1'])
-    # v = inv_det * (ray[2].dot(q))
+    # v = inv_det *(ray[2].dot(q))
     v = inv_det * cartesian_dot(ray[2], q)
-    if (v < 0 or v > 1.0 or (u + v) > 1.0):
+    if(v < 0 or v > 1.0 or(u + v) > 1.0):
         return False
 
-    # t = inv_det * (self.e2.dot(q))
+    # t = inv_det *(self.e2.dot(q))
     t = inv_det * cartesian_dot(shape[SHAPE_DATA]['e2'], q)
     if t < 0:
         return False
@@ -371,24 +370,26 @@ def shape_triangle_intersect(shape, ray):
 
 def shape_triangle_create(points, colours, reflections=None):
     """Creates a tuple with the data necessary to render a triangle.
-	
-	colour: the colour of the triangle.
-	specular: the reflective colour of the triangle.
-	points: a list or tuple of three cartesians points, being the vertices of
-	the triangle
-	colours: 
-	reflections
-	returns: a tuple containg data to render a triangle
-	"""
+
+        colour: the colour of the triangle.
+        specular: the reflective colour of the triangle.
+        points: a list or tuple of three cartesians points,
+        being the vertices ofthe triangle
+
+        :param colours:
+        :param reflections:
+
+        :return: a tuple containg data to render a triangle
+        """
     shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'triangle'
     shape[SHAPE_INTERSECT_FUNC] = shape_triangle_intersect
     shape[SHAPE_DIFFUSECOLOUR_FUNC] = shape_triangle_diffuse_colour
     shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_triangle_specular_colour
 
-    shape[SHAPE_DATA]['colorShade'] = not 'colour' in colours
-    shape[SHAPE_DATA]['reflectShade'] = (reflections != None and
-		not 'colour' in reflections)
+    shape[SHAPE_DATA]['colorShade'] = 'colour' not in colours
+    shape[SHAPE_DATA]['reflectShade'] = (reflections is not None and
+                                         'colour' not in reflections)
 
     shape[SHAPE_DIFFUSECOLOUR] = colours
     shape[SHAPE_SPECULARCOLOUR] = reflections
@@ -421,30 +422,30 @@ def shape_triangle_create(points, colours, reflections=None):
 
     shape[SHAPE_DATA]['normal'] = cartesian_normalise(cartesian_cross(
         cartesian_sub(points[1], points[0]), cartesian_sub(
-		points[2], points[0])))
+            points[2], points[0])))
 
     shape[SHAPE_DATA]['e1'] = cartesian_sub(points[1], points[0])
     shape[SHAPE_DATA]['e2'] = cartesian_sub(points[2], points[0])
     return shape
 
 
-###################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Code for a poly mesh
-###################################
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def shape_polymesh_diffuseColour(shape, intersectResult):
     # if not 'hit_polygon' in intersectResult:
-    #	return self.basicColour
+    # return self.basicColour
 
-    return intersectResult['hit_polygon'][SHAPE_DIFFUSECOLOUR_FUNC]\
-	(intersectResult['hit_polygon'], intersectResult)
+    return intersectResult['hit_polygon'][SHAPE_DIFFUSECOLOUR_FUNC](
+        intersectResult['hit_polygon'], intersectResult)
 
 
 def shape_polymesh_specularColour(shape, intersectResult):
     # if not 'hit_polygon' in intersectResult:
-    #	return self.refelectColour
+    # return self.refelectColour
 
-    return intersectResult['hit_polygon'][SHAPE_SPECULARCOLOUR_FUNC]\
-	(intersectResult['hit_polygon'], intersectResult)
+    return intersectResult['hit_polygon'][SHAPE_SPECULARCOLOUR_FUNC](
+        intersectResult['hit_polygon'], intersectResult)
 
 
 def shape_polymesh_intersect(shape, ray):
@@ -452,8 +453,8 @@ def shape_polymesh_intersect(shape, ray):
 
     for t in shape[SHAPE_DATA]['polygons']:
         result = t[SHAPE_INTERSECT_FUNC](t, ray)
-        if result != False:
-            if final_result == False or result['t'] < final_result['t']:
+        if result is not False:
+            if final_result is False or result['t'] < final_result['t']:
                 final_result = result
                 final_result['hit_polygon'] = t
             # if ray[3]: return final_result
@@ -494,7 +495,7 @@ def shape_polymesh_create(data):
     else:
         face_reflect_colours = None
 
-    do_refl = face_reflect_colours != None
+    do_refl = face_reflect_colours is not None
     if not do_refl:
         tri_refl = None
     face = -1
@@ -506,18 +507,18 @@ def shape_polymesh_create(data):
             tri_points.append(points[polygon_point])
 
         tri_colours = None
-        if ('face_diffuse_colours' in data and
-			face_diffuse_colours[face] != None):
+        if('face_diffuse_colours' in data and
+                face_diffuse_colours[face] is not None):
             tri_colours = face_diffuse_colours[face]
-        elif colour != None:
+        elif colour is not None:
             tri_colours = colour
 
         if do_refl:
             tri_refl = None
-            if ('face_specular_colours' in data and
-			face_diffuse_colours[face] != None):
+            if('face_specular_colours' in data and
+                    face_diffuse_colours[face] is not None):
                 tri_colours = face_specular_colours[face]
-            elif reflection != None:
+            elif reflection is not None:
                 tri_refl = reflection
 
         if len(tri_points) == 3:
@@ -558,7 +559,7 @@ def shape_polymesh_shapes(data, transform=None):
     else:
         face_reflect_colours = None
 
-    do_refl = face_reflect_colours != None
+    do_refl = face_reflect_colours is not None
     if not do_refl:
         tri_refl = None
     face = -1
@@ -570,18 +571,18 @@ def shape_polymesh_shapes(data, transform=None):
             tri_points.append(points[polygon_point])
 
         tri_colours = None
-        if ('face_diffuse_colours' in data and
-			face_diffuse_colours[face] != None):
+        if('face_diffuse_colours' in data and
+                face_diffuse_colours[face] is not None):
             tri_colours = face_diffuse_colours[face]
-        elif colour != None:
+        elif colour is not None:
             tri_colours = colour
 
         if do_refl:
             tri_refl = None
-            if ('face_specular_colours' in data and
-				face_diffuse_colours[face] != None):
+            if('face_specular_colours' in data and
+                    face_diffuse_colours[face] is not None):
                 tri_colours = face_specular_colours[face]
-            elif reflection != None:
+            elif reflection is not None:
                 tri_refl = reflection
 
         if len(tri_points) == 3:

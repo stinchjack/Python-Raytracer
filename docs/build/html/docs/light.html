@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>light module &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-light">
+<span id="light-module"></span><h1>light module<a class="headerlink" href="#module-light" title="Permalink to this headline">¶</a></h1>
+<p>Functions for dealing with lights</p>
+<p>A point light is stored as a tuple, with the first two elements being the
+stringd &#8216;light&#8217;, &#8216;point&#8217; as an identifiers, and the last two being a cartesian
+point and the colour.</p>
+<p>A directional light is defined as an area within a hollow shape that lit.
+For a cone, the cone is defined as having a base at x=0, y=0, z=0, having
+a height of 1, and a radius of 1 at that height. For a tube (cylinder), it is
+defined as having a radius of 1, where Y is between 0 and 1. Therefore a
+transformation is necessary for these types of lights to be located elsewhere
+and in other proportions in the scene.</p>
+<p>A directional light is also stored as a tuple. The tuple elements are two
+identifying strings as per point lights, a function to test if a point is
+inside the shape, a colour, and a transformation of the shape.</p>
+<dl class="function">
+<dt id="light.light_cone_is_inside">
+<code class="descclassname">light.</code><code class="descname">light_cone_is_inside</code><span class="sig-paren">(</span><em>light</em>, <em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#light.light_cone_is_inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a point is inside a cone. The cone is defined as
+having a base at x=0, y=0, z=0, having a height of 1, and a radius
+of 1 at that height.</p>
+<blockquote>
+<div>light: The cone light
+point: A cartesian as a point to test</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="light.light_conelight_create">
+<code class="descclassname">light.</code><code class="descname">light_conelight_create</code><span class="sig-paren">(</span><em>colour</em>, <em>transform</em><span class="sig-paren">)</span><a class="headerlink" href="#light.light_conelight_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple for a cone-shaped light</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="light.light_directional_is_inside">
+<code class="descclassname">light.</code><code class="descname">light_directional_is_inside</code><span class="sig-paren">(</span><em>light</em>, <em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#light.light_directional_is_inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a point is inside the area of a directional light. This
+calls the function stored in the directional light tuple for testing
+inside/outside.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>light</strong> &#8211; The directional light</li>
+<li><strong>point</strong> &#8211; A cartesian as a point to test</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Boolean</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="light.light_point_light_create">
+<code class="descclassname">light.</code><code class="descname">light_point_light_create</code><span class="sig-paren">(</span><em>point</em>, <em>colour</em><span class="sig-paren">)</span><a class="headerlink" href="#light.light_point_light_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a point light.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>point</strong> &#8211; A cartesian point (see cartesian module documentation)</li>
+<li><strong>colour</strong> &#8211; A colour (see cartesian module documentation)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple of light parameters</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="light.light_tube_is_inside">
+<code class="descclassname">light.</code><code class="descname">light_tube_is_inside</code><span class="sig-paren">(</span><em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#light.light_tube_is_inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a point is inside a cone. The cylinder is defined as
+having a radius of 1, where Y is between 0 and 1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>point</strong> &#8211; A cartesian as a point to test</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="light.light_tubelight_create">
+<code class="descclassname">light.</code><code class="descname">light_tubelight_create</code><span class="sig-paren">(</span><em>colour</em>, <em>transform</em><span class="sig-paren">)</span><a class="headerlink" href="#light.light_tubelight_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tube/cylinder shaped light</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>light</strong> &#8211; The cone light</li>
+<li><strong>point</strong> &#8211; A cartesian as a point to test</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple respresenting a directional light</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/light.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/light.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

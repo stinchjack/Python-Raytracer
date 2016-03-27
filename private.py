@@ -2,7 +2,7 @@ import inspect
 import sys
 
 
-class AccessError (Exception):
+class AccessError(Exception):
 
     def __init__(self, value):
         self.value = value
@@ -38,7 +38,7 @@ class ReadOnly:
 
         except:
             raise AccessError("Access Error for class %s" % (self.__className))
-        if (self.__className == callingClassName):
+        if(self.__className == callingClassName):
             self.__value = value
 
 
@@ -69,7 +69,7 @@ class Private:
             raise AccessError("Access Error for class %s" % (self.__className))
 
         callingClassValid = False
-        if (self.__className == callingClassName):
+        if(self.__className == callingClassName):
             return self.__value
         else:
             try:
@@ -81,11 +81,11 @@ class Private:
                                   (self.__className))
             c = len(parentClasses)
             i = 0
-            while (i < c):
+            while(i < c):
                 parentCls = parentClasses[i]
                 if parentCls.__name__ == self.__className:
                     callingClassValid = True
-                if (callingClassValid):
+                if(callingClassValid):
                     break
                 i = i + 1
             if not callingClassValid:
@@ -101,7 +101,7 @@ class Private:
                 return self.__value
 
 
-class Protected (Private):
+class Protected(Private):
 
     __className = None
 
@@ -128,7 +128,7 @@ class Protected (Private):
             raise AccessError("Access Error for class %s" % (self.__className))
 
         callingClassValid = False
-        if (self.__className == callingClassName):
+        if(self.__className == callingClassName):
             return self.__value
         else:
             try:
@@ -140,11 +140,11 @@ class Protected (Private):
                                   (self.__className))
             c = len(parentClasses)
             i = 0
-            while (i < c):
+            while(i < c):
                 parentCls = parentClasses[i]
                 if parentCls.__name__ == self.__className:
                     callingClassValid = True
-                if (callingClassValid):
+                if(callingClassValid):
                     break
                 i = i + 1
             if callingClassValid:
