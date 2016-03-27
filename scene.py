@@ -23,7 +23,9 @@ class Scene:
     output = PIL_Output()
 
     def add_shape(self, shape, name=None):
-
+        """Add a shape to the scene
+        :param shape: the shape to add
+        :param name: a text handle for the shape"""
         self.shape_count = self.shape_count + 1
 
         while name in self.shapes or name is None:
@@ -55,11 +57,11 @@ class Scene:
 
         self.views[name] = view_obj
 
-    def render(self, viewName):
+    def render(self, view_name):
 
         if(self.output is None):
             return None
-        view.view_render(self.views[viewName], self, self.output)
+        view.view_render(self.views[view_name], self, self.output)
         return self.output.get_output()
 
     def test_intersect(self, ray, excludeShape=None):
