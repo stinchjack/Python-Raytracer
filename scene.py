@@ -35,7 +35,9 @@ class Scene:
         self.shapes[name] = shape
 
     def add_light(self, light, name=None):
-
+        """Add a light to the scene
+        :param light: the light to add
+        :param name: a text handle for the light"""
         self.light_count = self.light_count + 1
 
         while name in self.lights or name is None:
