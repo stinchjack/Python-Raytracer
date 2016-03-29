@@ -1,9 +1,11 @@
 import colorama
+import datetime
 import glob
 import os
 import shutil
 import subprocess
 import sys
+import time
 import unittest
 
 """Script to automate update procedure. Checks for PEP8 compliance, runs
@@ -15,7 +17,7 @@ As well as Sphinx, this script requires autoPEP8 and the colorama module.
 
 colorama.init()
 
-# Get all the requirred paths
+# Get all the required paths
 auto_update_full_filepath = os.path.abspath(__file__)
 
 # base_dir is the main project directory
@@ -44,6 +46,10 @@ sys.path.insert(0, script_dir)
 sys.path.insert(0, unit_test_dir)
 sys.path.insert(0, doc_dir)
 
+# git_exec is the path to the git executable
+os.chdir(base_dir)
+git_exec = "d:\\git\\cmd\\git "
+
 
 def check_pep8():
     """Runs the PEP8 style checker.
@@ -59,9 +65,105 @@ def check_pep8():
     return pep8_pass
 
 
-def auto_update():
-
+def get_repo_branches():
+    print("%s%s\r\nChecking respository branches ...\r\n" %
+          (colorama.Fore.BLUE, colorama.Style.BRIGHT))
+    print(colorama.Style.RESET_ALL)
     os.chdir(base_dir)
+    branch_result = subprocess.run("%s branch" % (git_exec),
+                                   stdout=subprocess.PIPE)
+    if branch_result.returncode > 0:
+        return "Failed to fetch current repository branches"
+
+    branches = branch_result.stdout.decode('utf-8').split('\n')
+    branch_list = []
+    current_branch = None
+    for branch in branches:
+        branch = branch.strip()
+        if len(branch) > 0 and branch[0] == "*":
+            branch = branch[2:]
+            current_branch = branch
+        print(branch)
+        if len(branch) > 0:
+            branch_list.append(branch)
+
+    branch_list.sort()
+    return {'branches': branch_list, 'current': current_branch}
+
+
+def update_git_repo(current_branch):
+    # https://www.git-tower.com/blog/git-cheat-sheet/
+
+    print("%s%s\r\nUpdating repository ...\r\n" %
+          (colorama.Fore.BLUE, colorama.Style.BRIGHT))
+    print(colorama.Style.RESET_ALL)
+
+    print("Staging current changes ...")
+    stage_result = subprocess.run("%s add ." % (git_exec))
+    if stage_result.returncode > 0:
+        return "Failed to stage latest changes."
+
+    print("Committing changes ...\r\n")
+
+    msg = ''
+    while msg.strip() == '':
+        print("%s%s\r\nEnter a commit message (cannot be blank)" %
+              (colorama.Fore.BLUE, colorama.Style.BRIGHT))
+        print("%s%s" % (colorama.Fore.WHITE, colorama.Style.BRIGHT))
+        msg = input()
+
+    commit_result = subprocess.run('%s commit -m "%s"' % (git_exec, msg))
+    if commit_result.returncode > 0:
+        return "Failed to commit changes"
+
+    print("Checking out local 'dev' branch ... ")
+    checkout_result = subprocess.run("%s checkout dev" % (git_exec))
+    if checkout_result.returncode > 0:
+        return "Failed to ccheckout dev branch"
+
+    print("Merging '%s' branch into 'dev' branch ..." % (current_branch))
+    merge_result = subprocess.run("%s merge %s" % (git_exec, current_branch))
+    if merge_result.returncode > 0:
+        return "Failed to merge '%s' branch into 'dev' branch" %\
+               (current_branch)
+
+    print("Creating new '%s' branch with 'dev' branch as head ..." %
+          (current_branch))
+    new_branch = datetime.datetime.now().strftime("%d.%m.%Y_%H.%M")
+    merge_result = subprocess.run("%s brance " % (git_exec, new_branch))
+    if merge_result.returncode > 0:
+        return "Failed to create '%s' branch" % (current_branch)
+
+
+def auto_update():
+    os.chdir(base_dir)
+
+    # Check the repository branch is not dev or master
+    branch_data = get_repo_branches()
+
+    if branch_data['current'] == 'dev' or branch_data['current'] == 'master':
+        return "The current git repository branch is '%s'. " % \
+            (branch_data['current'], "This script should not be run " +
+             "over the master or dev branches directly")
+
+    branch_data['branches'].remove('dev')
+    branch_data['branches'].remove('master')
+
+    branches = {}
+    latest = (None, 0)
+    for branch in branch_data['branches']:
+        current = (branch == branch_data['current'])
+        timestamp = time.mktime(datetime.datetime.strptime(
+            branch, "%d.%m.%Y_%H.%M").timetuple())
+
+        branches[branch] = (timestamp, current)
+        if latest[1] < timestamp:
+            latest = (branch, timestamp)
+
+    # Check the branch name with the latest time is the current branch
+    if not branches[latest[0]][1]:
+        return "The current git repository branch does not match the " +\
+               "latest repository branch."
 
     # check for PEP8 violations
     print("%s%s\r\nChecking for PEP8 formatting ...\r\n" %
@@ -144,7 +246,7 @@ def auto_update():
         subprocess.run(
             "sphinx-build -b html .\\ -c source\\ build\\html\\")
 
-    if sphinx_build_result.returncode == 1:
+    if sphinx_build_result.returncode > 0:
         return "Sphinx documentation build error"
 
     print("Removing Sphinx executables to project documentation directory ...")
@@ -155,7 +257,9 @@ def auto_update():
     os.chdir(base_dir)
 
     # Send to GitHub
-    return True
+    git_result = update_git_repo(branch_data['current'])
+
+    return git_result
 
 if __name__ == '__main__':
     result = auto_update()
