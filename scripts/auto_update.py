@@ -13,7 +13,7 @@ unit tests, generates documentation using Sphinx, updates GIT repository.
 
 As well as Sphinx, this script requires autoPEP8 and the colorama module.
 
-.. todo: implement GIT repo manipulation"""
+"""
 
 colorama.init()
 
@@ -48,6 +48,8 @@ sys.path.insert(0, doc_dir)
 
 # git_exec is the path to the git executable
 os.chdir(base_dir)
+
+# TODO: fix to relative paths, etc
 git_exec = "d:\\git\\cmd\\git "
 
 
@@ -66,7 +68,7 @@ def check_pep8():
 
 
 def get_repo_branches():
-    """Retrieves"""
+    """Retrieves git respository branch information"""
     print("%s%s\r\nChecking respository branches ...\r\n" %
           (colorama.Fore.BLUE, colorama.Style.BRIGHT))
     print(colorama.Style.RESET_ALL)
@@ -106,6 +108,7 @@ def update_git_repo(current_branch):
 
     print("Committing changes ...\r\n")
 
+    # TODO: add capablility for multiline messages
     msg = ''
     while msg.strip() == '':
         print("%s%s\r\nEnter a commit message (cannot be blank)" %
@@ -140,6 +143,8 @@ def update_git_repo(current_branch):
     checkout_result = subprocess.run("%s checkout %s" % (git_exec, new_branch))
     if checkout_result.returncode > 0:
         return "Failed to ccheckout %s branch" % (new_branch)
+
+    # TODO: add optional to origin
 
     return True
 
@@ -251,6 +256,7 @@ def auto_update():
         return "Sphinx documentation build error"
 
     print("\r\nRunning sphinx-build to generate HTML documentation ...\r\n")
+    # TODO: change to use os.join
     sphinx_build_result = \
         subprocess.run(
             "sphinx-build -b html .\\ -c source\\ build\\html\\")
@@ -279,3 +285,4 @@ if __name__ == '__main__':
         sys.exit(1)
     else:
         sys.exit(0)
+# TODO: add success message
