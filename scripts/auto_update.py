@@ -128,12 +128,18 @@ def update_git_repo(current_branch):
         return "Failed to merge '%s' branch into 'dev' branch" %\
                (current_branch)
 
-    print("Creating new '%s' branch with 'dev' branch as head ..." %
-          (current_branch))
     new_branch = datetime.datetime.now().strftime("%d.%m.%Y_%H.%M")
-    merge_result = subprocess.run("%s brance " % (git_exec, new_branch))
+    print("Creating new '%s' branch with 'dev' branch as head ..." %
+          (new_branch))
+
+    merge_result = subprocess.run("%s branch %s " % (git_exec, new_branch))
     if merge_result.returncode > 0:
-        return "Failed to create '%s' branch" % (current_branch)
+        return "Failed to create '%s' branch" % (new_branch)
+
+    print("Checking out local '%s' branch ... ")
+    checkout_result = subprocess.run("%s checkout %s" % (git_exec, new_branch))
+    if checkout_result.returncode > 0:
+        return "Failed to ccheckout %s branch" % (new_branch)
 
 
 def auto_update():
