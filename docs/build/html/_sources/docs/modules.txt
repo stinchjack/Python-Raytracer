@@ -1,5 +1,5 @@
-git_repo_clone
-==============
+dev
+===
 
 .. toctree::
    :maxdepth: 4
@@ -11,12 +11,8 @@ git_repo_clone
    matrix
    output
    planarshapes
-   private
    quadraticshapes
    scene
    shape
-   speed
-   teapot
-   test1
    transformation
    view

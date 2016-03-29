@@ -38,6 +38,29 @@
             
   <div class="section" id="module-shape">
 <span id="shape-module"></span><h1>shape module<a class="headerlink" href="#module-shape" title="Permalink to this headline">¶</a></h1>
+<dl class="data">
+<dt id="shape.SHAPE_DATA">
+<code class="descclassname">shape.</code><code class="descname">SHAPE_DATA</code><em class="property"> = 9</em><a class="headerlink" href="#shape.SHAPE_DATA" title="Permalink to this definition">¶</a></dt>
+<dd><p>Functions for dealing with shapes. A shape is a list with the following
+elements:</p>
+<ul class="simple">
+<li>the string &#8216;shape&#8217;</li>
+<li>a string identifying the type of shape, e.g., &#8216;disc&#8217;</li>
+<li>a colour tuple to use for the diffuse colour of the shape, where no function
+is used to calculate diffuse colour otherwise</li>
+<li>a colour tuple to use for the specular colour of the shape, where no function
+is used to calculate diffuse colour otherwise</li>
+<li>a function to test the intersection of a ray with the shape</li>
+<li>a function to test if a point is inside the shape</li>
+<li>a function for getting the diffuse colour at a particluar intersection
+point on the object</li>
+<li>a function for getting the specular colour at a particluar intersection
+point on the object</li>
+<li>a Transformation for the shape</li>
+<li>a dictionary of other shape data, as needed by particular shapes</li>
+</ul>
+</dd></dl>
+
 <dl class="function">
 <dt id="shape.shape_diffuse_colour">
 <code class="descclassname">shape.</code><code class="descname">shape_diffuse_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#shape.shape_diffuse_colour" title="Permalink to this definition">¶</a></dt>
@@ -46,7 +69,17 @@
 <dl class="function">
 <dt id="shape.shape_empty_shape">
 <code class="descclassname">shape.</code><code class="descname">shape_empty_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#shape.shape_empty_shape" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>&#8220;Returns a list with some starting elements necessary for a shape.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[&#8216;shape&#8217;, None, None, None, None, None, shape_diffuse_colour,
+shape_specular_colour, None, {}]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="function">
 <dt id="shape.shape_point_inside">
@@ -61,7 +94,10 @@
 <dl class="function">
 <dt id="shape.shape_set_transform">
 <code class="descclassname">shape.</code><code class="descname">shape_set_transform</code><span class="sig-paren">(</span><em>shape</em>, <em>transform</em><span class="sig-paren">)</span><a class="headerlink" href="#shape.shape_set_transform" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sets the transformation for a shape.
+:param shape: a shape
+:param transform: a Transformation object</p>
+</dd></dl>
 
 <dl class="function">
 <dt id="shape.shape_specular_colour">
@@ -71,7 +107,21 @@
 <dl class="function">
 <dt id="shape.shape_test_intersect">
 <code class="descclassname">shape.</code><code class="descname">shape_test_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#shape.shape_test_intersect" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Tests a ray for intersection against a shape.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>shape</strong> &#8211; the shape to test against</li>
+<li><strong>ray</strong> &#8211; the ray to test</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>:return :</p>
+</dd></dl>
 
 </div>
 

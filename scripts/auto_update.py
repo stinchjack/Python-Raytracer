@@ -66,6 +66,7 @@ def check_pep8():
 
 
 def get_repo_branches():
+    """Retrieves"""
     print("%s%s\r\nChecking respository branches ...\r\n" %
           (colorama.Fore.BLUE, colorama.Style.BRIGHT))
     print(colorama.Style.RESET_ALL)

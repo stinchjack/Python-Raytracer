@@ -18,7 +18,6 @@ Authour: Jack Stinchcombe <stinchjack@gmail.com>
 
 import gmpy2
 from gmpy2 import *
-from private import *
 
 # ['cartesian',0,0,0,NONe]
 CARTESIAN_X = 1

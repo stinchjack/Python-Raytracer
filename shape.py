@@ -78,7 +78,7 @@ def shape_point_inside(shape, cartesian):
 def shape_test_intersect(shape, ray):
     """Tests a ray for intersection against a shape.
 
-    :param shape: the shape to test against 
+    :param shape: the shape to test against
     :param ray: the ray to test
     :return :"""
     if shape[SHAPE_TRANSFORM] is not None:
