@@ -62,7 +62,7 @@ def shape_specular_colour(shape, intersect_result):
 
 def shape_empty_shape():
     """"Returns a list with some starting elements necessary for a shape.
-    
+
     :return: ['shape', None, None, None, None, None, shape_diffuse_colour,
              shape_specular_colour, None, {}]
     """
@@ -77,7 +77,7 @@ def shape_point_inside(shape, cartesian):
 
 def shape_test_intersect(shape, ray):
     """Tests a ray for intersection against a shape.
- 
+
     :param shape: the shape to test against 
     :param ray: the ray to test
     :return :"""

@@ -88,12 +88,12 @@ class Scene:
         curr_t = None
         curr_intersect_result = None
         for shape in self.shapes:
-            
+
             if shape not in exclude_shapes:
                 sh = self.shapes[shape]
                 intersect_result = shape_test_intersect(sh, ray)
                 if (intersect_result is not False and
-                    intersect_result is not None):
+                        intersect_result is not None):
                     intersect_result['shape'] = sh
 
                     t = intersect_result['t']
