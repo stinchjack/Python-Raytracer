@@ -136,10 +136,12 @@ def update_git_repo(current_branch):
     if merge_result.returncode > 0:
         return "Failed to create '%s' branch" % (new_branch)
 
-    print("Checking out local '%s' branch ... ")
+    print("Checking out local '%s' branch ... " % (new_branch))
     checkout_result = subprocess.run("%s checkout %s" % (git_exec, new_branch))
     if checkout_result.returncode > 0:
         return "Failed to ccheckout %s branch" % (new_branch)
+
+    return True
 
 
 def auto_update():
