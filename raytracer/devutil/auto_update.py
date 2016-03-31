@@ -151,7 +151,7 @@ def update_git_repo(current_branch):
 
     input_understood = False
     while not input_understood:
-        msg = "%s\r\nWould you like to push 'dev' branch to origin? [n] %s" %\
+        msg = "%s\r\nWould you like to push 'dev' branch to origin? [n]: %s" %\
             (colorama.Style.BRIGHT, colorama.Style.RESET_ALL)
 
         print(msg, end="")
@@ -165,7 +165,7 @@ def update_git_repo(current_branch):
     do_push = push_input == 'y'
     if do_push:
         print("%sPushing 'dev' branch to origin ...%s" %
-              (colorama.Style.BRIGHT, new_branch, colorama.Style.RESET_ALL))
+              (colorama.Style.BRIGHT, colorama.Style.RESET_ALL))
         merge_result = subprocess.run("%s push origin dev" % (git_executable))
 
     new_branch = datetime.datetime.now().strftime("%d.%m.%Y_%H.%M")
