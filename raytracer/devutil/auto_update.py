@@ -1,4 +1,4 @@
-import colorama
+
 import datetime
 import glob
 import os
@@ -7,6 +7,7 @@ import subprocess
 import sys
 import time
 import unittest
+import colorama
 
 """Script to automate update procedure. Checks for PEP8 compliance, runs
 unit tests, generates documentation using Sphinx, updates GIT repository.
@@ -21,7 +22,7 @@ auto_update_full_filepath = os.path.abspath(__file__)
 
 # base_dir is the main project directory
 base_dir = auto_update_full_filepath[
-    :auto_update_full_filepath.find('scripts')]
+    :auto_update_full_filepath.find('devutil')]
 
 python_executable = sys.executable
 if '.exe' in python_executable:
@@ -55,6 +56,8 @@ sys.path.insert(0, doc_dir)
 os.chdir(base_dir)
 git_executable = os.path.join(python_dir[0] + ":\\",
                               'git', 'cmd', 'git') + " "
+
+
 def check_pep8():
     """Runs the PEP8 style checker.
 
@@ -113,15 +116,15 @@ def update_git_repo(current_branch):
 
     msg = ''
     while msg.strip() == '':
-        print("%s%s\r\nEnter a commit message. Use fullstop to indicate" +
-              "last line. Message cannot be blank." %
-              (colorama.Fore.BLUE, colorama.Style.BRIGHT))
+        print("%s%s\r\nEnter a commit message. Use fullstop to indicate" %
+              (colorama.Fore.BLUE, colorama.Style.BRIGHT) +
+              "last line. Message cannot be blank.")
         print("%s%s" % (colorama.Fore.WHITE, colorama.Style.BRIGHT))
-        
+
         done = False
         while not done:
             i = input()
-            if i=='.':
+            if i == '.':
                 done = True
             msg = msg + i
 
@@ -138,45 +141,49 @@ def update_git_repo(current_branch):
 
     print("%sMerging '%s' branch into 'dev' branch ...%s" %
           (colorama.Style.BRIGHT, current_branch, colorama.Style.RESET_ALL))
-    merge_result = subprocess.run("%s merge %s" % (git_executable, current_branch))
+    merge_result = subprocess.run("%s merge %s" %
+                                  (git_executable, current_branch))
     if merge_result.returncode > 0:
         return "Failed to merge '%s' branch into 'dev' branch" %\
                (current_branch)
-        #TODO: add optional merge abort
-               
+        # TODO: add optional merge abort
+
     input_understood = False
     while not input_understood:
-        print("%sWould you like to push 'dev' branch to origin? [n]%s" %
-               (colorama.Style.BRIGHT, colorama.Style.RESET_ALL), end="")
+        msg = "%sWould you like to push 'dev' branch to origin? [n]%s" %\
+            (colorama.Style.BRIGHT, colorama.Style.RESET_ALL)
+
+        print(msg)
         push_input = input.strip().lower()
         if push_input == "":
             push_input == "n"
-        
+
         if push_input == "y" or push_input == "n":
             input_understood = True
-    
-    do_push == push_input=='y'
+
+    do_push == push_input == 'y'
     if do_push:
         print("%sPushing 'dev' branch to origin ...%s" %
-              (colorama.Style.BRIGHT, new_branch, colorama.Style.RESET_ALL))    
+              (colorama.Style.BRIGHT, new_branch, colorama.Style.RESET_ALL))
         merge_result = subprocess.run("%s push origin dev" % (git_executable))
-    
+
     new_branch = datetime.datetime.now().strftime("%d.%m.%Y_%H.%M")
     print("%sCreating new '%s' branch with 'dev' branch as head ...%s" %
           (colorama.Style.BRIGHT, colorama.Style.RESET_ALL))
 
-    merge_result = subprocess.run("%s branch %s " % (git_executable, new_branch))
+    merge_result = subprocess.run("%s branch %s " %
+                                  (git_executable, new_branch))
     if merge_result.returncode > 0:
         return "Failed to create '%s' branch" % (new_branch)
-        
+
     print("Checking out local '%s' branch ... " % (new_branch))
     checkout_result = subprocess.run("%s checkout %s" %
                                      (git_executable, new_branch))
     if checkout_result.returncode > 0:
         return "Failed to checkout %s branch" % (new_branch)
 
-
     return True
+
 
 def update_sphinx_docs():
     # Generate documentation
@@ -201,7 +208,7 @@ def update_sphinx_docs():
 
     sphinx_apidoc_result = subprocess.run('sphinx-apidoc -o %s %s' %
                                           (os.path.join("docs", ""),
-                                           par_dir)))
+                                           par_dir))
 
     if sphinx_apidoc_result.returncode == 1:
         return "Sphinx documentation build error"
@@ -210,20 +217,23 @@ def update_sphinx_docs():
     # TODO: check stdout for warnings
     sphinx_build_result = \
         subprocess.run(
-            "sphinx-build -b html %s -c %s %s",
-            (cur_dir, os.path.join(source, ''),
-             os.path.join('build','html','')))
+            "sphinx-build -b html %s -c %s %s" %
+            (cur_dir, os.path.join('source', ''),
+             os.path.join('build', 'html', '')))
 
     if sphinx_build_result.returncode > 0:
         return "Sphinx documentation build error"
 
-    print("Removing Sphinx executables to project documentation directory ...")
+    print("Removing Sphinx executables from project " +
+          "documentation directory ...")
     copied_sphinx_files = glob.glob(os.path.join(doc_dir, "sphinx*"))
     for file in copied_sphinx_files:
         os.remove(file)
 
     os.chdir(base_dir)
-    
+    return True
+
+
 def auto_update():
     os.chdir(base_dir)
 
@@ -302,12 +312,12 @@ def auto_update():
     else:
         print(("%s%s\r\nUnit tests ran successfully. \r\n ") %
               (colorama.Fore.GREEN, colorama.Style.BRIGHT))
-        print(colorama.Style.RESET_ALL)  
+        print(colorama.Style.RESET_ALL)
 
     sphinx_result = update_sphinx_docs()
-    if  sphinx_result is not True:
+    if sphinx_result is not True:
         return sphinx_result
-        
+
     # Send to GitHub
     git_result = update_git_repo(branch_data['current'])
 
@@ -323,5 +333,5 @@ if __name__ == '__main__':
     else:
         print("%s%s\r\nUpdate successful\r\n" %
               (colorama.Fore.GREEN, colorama.Style.BRIGHT))
-        print(colorama.Style.RESET_ALL)    
+        print(colorama.Style.RESET_ALL)
         sys.exit(0)

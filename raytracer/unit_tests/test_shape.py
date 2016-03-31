@@ -1,5 +1,5 @@
-import shape
-import planarshapes
+import raytracer.shape as shape
+import raytracer.planarshapes as planrshapes
 import unittest
 
 

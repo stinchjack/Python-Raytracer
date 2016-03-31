@@ -1,10 +1,10 @@
-import quadraticshapes
+import raytracer.quadraticshapes as quadraticshapes
 import unittest
-import shape
+import raytracer.shape as shape
 import math
-import colour
-import transformation
-import cartesian
+import raytracer.colour as colour
+import raytracer.transformation as transformation
+import raytracer.cartesian as cartesian
 import random
 
 
