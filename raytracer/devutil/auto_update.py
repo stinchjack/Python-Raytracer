@@ -150,11 +150,11 @@ def update_git_repo(current_branch):
 
     input_understood = False
     while not input_understood:
-        msg = "%sWould you like to push 'dev' branch to origin? [n]%s" %\
+        msg = "%s\r\nWould you like to push 'dev' branch to origin? [n]%s" %\
             (colorama.Style.BRIGHT, colorama.Style.RESET_ALL)
 
         print(msg)
-        push_input = input.strip().lower()
+        push_input = input().strip().lower()
         if push_input == "":
             push_input == "n"
 
