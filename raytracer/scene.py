@@ -14,42 +14,42 @@ against each shape in the scene."""
 
 
 class Scene:
-    lights = {}
-    shapes = {}
-    views = {}
-    shape_count = 0
-    light_count = 0
-    view_count = 0
-    output = PIL_Output()
+    __lights__ = {}
+    __shapes__ = {}
+    __views__ = {}
+    __shape_count__ = 0
+    __light_count__ = 0
+    __view_count__ = 0
+    __output__ = PIL_Output()
 
     def add_shape(self, shape, name=None):
         """Add a shape to the scene
         :param shape: the shape to add
         :param name: a text handle for the shape"""
-        self.shape_count = self.shape_count + 1
+        self.shape_count = self.__shape_count__ + 1
 
-        while name in self.shapes or name is None:
+        while name in self.__shapes__ or name is None:
             name = "Shape%d" % (self.shape_count)
-            self.shape_count = self.shape_count + 1
+            self.shape_count = self.__shape_count__ + 1
 
-        self.shapes[name] = shape
+        self.__shapes__[name] = shape
 
     def add_light(self, light, name=None):
         """Add a light to the scene
         :param light: the light to add
         :param name: a text handle for the light"""
-        self.light_count = self.light_count + 1
+        self.light_count = self.__light_count__ + 1
 
-        while name in self.lights or name is None:
+        while name in self.__lights__ or name is None:
             name = "Light%d" % (self.light_count)
             self.light_count = self.light_count + 1
 
-        self.lights[name] = light
+        self.__lights__[name] = light
 
     def get_lights(self):
         """Returns the array of lights in the scene.
         :return: an array of lights"""
-        return self.lights
+        return self.__lights__
 
     def add_view(self, view_obj, name=None):
         """Adds a view to the scene.
@@ -57,14 +57,14 @@ class Scene:
         :param view_obj: the view to add
         :param name: a string handle for the view"""
 
-        self.view_count = self.view_count + 1
+        self.__view_count__ = self.__view_count__ + 1
 
         # Assign a handle to the view if none give
-        while name in self.views or name is None:
-            name = "View%d" % (self.view_count)
-            self.view_count = view_count + 1
+        while name in self.__views__ or name is None:
+            name = "View%d" % (self.__view_count__)
+            self.__view_count__ = view_count + 1
 
-        self.views[name] = view_obj
+        self.__views__[name] = view_obj
 
     def render(self, view_name):
         """Renders the scene using the specified view. The output type must be
@@ -74,10 +74,11 @@ class Scene:
                  is set
         :rtype: an instance of a child class of Output, being the same object
                 passed as a paramter into set_output_type"""
-        if(self.output is None):
+        if(self.__output__ is None):
             return None
-        raytracer.view.view_render(self.views[view_name], self, self.output)
-        return self.output.get_output()
+        raytracer.view.view_render(
+             self.__views__[view_name], self, self.__output__)
+        return self.__output__.get_output()
 
     def test_intersect(self, ray, exclude_shapes=[]):
         """Tests intersection of a ray with all the shapes in the scene.
@@ -87,10 +88,10 @@ class Scene:
         curr_sh = None
         curr_t = None
         curr_intersect_result = None
-        for shape in self.shapes:
+        for shape in self.__shapes__:
 
             if shape not in exclude_shapes:
-                sh = self.shapes[shape]
+                sh = self.__shapes__[shape]
                 intersect_result = shape_test_intersect(sh, ray)
                 if (intersect_result is not False and
                         intersect_result is not None):
@@ -117,4 +118,4 @@ class Scene:
         if not isinstance(output, Output):
             return None
 
-        self.output = output
+        self.__output__ = output
