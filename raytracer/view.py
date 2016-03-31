@@ -1,12 +1,12 @@
 from gmpy2 import *
 from raytracer.cartesian import *
-from raytracer.cartesiancolour import *
-from raytracer.cartesianmatrix import *
-from raytracer.cartesianlight import *
-from raytracer.cartesianoutput import *
-from raytracer.cartesianshape import *
-import raytracer.scene
-from raytracer.cartesianlightingModel import *
+from raytracer.colour import *
+from raytracer.matrix import *
+from raytracer.light import *
+from raytracer.output import *
+from raytracer.shape import *
+import raytracer.scene as scene
+from raytracer.lightingModel import *
 import random
 
 """Functions for dealing with views. A view is simply a perspective on a

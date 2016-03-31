@@ -6,7 +6,7 @@ from raytracer.matrix import *
 from raytracer.light import *
 from raytracer.output import *
 from raytracer.shape import *
-import view
+import raytracer.view as view
 
 """A scene class is a container for shapes, lights and views. It also
 contains a key piece of raytracer code, the loop for testing a ray
