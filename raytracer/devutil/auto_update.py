@@ -153,7 +153,7 @@ def update_git_repo(current_branch):
         msg = "%s\r\nWould you like to push 'dev' branch to origin? [n]%s" %\
             (colorama.Style.BRIGHT, colorama.Style.RESET_ALL)
 
-        print(msg)
+        print(msg, end="")
         push_input = input().strip().lower()
         if push_input == "":
             push_input == "n"
@@ -169,7 +169,7 @@ def update_git_repo(current_branch):
 
     new_branch = datetime.datetime.now().strftime("%d.%m.%Y_%H.%M")
     print("%sCreating new '%s' branch with 'dev' branch as head ...%s" %
-          (colorama.Style.BRIGHT, colorama.Style.RESET_ALL))
+          (colorama.Style.BRIGHT, new_branch, colorama.Style.RESET_ALL))
 
     merge_result = subprocess.run("%s branch %s " %
                                   (git_executable, new_branch))
