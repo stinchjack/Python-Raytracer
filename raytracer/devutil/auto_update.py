@@ -177,11 +177,16 @@ def update_git_repo(current_branch):
     if merge_result.returncode > 0:
         return "Failed to create '%s' branch" % (new_branch)
 
-    print("Checking out local '%s' branch ... " % (new_branch))
+    print("%sChecking out local '%s' branch ... %s" %
+          (colorama.Style.BRIGHT, new_branch, colorama.Style.RESET_ALL))
     checkout_result = subprocess.run("%s checkout %s" %
                                      (git_executable, new_branch))
     if checkout_result.returncode > 0:
         return "Failed to checkout %s branch" % (new_branch)
+
+    print("%s%s\r\nGIT repository updated successfully.\r\n" %
+          (colorama.Fore.GREEN, colorama.Style.BRIGHT))
+    print(colorama.Style.RESET_ALL)
 
     return True
 
