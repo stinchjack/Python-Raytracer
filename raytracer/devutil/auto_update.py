@@ -128,6 +128,7 @@ def update_git_repo(current_branch):
                 done = True
             msg = msg + i
 
+    print("\r\n %s" % (colorama.Style.RESET_ALL))
     commit_result = subprocess.run('%s commit -m "%s"' %
                                    (git_executable, msg))
     if commit_result.returncode > 0:
@@ -150,7 +151,7 @@ def update_git_repo(current_branch):
 
     input_understood = False
     while not input_understood:
-        msg = "%s\r\nWould you like to push 'dev' branch to origin? [n]%s" %\
+        msg = "%s\r\nWould you like to push 'dev' branch to origin? [n] %s" %\
             (colorama.Style.BRIGHT, colorama.Style.RESET_ALL)
 
         print(msg, end="")
@@ -160,7 +161,7 @@ def update_git_repo(current_branch):
 
         if push_input == "y" or push_input == "n":
             input_understood = True
-
+    print("\r\n")
     do_push = push_input == 'y'
     if do_push:
         print("%sPushing 'dev' branch to origin ...%s" %
