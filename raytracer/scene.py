@@ -1,4 +1,3 @@
-import gmpy2
 from gmpy2 import *
 from raytracer.cartesian import *
 from raytracer.colour import *
@@ -6,6 +5,7 @@ from raytracer.matrix import *
 from raytracer.light import *
 from raytracer.output import *
 from raytracer.shape import *
+import raytracer.view
 from raytracer.view import *
 
 """A scene class is a container for shapes, lights and views. It also
@@ -76,7 +76,7 @@ class Scene:
                 passed as a paramter into set_output_type"""
         if(self.output is None):
             return None
-        view_render(self.views[view_name], self, self.output)
+        raytracer.view.view_render(self.views[view_name], self, self.output)
         return self.output.get_output()
 
     def test_intersect(self, ray, exclude_shapes=[]):

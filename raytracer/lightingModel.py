@@ -18,7 +18,7 @@ from raytracer.colour import *
 from raytracer.matrix import *
 from raytracer.light import *
 from raytracer.output import *
-import raytracer.scene
+import raytracer.scene as scene
 from raytracer.view import *
 LIGHTINGMODEL_BASIC_CALCFUNC = 2
 LIGHTINGMODEL_BASIC_AMBIENT = 3

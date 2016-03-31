@@ -17,7 +17,7 @@ from raytracer.planarshapes import *
 from timeit import *
 
 
-from lightingModel import *
+from raytracer.lightingModel import *
 
 if __name__ == '__main__':
 
