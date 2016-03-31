@@ -5,7 +5,7 @@ from raytracer.matrix import *
 from raytracer.light import *
 from raytracer.output import *
 from raytracer.shape import *
-import raytracer.scene as scene
+from raytracer.scene import *
 from raytracer.lightingModel import *
 import random
 
@@ -266,7 +266,7 @@ def view_render(view, scene_obj, output_type):
      :param output_type: An instance of class Output
     """
     output_type.set_rectangle(view[VIEW_PHYSICALRECTANGLE])
-    if not isinstance(scene_obj, scene.Scene):
+    if not isinstance(scene_obj, Scene):
         return None
     view[VIEW_VIEW_Y] = view[VIEW_VIEWRECTANGLE]['top']
     view[VIEW_VIEW_X] = view[VIEW_VIEWRECTANGLE]['left']

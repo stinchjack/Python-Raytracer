@@ -6,7 +6,7 @@ from raytracer.matrix import *
 from raytracer.light import *
 from raytracer.output import *
 from raytracer.shape import *
-import raytracer.view as view
+from raytracer.view import *
 
 """A scene class is a container for shapes, lights and views. It also
 contains a key piece of raytracer code, the loop for testing a ray
@@ -76,7 +76,7 @@ class Scene:
                 passed as a paramter into set_output_type"""
         if(self.output is None):
             return None
-        view.view_render(self.views[view_name], self, self.output)
+        view_render(self.views[view_name], self, self.output)
         return self.output.get_output()
 
     def test_intersect(self, ray, exclude_shapes=[]):

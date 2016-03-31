@@ -36,8 +36,147 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="view-module">
-<h1>view module<a class="headerlink" href="#view-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-view">
+<span id="view-module"></span><h1>view module<a class="headerlink" href="#module-view" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="view.view_create">
+<code class="descclassname">view.</code><code class="descname">view_create</code><span class="sig-paren">(</span><em>eye_z</em>, <em>physical_rectangle</em>, <em>view_rectangle</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a view.</p>
+<blockquote>
+<div><p>eye_z: The Z-position of the eye point. This should be a negative value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param physical_rectangle:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The rectangle of the physical output to draw
+onto. This is value is a dictionary:
+&#8216;left&#8217;: the left-hand edge of the physical output to draw onto
+&#8216;right&#8217;: the right-hand edge of the physical output to draw onto
+&#8216;top&#8217;: the top edge of the physical output to draw onto
+&#8216;bottom&#8217;: the bottom edge of the physical output to draw onto</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">param view_rectangle:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">The rectangle of the logical view to draw at
+where z=0. This is a dictionary:
+&#8216;left&#8217;: the left-hand edge
+&#8216;right&#8217;: the right-hand edge
+&#8216;top&#8217;: the top edge
+&#8216;bottom&#8217;: the bottom edge</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transformation</strong> &#8211; A transformation to apply to the view(optional)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of view parameters, or None on failure.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_render">
+<code class="descclassname">view.</code><code class="descname">view_render</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>output_type</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders a view of a scene.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to render</li>
+<li><strong>scene_obj</strong> &#8211; The scene to render</li>
+<li><strong>output_type</strong> &#8211; An instance of class Output</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_render_pixel">
+<code class="descclassname">view.</code><code class="descname">view_render_pixel</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>physical_x</em>, <em>physical_y</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_render_pixel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders one pixel of a view</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to render</li>
+<li><strong>scene_obj</strong> &#8211; The scene to render</li>
+<li><strong>physical_x</strong> &#8211; The X co-ordinate of the pixel</li>
+<li><strong>physical_y</strong> &#8211; The Y co-ordinate of the pixel</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_set_antialias">
+<code class="descclassname">view.</code><code class="descname">view_set_antialias</code><span class="sig-paren">(</span><em>view</em>, <em>on=False</em>, <em>x=1</em>, <em>y=1</em>, <em>stochastic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_set_antialias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the antialias parameters for a view.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>on</strong> &#8211; Boolean value dictating to using antialias while rendering
+or not</li>
+<li><strong>stochastic</strong> &#8211; Boolean value dictating use of stochastic/random
+antialiasing</li>
+<li><strong>x</strong> &#8211; How many times to divide a pixel on the horizontal axis</li>
+<li><strong>y</strong> &#8211; How many times to divide a pixel on the vertical axis</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_set_lighting_model">
+<code class="descclassname">view.</code><code class="descname">view_set_lighting_model</code><span class="sig-paren">(</span><em>view</em>, <em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_set_lighting_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the lighting model for a view</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>model</strong> &#8211; Lighting model to use while rendering the scene</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="view.view_set_transform">
+<code class="descclassname">view.</code><code class="descname">view_set_transform</code><span class="sig-paren">(</span><em>view</em>, <em>transform</em><span class="sig-paren">)</span><a class="headerlink" href="#view.view_set_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set or change the transformation for a view.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>transform</strong> &#8211; The transformation to apply</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 
 

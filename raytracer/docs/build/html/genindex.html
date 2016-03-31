@@ -41,7 +41,8 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#C"><strong>C</strong></a>
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#C"><strong>C</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
@@ -53,8 +54,29 @@
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
+ | <a href="#V"><strong>V</strong></a>
  
 </div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="docs/scene.html#scene.Scene.add_light">add_light() (scene.Scene method)</a>
+  </dt>
+
+      
+  <dt><a href="docs/scene.html#scene.Scene.add_shape">add_shape() (scene.Scene method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="docs/scene.html#scene.Scene.add_view">add_view() (scene.Scene method)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
@@ -127,6 +149,12 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
       
+  <dt><a href="docs/scene.html#scene.Scene.get_lights">get_lights() (scene.Scene method)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
   <dt><a href="docs/output.html#output.Output.get_output">get_output() (output.Output method)</a>
   </dt>
 
@@ -175,6 +203,10 @@
   </dt>
 
       
+  <dt><a href="docs/scene.html#scene.Scene.light_count">light_count (scene.Scene attribute)</a>
+  </dt>
+
+      
   <dt><a href="docs/light.html#light.light_directional_is_inside">light_directional_is_inside() (in module light)</a>
   </dt>
 
@@ -182,14 +214,34 @@
   <dt><a href="docs/light.html#light.light_point_light_create">light_point_light_create() (in module light)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="docs/light.html#light.light_tube_is_inside">light_tube_is_inside() (in module light)</a>
   </dt>
 
       
   <dt><a href="docs/light.html#light.light_tubelight_create">light_tubelight_create() (in module light)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="docs/lightingModel.html#module-lightingModel">lightingModel (module)</a>
+  </dt>
+
+      
+  <dt><a href="docs/lightingModel.html#lightingModel.lightingmodel_basic_calculate">lightingmodel_basic_calculate() (in module lightingModel)</a>
+  </dt>
+
+      
+  <dt><a href="docs/lightingModel.html#lightingModel.lightingmodel_basic_create">lightingmodel_basic_create() (in module lightingModel)</a>
+  </dt>
+
+      
+  <dt><a href="docs/lightingModel.html#lightingModel.lightingmodel_calculate">lightingmodel_calculate() (in module lightingModel)</a>
+  </dt>
+
+      
+  <dt><a href="docs/scene.html#scene.Scene.lights">lights (scene.Scene attribute)</a>
   </dt>
 
       
@@ -254,6 +306,12 @@
   <dt><a href="docs/output.html#module-output">output (module)</a>
   </dt>
 
+      <dd><dl>
+        
+  <dt><a href="docs/scene.html#scene.Scene.output">(scene.Scene attribute)</a>
+  </dt>
+
+      </dl></dd>
   </dl></td>
 </tr></table>
 
@@ -302,10 +360,14 @@
   <dt><a href="docs/cartesian.html#cartesian.ray_is_shadow">ray_is_shadow() (in module cartesian)</a>
   </dt>
 
+      
+  <dt><a href="docs/cartesian.html#cartesian.ray_scale">ray_scale() (in module cartesian)</a>
+  </dt>
+
   </dl></td>
   <td style="width: 33%" valign="top"><dl>
       
-  <dt><a href="docs/cartesian.html#cartesian.ray_scale">ray_scale() (in module cartesian)</a>
+  <dt><a href="docs/scene.html#scene.Scene.render">render() (scene.Scene method)</a>
   </dt>
 
       
@@ -327,7 +389,19 @@
   </dt>
 
       
+  <dt><a href="docs/scene.html#scene.Scene">Scene (class in scene)</a>
+  </dt>
+
+      
+  <dt><a href="docs/scene.html#module-scene">scene (module)</a>
+  </dt>
+
+      
   <dt><a href="docs/transformation.html#transformation.Transform.set_options">set_options() (transformation.Transform method)</a>
+  </dt>
+
+      
+  <dt><a href="docs/scene.html#scene.Scene.set_output_type">set_output_type() (scene.Scene method)</a>
   </dt>
 
       
@@ -407,6 +481,10 @@
   </dt>
 
       
+  <dt><a href="docs/scene.html#scene.Scene.shape_count">shape_count (scene.Scene attribute)</a>
+  </dt>
+
+      
   <dt><a href="docs/quadraticshapes.html#quadraticshapes.shape_cylinder_create">shape_cylinder_create() (in module quadraticshapes)</a>
   </dt>
 
@@ -422,12 +500,12 @@
   <dt><a href="docs/shape.html#shape.shape_diffuse_colour">shape_diffuse_colour() (in module shape)</a>
   </dt>
 
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="docs/planarshapes.html#planarshapes.shape_disc_create">shape_disc_create() (in module planarshapes)</a>
   </dt>
 
-  </dl></td>
-  <td style="width: 33%" valign="top"><dl>
       
   <dt><a href="docs/planarshapes.html#planarshapes.shape_disc_intersect">shape_disc_intersect() (in module planarshapes)</a>
   </dt>
@@ -520,12 +598,20 @@
   <dt><a href="docs/planarshapes.html#planarshapes.shape_triangle_specular_colour">shape_triangle_specular_colour() (in module planarshapes)</a>
   </dt>
 
+      
+  <dt><a href="docs/scene.html#scene.Scene.shapes">shapes (scene.Scene attribute)</a>
+  </dt>
+
   </dl></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="docs/scene.html#scene.Scene.test_intersect">test_intersect() (scene.Scene method)</a>
+  </dt>
+
       
   <dt><a href="docs/transformation.html#transformation.Transform">Transform (class in transformation)</a>
   </dt>
@@ -550,6 +636,50 @@
 
       
   <dt><a href="docs/matrix.html#matrix.TranslationMatrix">TranslationMatrix (class in matrix)</a>
+  </dt>
+
+  </dl></td>
+</tr></table>
+
+<h2 id="V">V</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="docs/view.html#module-view">view (module)</a>
+  </dt>
+
+      
+  <dt><a href="docs/scene.html#scene.Scene.view_count">view_count (scene.Scene attribute)</a>
+  </dt>
+
+      
+  <dt><a href="docs/view.html#view.view_create">view_create() (in module view)</a>
+  </dt>
+
+      
+  <dt><a href="docs/view.html#view.view_render">view_render() (in module view)</a>
+  </dt>
+
+      
+  <dt><a href="docs/view.html#view.view_render_pixel">view_render_pixel() (in module view)</a>
+  </dt>
+
+  </dl></td>
+  <td style="width: 33%" valign="top"><dl>
+      
+  <dt><a href="docs/view.html#view.view_set_antialias">view_set_antialias() (in module view)</a>
+  </dt>
+
+      
+  <dt><a href="docs/view.html#view.view_set_lighting_model">view_set_lighting_model() (in module view)</a>
+  </dt>
+
+      
+  <dt><a href="docs/view.html#view.view_set_transform">view_set_transform() (in module view)</a>
+  </dt>
+
+      
+  <dt><a href="docs/scene.html#scene.Scene.views">views (scene.Scene attribute)</a>
   </dt>
 
   </dl></td>

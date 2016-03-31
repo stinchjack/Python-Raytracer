@@ -36,8 +36,63 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="lightingmodel-module">
-<h1>lightingModel module<a class="headerlink" href="#lightingmodel-module" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="module-lightingModel">
+<span id="lightingmodel-module"></span><h1>lightingModel module<a class="headerlink" href="#module-lightingModel" title="Permalink to this headline">¶</a></h1>
+<p>Lighting module functions.</p>
+<p>The rationale of this module is to allow for more than one lighting model,
+where simpler lighting models can be used for quicker rendering. A lighting
+model tuple has the following elements:</p>
+<ul class="simple">
+<li>The string &#8216;lightingModel&#8217; as an identifier.</li>
+<li>A string identifying the lighting model type, e.g. &#8216;basic&#8217;</li>
+<li>A reference to the calculation function for the lighting model.</li>
+<li>The ambient light colour</li>
+<li>The maximum number of reflections</li>
+</ul>
+<p>To do: Implement reflections for the basic lighting model.</p>
+<dl class="function">
+<dt id="lightingModel.lightingmodel_basic_calculate">
+<code class="descclassname">lightingModel.</code><code class="descname">lightingmodel_basic_calculate</code><span class="sig-paren">(</span><em>lightingmodel</em>, <em>scene_obj</em>, <em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#lightingModel.lightingmodel_basic_calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the colour where a ray intersects with an object.</p>
+<p>lightingmodel: a lighting model tuple.
+:param scene_obj: the Scene object
+:param result: the intersection test results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a tuple of colour information</td>
+</tr>
+</tbody>
+</table>
+<p>To do: Implement reflections.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lightingModel.lightingmodel_basic_create">
+<code class="descclassname">lightingModel.</code><code class="descname">lightingmodel_basic_create</code><span class="sig-paren">(</span><em>ambient_light=None</em>, <em>max_reflect=5</em><span class="sig-paren">)</span><a class="headerlink" href="#lightingModel.lightingmodel_basic_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with data for basic lighting model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ambient_light</strong> &#8211; The colour of the ambient light to apply</li>
+<li><strong>max_reflect</strong> &#8211; the maximum number of recrusive reflections
+to allow</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: a lighting model tuple</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="lightingModel.lightingmodel_calculate">
+<code class="descclassname">lightingModel.</code><code class="descname">lightingmodel_calculate</code><span class="sig-paren">(</span><em>lightingmodel</em>, <em>scene_obj</em>, <em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#lightingModel.lightingmodel_calculate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
 
 
