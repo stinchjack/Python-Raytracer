@@ -161,7 +161,7 @@ def update_git_repo(current_branch):
         if push_input == "y" or push_input == "n":
             input_understood = True
 
-    do_push == push_input == 'y'
+    do_push = push_input == 'y'
     if do_push:
         print("%sPushing 'dev' branch to origin ...%s" %
               (colorama.Style.BRIGHT, new_branch, colorama.Style.RESET_ALL))
