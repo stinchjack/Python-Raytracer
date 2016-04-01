@@ -1,18 +1,18 @@
-"""
-Classes for managing output from the raytracer.
-"""
+
 from PIL import Image
 from raytracer.colour import *
 
+""" Classes for managing output from the raytracer"""
+
 
 class Output:
-    """Abstract class covering all types of output."""
+    """Abstract class covering all types of output"""
 
     def set_rectangle(self, rectangle):
         """Sets the rectangle for the output.
 
         :param rectangle: a dictionary with 'top', 'left',
-                          'bottom', and 'right' values"""
+                          'bottom', and 'right' value"""
         if not type(rectangle) is dict:
             return None
         if rectangle['left'] != 0:
@@ -23,42 +23,40 @@ class Output:
             rectangle['bottom'] = rectangle['bottom'] - rectangle['top']
             rectangle['top'] = 0
 
-        self.rectangle = rectangle
+        self.__rectangle__ = rectangle
 
     def set_pixel(self, x, y, colour):
         """Placeholder method for setting a colour at a specified co-ordinate
 
-                :param x: the x co-ordinate of the colour to set.
-                :param y: the y co-ordinate of the colour to set.
-                :param colour: the colour to set
+        :param x: the x co-ordinate of the colour to set.
+        :param y: the y co-ordinate of the colour to set.
+        :param colour: the colour to set
 
-                :return: False
-        """
+        :return: False"""
+
         return False
 
     def get_output(self):
-        """
-                Placeholder method for getting a generated image
+        """Placeholder method for getting a generated image
 
-                :return: None
-                """
+        :return: None"""
         return None
 
 
 class PIL_Output(Output):
-    image = None
-    pixels = None
+    __image__ = None
+    __pixels__ = None
 
     def set_rectangle(self, rectangle):
         """Creates a new PIL Image based on the specified rectangle and
         readies it for use.
 
-                :param rectangle: a dictionary with 'top', 'left', 'bottom',
-                                  and 'right' values"""
+        :param rectangle: a dictionary with 'top', 'left', 'bottom',
+                          and 'right' value"""
         super().set_rectangle(rectangle)
-        self.image = Image.new(
-            'RGB', (self.rectangle['right'], self.rectangle['bottom']))
-        self.pixels = self.image.load()
+        self.__image__ = Image.new(
+            'RGB', (self.__rectangle__['right'], self.__rectangle__['bottom']))
+        self.__pixels__ = self.__image__.load()
 
     def set_pixel(self, x, y, colour):
         """ Sets a colour at a specified co-ordinate
@@ -67,8 +65,9 @@ class PIL_Output(Output):
                 :param y: the y co-ordinate of the colour to set.
                 :param colour: the colour to set"""
 
-        self.pixels[x, y] = (colour[1] * 255, colour[2] * 255, colour[3] * 255)
+        self.__pixels__[x, y] = (
+            colour[1] * 255, colour[2] * 255, colour[3] * 255)
 
     def get_output(self):
         """Returns the PIL image created"""
-        return self.image
+        return self.__image__

@@ -10,7 +10,8 @@ from raytracer.view import *
 
 """A scene class is a container for shapes, lights and views. It also
 contains a key piece of raytracer code, the loop for testing a ray
-against each shape in the scene."""
+against each shape in the scene
+"""
 
 
 class Scene:
@@ -26,6 +27,7 @@ class Scene:
         """Add a shape to the scene
         :param shape: the shape to add
         :param name: a text handle for the shape"""
+
         self.shape_count = self.__shape_count__ + 1
 
         while name in self.__shapes__ or name is None:
@@ -37,7 +39,9 @@ class Scene:
     def add_light(self, light, name=None):
         """Add a light to the scene
         :param light: the light to add
-        :param name: a text handle for the light"""
+        :param name: a text handle for the light
+        """
+
         self.light_count = self.__light_count__ + 1
 
         while name in self.__lights__ or name is None:
@@ -48,14 +52,16 @@ class Scene:
 
     def get_lights(self):
         """Returns the array of lights in the scene.
-        :return: an array of lights"""
+        :return: an array of lights
+        """
         return self.__lights__
 
     def add_view(self, view_obj, name=None):
         """Adds a view to the scene.
         :return: an array of lights
         :param view_obj: the view to add
-        :param name: a string handle for the view"""
+        :param name: a string handle for the view
+        """
 
         self.__view_count__ = self.__view_count__ + 1
 
@@ -71,20 +77,22 @@ class Scene:
         set prior to calling this method.
         :param view_name: the handle of the view to use
         :return: the output of the rendered scene, or None if no output type
-                 is set
+        is set
         :rtype: an instance of a child class of Output, being the same object
-                passed as a paramter into set_output_type"""
+        passed as a paramter into set_output_type
+        """
         if(self.__output__ is None):
             return None
         raytracer.view.view_render(
-             self.__views__[view_name], self, self.__output__)
+            self.__views__[view_name], self, self.__output__)
         return self.__output__.get_output()
 
     def test_intersect(self, ray, exclude_shapes=[]):
         """Tests intersection of a ray with all the shapes in the scene.
         :param ray: the ray to test against the shapes
         :param exclude_shapes: a list of shapes to exclude from the
-                               intersection tests"""
+        intersection test
+        """
         curr_sh = None
         curr_t = None
         curr_intersect_result = None
@@ -114,7 +122,9 @@ class Scene:
 
     def set_output_type(self, output):
         """Sets the output type for rendering the scene.
-        :param output: an instance of a child class of Output"""
+        :param output: an instance of a child class of Output
+        """
+
         if not isinstance(output, Output):
             return None
 

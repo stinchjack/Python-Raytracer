@@ -1,18 +1,3 @@
-"""Lighting module functions.
-
-The rationale of this module is to allow for more than one lighting model,
-where simpler lighting models can be used for quicker rendering. A lighting
-model tuple has the following elements:
-
-* The string 'lightingModel' as an identifier.
-* A string identifying the lighting model type, e.g. 'basic'
-* A reference to the calculation function for the lighting model.
-* The ambient light colour
-* The maximum number of reflections
-
-To do: Implement reflections for the basic lighting model.
-"""
-
 from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.matrix import *
@@ -20,17 +5,32 @@ from raytracer.light import *
 from raytracer.output import *
 import raytracer.scene as scene
 from raytracer.view import *
+
+"""Lighting module functions.
+
+The rationale of this module is to allow for more than one lighting model,
+where simpler lighting models can be used for quicker rendering. A lighting
+model tuple has the following elements:
+
+* The string 'lighting_model' as an identifier.
+* A string identifying the lighting model type, e.g. 'basic'
+* A reference to the calculation function for the lighting model.
+* The ambient light colour
+* The maximum number of reflections
+
+To do: Implement reflections for the basic lighting model."""
+
 LIGHTINGMODEL_BASIC_CALCFUNC = 2
 LIGHTINGMODEL_BASIC_AMBIENT = 3
 LIGHTINGMODEL_BASIC_MAXREFLECT = 4
 
 
-def lightingmodel_calculate(lightingmodel, scene_obj, result):
-    return lightingModel[LIGHTINGMODEL_BASIC_CALCFUNC](lightingModel,
-                                                       scene_obj, result)
+def lightingmodel_calculate(lighting_model, scene_obj, result):
+    return lighting_model[LIGHTINGMODEL_BASIC_CALCFUNC](lighting_model,
+                                                        scene_obj, result)
 
 
-def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
+def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
     """Calculates the colour where a ray intersects with an object.
 
         lightingmodel: a lighting model tuple.
@@ -57,7 +57,7 @@ def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
     diffuse_colour = result['shape'][
         SHAPE_DIFFUSECOLOUR_FUNC](result['shape'], result)
 
-    end_colour = lightingmodel[LIGHTINGMODEL_BASIC_AMBIENT]
+    end_colour = lighting_model[LIGHTINGMODEL_BASIC_AMBIENT]
 
     lights = scene_obj.get_lights()
 
@@ -70,6 +70,7 @@ def lightingmodel_basic_calculate(lightingmodel, scene_obj, result):
         # print("result['normal']: %s"%result['normal'])
 
         # if(result['normal'].dot(result['ray'].vector)<0):
+
         if(cartesian_dot(result['normal'], result['ray'][RAY_VECTOR]) < 0):
             norml = result['normal']
         else:
@@ -143,10 +144,9 @@ def lightingmodel_basic_create(ambient_light=None, max_reflect=5):
         :param max_reflect: the maximum number of recrusive reflections
                             to allow
 
-        Returns: a lighting model tuple
+        Returns: a lighting model tuple"""
 
-        """
     if ambient_light is None:
         ambient_light = colour_create(0, 0, 0)
-    return('lightingModel', 'basic', lightingmodel_basic_calculate,
+    return('lighting_model', 'basic', lightingmodel_basic_calculate,
            ambient_light, max_reflect)

@@ -1,0 +1,2000 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>raytracer package &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="raytracer-package">
+<h1>raytracer package<a class="headerlink" href="#raytracer-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="raytracer.devutil.html">raytracer.devutil package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-raytracer.devutil.auto_update">raytracer.devutil.auto_update module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-raytracer.devutil.quick">raytracer.devutil.quick module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-raytracer.devutil">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="raytracer.unit_tests.html">raytracer.unit_tests package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests.test_planarshapes">raytracer.unit_tests.test_planarshapes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests.test_quadraticshapes">raytracer.unit_tests.test_quadraticshapes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests.test_shape">raytracer.unit_tests.test_shape module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-raytracer.cartesian">
+<span id="raytracer-cartesian-module"></span><h2>raytracer.cartesian module<a class="headerlink" href="#module-raytracer.cartesian" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="raytracer.cartesian.cartesian_add">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">cartesian_add</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.cartesian_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds two cartesians together</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; a cartesian</li>
+<li><strong>c2</strong> &#8211; a cartesian</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a cartesian, the result of adding c1 and c2</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.cartesian_copy">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">cartesian_copy</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.cartesian_copy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a copy of a cartesian</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>c</strong> &#8211; a cartesian to copy</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a copy of empty_shape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.cartesian_create">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">cartesian_create</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.cartesian_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cartesian tuple</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; The x part of the co-ordinate</li>
+<li><strong>y</strong> &#8211; The y part of the co-ordinate</li>
+<li><strong>z</strong> &#8211; The z part of the co-ordinate</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple representing a cartesian</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.cartesian_cross">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">cartesian_cross</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.cartesian_cross" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the cross product of two cartesians.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; a cartesian</li>
+<li><strong>c2</strong> &#8211; a cartesian</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">cross-product of c1 and c2</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.cartesian_dot">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">cartesian_dot</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.cartesian_dot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the dot product of cartesians c1 and c2
+:param c1: a cartesian
+:param c2: a cartesian
+:return: the dot product of cartesians c1 and c2</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.cartesian_len">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">cartesian_len</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.cartesian_len" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the length of given cartesian.   Useful for vectors.</p>
+<p>c1: a cartesian
+:return: the length of given c1</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.cartesian_normalise">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">cartesian_normalise</code><span class="sig-paren">(</span><em>c</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.cartesian_normalise" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cartesian with a length of 1 from the given
+cartesian. Useful for Vectors</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param c:</th><td class="field-body">a cartesian</td>
+</tr>
+<tr class="field-even field"><th class="field-name">return:</th><td class="field-body">a normalised cartesian</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.cartesian_scale">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">cartesian_scale</code><span class="sig-paren">(</span><em>c1</em>, <em>scale</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.cartesian_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiples the cartesian by the scalar value given. Useful for Vectors</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; a cartesian</li>
+<li><strong>scale</strong> &#8211; the value to scale/multiply the c1 by.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">c1 multiplied by scale</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.cartesian_sub">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">cartesian_sub</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.cartesian_sub" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subtracts cartesian c2 from cartesian c1</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; a cartesian</li>
+<li><strong>c2</strong> &#8211; a cartesian</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a cartesian, the result of subtracting c2 from c1</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.lineseg2d_ccw">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">lineseg2d_ccw</code><span class="sig-paren">(</span><em>A</em>, <em>B</em>, <em>C</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.lineseg2d_ccw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Line intersection code derived from
+<a class="reference external" href="http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/">http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.lineseg2d_create">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">lineseg2d_create</code><span class="sig-paren">(</span><em>start</em>, <em>end</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.lineseg2d_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a lineseg2d tuple</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.lineseg2d_intersect">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">lineseg2d_intersect</code><span class="sig-paren">(</span><em>ls1</em>, <em>ls2</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.lineseg2d_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if two line segments intersect with each other.
+(Used for polygon intersection tests).</p>
+<p>Line intersection code derived from
+<a class="reference external" href="http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/">http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/</a></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.ray_calc_pt">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">ray_calc_pt</code><span class="sig-paren">(</span><em>ray</em>, <em>t</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.ray_calc_pt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a point along a ray, returning a cartesian. The vector
+part of the the ray is scaled by t and added to the start point of the
+array.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ray</strong> &#8211; a ray tuple</li>
+<li><strong>t</strong> &#8211; the position along the ray, proportional to the vector
+component of the ray.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a cartesian, calculated by the expression
+ray start + (ray vector * t)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.ray_create">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">ray_create</code><span class="sig-paren">(</span><em>start</em>, <em>vector</em>, <em>shadow=False</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.ray_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a ray tuple</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>start</strong> &#8211; a cartesian point, being the start of the ray</li>
+<li><strong>vector</strong> &#8211; a cartesian vector, being the direction of the ray</li>
+<li><strong>shadow</strong> &#8211; a boolean, indicating if the ray is being used for
+shadow detection.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a ray tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.ray_is_shadow">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">ray_is_shadow</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.ray_is_shadow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if the ray is used for shadow detection</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> &#8211; a ray tuple</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the fourth element from the tuple, being a boolean.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.ray_scale">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">ray_scale</code><span class="sig-paren">(</span><em>ray</em>, <em>scale</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.ray_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiples the lenth of the ray by the given scale</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>ray</strong> &#8211; a ray tuple</li>
+<li><strong>scale</strong> &#8211; the value to scale the length by</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a new ray, being the a ray with the same
+start point as the given ray, and the vector from the
+given ray but scaled by the given amount</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.cartesian.transform_matrix_mul_cartesian">
+<code class="descclassname">raytracer.cartesian.</code><code class="descname">transform_matrix_mul_cartesian</code><span class="sig-paren">(</span><em>matrix</em>, <em>cartesian</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.transform_matrix_mul_cartesian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplies a matrix by a cartesian, resulting in a transformed
+cartesian.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>matrix</strong> &#8211; a matrix</li>
+<li><strong>cartesian</strong> &#8211; a cartesian tuple</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">cartesian</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.colour">
+<span id="raytracer-colour-module"></span><h2>raytracer.colour module<a class="headerlink" href="#module-raytracer.colour" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="raytracer.colour.colour_add">
+<code class="descclassname">raytracer.colour.</code><code class="descname">colour_add</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.colour.colour_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds two colours together</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; A colour tuple</li>
+<li><strong>c2</strong> &#8211; A colour tuple</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A couple tuple, the result of adding c1 and c2</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.colour.colour_create">
+<code class="descclassname">raytracer.colour.</code><code class="descname">colour_create</code><span class="sig-paren">(</span><em>r</em>, <em>g</em>, <em>b</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.colour.colour_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a colour tuple</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>r</strong> &#8211; The red component of the colour</li>
+<li><strong>g</strong> &#8211; The green component of the colour</li>
+<li><strong>b</strong> &#8211; The blue component of the colour</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple: (&#8216;colour&#8217;,r,g,b)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.colour.colour_mul">
+<code class="descclassname">raytracer.colour.</code><code class="descname">colour_mul</code><span class="sig-paren">(</span><em>c1</em>, <em>c2</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.colour.colour_mul" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplies two colour together. One of the colour tuples should have
+scalar values. Useful for calculating relflected colours.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; A colour tuple</li>
+<li><strong>c2</strong> &#8211; A colour tuple</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">c1 multiplied by c2</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.colour.colour_scale">
+<code class="descclassname">raytracer.colour.</code><code class="descname">colour_scale</code><span class="sig-paren">(</span><em>c1</em>, <em>scale</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.colour.colour_scale" title="Permalink to this definition">¶</a></dt>
+<dd><p>Multiplies a colour by the given scale</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>c1</strong> &#8211; A colour</li>
+<li><strong>scale</strong> &#8211; A scalar value</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">c1 scaled by the scale parameter</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.light">
+<span id="raytracer-light-module"></span><h2>raytracer.light module<a class="headerlink" href="#module-raytracer.light" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="raytracer.light.light_cone_is_inside">
+<code class="descclassname">raytracer.light.</code><code class="descname">light_cone_is_inside</code><span class="sig-paren">(</span><em>light</em>, <em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.light.light_cone_is_inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a point is inside a cone. The cone is defined as
+having a base at x=0, y=0, z=0, having a height of 1, and a radius
+of 1 at that height.</p>
+<blockquote>
+<div>light: The cone light
+point: A cartesian as a point to test</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.light.light_conelight_create">
+<code class="descclassname">raytracer.light.</code><code class="descname">light_conelight_create</code><span class="sig-paren">(</span><em>colour</em>, <em>transform</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.light.light_conelight_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple for a cone-shaped light</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.light.light_directional_is_inside">
+<code class="descclassname">raytracer.light.</code><code class="descname">light_directional_is_inside</code><span class="sig-paren">(</span><em>light</em>, <em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.light.light_directional_is_inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a point is inside the area of a directional light. This
+calls the function stored in the directional light tuple for testing
+inside/outside.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>light</strong> &#8211; The directional light</li>
+<li><strong>point</strong> &#8211; A cartesian as a point to test</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Boolean</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.light.light_point_light_create">
+<code class="descclassname">raytracer.light.</code><code class="descname">light_point_light_create</code><span class="sig-paren">(</span><em>point</em>, <em>colour</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.light.light_point_light_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a point light.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>point</strong> &#8211; A cartesian point (see cartesian module documentation)</li>
+<li><strong>colour</strong> &#8211; A colour (see cartesian module documentation)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A tuple of light parameters</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.light.light_tube_is_inside">
+<code class="descclassname">raytracer.light.</code><code class="descname">light_tube_is_inside</code><span class="sig-paren">(</span><em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.light.light_tube_is_inside" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a point is inside a cone. The cylinder is defined as
+having a radius of 1, where Y is between 0 and 1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>point</strong> &#8211; A cartesian as a point to test</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.light.light_tubelight_create">
+<code class="descclassname">raytracer.light.</code><code class="descname">light_tubelight_create</code><span class="sig-paren">(</span><em>colour</em>, <em>transform</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.light.light_tubelight_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tube/cylinder shaped light</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>light</strong> &#8211; The cone light</li>
+<li><strong>point</strong> &#8211; A cartesian as a point to test</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple respresenting a directional light</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.lighting_model">
+<span id="raytracer-lighting-model-module"></span><h2>raytracer.lighting_model module<a class="headerlink" href="#module-raytracer.lighting_model" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="raytracer.lighting_model.lightingmodel_basic_calculate">
+<code class="descclassname">raytracer.lighting_model.</code><code class="descname">lightingmodel_basic_calculate</code><span class="sig-paren">(</span><em>lighting_model</em>, <em>scene_obj</em>, <em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.lighting_model.lightingmodel_basic_calculate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the colour where a ray intersects with an object.</p>
+<p>lightingmodel: a lighting model tuple.
+:param scene_obj: the Scene object
+:param result: the intersection test results</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a tuple of colour information</td>
+</tr>
+</tbody>
+</table>
+<p>To do: Implement reflections.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.lighting_model.lightingmodel_basic_create">
+<code class="descclassname">raytracer.lighting_model.</code><code class="descname">lightingmodel_basic_create</code><span class="sig-paren">(</span><em>ambient_light=None</em>, <em>max_reflect=5</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.lighting_model.lightingmodel_basic_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with data for basic lighting model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ambient_light</strong> &#8211; The colour of the ambient light to apply</li>
+<li><strong>max_reflect</strong> &#8211; the maximum number of recrusive reflections
+to allow</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>Returns: a lighting model tuple</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.lighting_model.lightingmodel_calculate">
+<code class="descclassname">raytracer.lighting_model.</code><code class="descname">lightingmodel_calculate</code><span class="sig-paren">(</span><em>lighting_model</em>, <em>scene_obj</em>, <em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.lighting_model.lightingmodel_calculate" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.matrix">
+<span id="raytracer-matrix-module"></span><h2>raytracer.matrix module<a class="headerlink" href="#module-raytracer.matrix" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="raytracer.matrix.Matrix">
+<em class="property">class </em><code class="descclassname">raytracer.matrix.</code><code class="descname">Matrix</code><a class="headerlink" href="#raytracer.matrix.Matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A generic 4x4 maths matrix for transformation purposes</p>
+<dl class="method">
+<dt id="raytracer.matrix.Matrix.inversed">
+<code class="descname">inversed</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.matrix.Matrix.inversed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the inverse matrix</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="raytracer.matrix.RotationMatrix">
+<em class="property">class </em><code class="descclassname">raytracer.matrix.</code><code class="descname">RotationMatrix</code><span class="sig-paren">(</span><em>vector</em>, <em>angle</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.matrix.RotationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#raytracer.matrix.Matrix" title="raytracer.matrix.Matrix"><code class="xref py py-class docutils literal"><span class="pre">raytracer.matrix.Matrix</span></code></a></p>
+<p>A matrix for rotation about an arbitrary axis.
+See <a class="reference external" href="http://math.kennesaw.edu/~plaval/math4490/rotgen.pd">http://math.kennesaw.edu/~plaval/math4490/rotgen.pd</a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="raytracer.matrix.RotationZMatrix">
+<em class="property">class </em><code class="descclassname">raytracer.matrix.</code><code class="descname">RotationZMatrix</code><span class="sig-paren">(</span><em>angle</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.matrix.RotationZMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#raytracer.matrix.Matrix" title="raytracer.matrix.Matrix"><code class="xref py py-class docutils literal"><span class="pre">raytracer.matrix.Matrix</span></code></a></p>
+<p>A matrix for rotation about the Z axis</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="raytracer.matrix.ScaleMatrix">
+<em class="property">class </em><code class="descclassname">raytracer.matrix.</code><code class="descname">ScaleMatrix</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>z</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.matrix.ScaleMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#raytracer.matrix.Matrix" title="raytracer.matrix.Matrix"><code class="xref py py-class docutils literal"><span class="pre">raytracer.matrix.Matrix</span></code></a></p>
+<p>A matrix for scaling</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="raytracer.matrix.TranslationMatrix">
+<em class="property">class </em><code class="descclassname">raytracer.matrix.</code><code class="descname">TranslationMatrix</code><span class="sig-paren">(</span><em>value</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.matrix.TranslationMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#raytracer.matrix.Matrix" title="raytracer.matrix.Matrix"><code class="xref py py-class docutils literal"><span class="pre">raytracer.matrix.Matrix</span></code></a></p>
+<p>A matrix for translation</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.output">
+<span id="raytracer-output-module"></span><h2>raytracer.output module<a class="headerlink" href="#module-raytracer.output" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="raytracer.output.Output">
+<em class="property">class </em><code class="descclassname">raytracer.output.</code><code class="descname">Output</code><a class="headerlink" href="#raytracer.output.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Abstract class covering all types of output</p>
+<dl class="method">
+<dt id="raytracer.output.Output.get_output">
+<code class="descname">get_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.output.Output.get_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Placeholder method for getting a generated image</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.output.Output.set_pixel">
+<code class="descname">set_pixel</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>colour</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.output.Output.set_pixel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Placeholder method for setting a colour at a specified co-ordinate</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> &#8211; the x co-ordinate of the colour to set.</li>
+<li><strong>y</strong> &#8211; the y co-ordinate of the colour to set.</li>
+<li><strong>colour</strong> &#8211; the colour to set</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.output.Output.set_rectangle">
+<code class="descname">set_rectangle</code><span class="sig-paren">(</span><em>rectangle</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.output.Output.set_rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the rectangle for the output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rectangle</strong> &#8211; a dictionary with &#8216;top&#8217;, &#8216;left&#8217;,
+&#8216;bottom&#8217;, and &#8216;right&#8217; value</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="raytracer.output.PIL_Output">
+<em class="property">class </em><code class="descclassname">raytracer.output.</code><code class="descname">PIL_Output</code><a class="headerlink" href="#raytracer.output.PIL_Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#raytracer.output.Output" title="raytracer.output.Output"><code class="xref py py-class docutils literal"><span class="pre">raytracer.output.Output</span></code></a></p>
+<dl class="method">
+<dt id="raytracer.output.PIL_Output.get_output">
+<code class="descname">get_output</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.output.PIL_Output.get_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the PIL image created</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.output.PIL_Output.set_pixel">
+<code class="descname">set_pixel</code><span class="sig-paren">(</span><em>x</em>, <em>y</em>, <em>colour</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.output.PIL_Output.set_pixel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets a colour at a specified co-ordinate</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>x</strong> &#8211; the x co-ordinate of the colour to set.</li>
+<li><strong>y</strong> &#8211; the y co-ordinate of the colour to set.</li>
+<li><strong>colour</strong> &#8211; the colour to set</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.output.PIL_Output.set_rectangle">
+<code class="descname">set_rectangle</code><span class="sig-paren">(</span><em>rectangle</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.output.PIL_Output.set_rectangle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a new PIL Image based on the specified rectangle and
+readies it for use.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>rectangle</strong> &#8211; a dictionary with &#8216;top&#8217;, &#8216;left&#8217;, &#8216;bottom&#8217;,
+and &#8216;right&#8217; value</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.planarshapes">
+<span id="raytracer-planarshapes-module"></span><h2>raytracer.planarshapes module<a class="headerlink" href="#module-raytracer.planarshapes" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_disc_create">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_disc_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_disc_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a disc.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the disc.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the disc.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the disc.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to render a disc</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_disc_intersect">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_disc_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_disc_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a disc. An untranslated disc is
+located at X=0, Y=0, Z=0, sits on the XY plane, and has a radius        of 1 in both X and Y.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the disc</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_polygon_convert2d">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_polygon_convert2d</code><span class="sig-paren">(</span><em>shape</em>, <em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_polygon_convert2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a point in 3D space and flattens it without perspective into
+2D space. (The 2D points are used for inside/outside tests).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the polygon related to the point</li>
+<li><strong>point</strong> &#8211; a cartesian point to flatten</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple with a 2D co-oridnate</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_polygon_create">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_polygon_create</code><span class="sig-paren">(</span><em>data={}</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_polygon_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a polygon.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the polygon.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the polygon.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Transform:</th><td class="field-body"><p class="first">the transformation to apply to the polygon.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to render a polygon</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_polygon_intersect">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_polygon_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_polygon_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a polygon.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the rectangle</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_polymesh_create">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_polymesh_create</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_polymesh_create" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_polymesh_diffuse_colour">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_polymesh_diffuse_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_polymesh_diffuse_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diffuse colour for an intersection resilt with a
+polygon mesh.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shape</strong> &#8211; the polygon mesh to get the colour from</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Param:</th><td class="field-body">intersection_result: A dictionary of intersection results</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a colour tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_polymesh_intersect">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_polymesh_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_polymesh_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a polygon mesg.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the polygon mesh</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_polymesh_shapes">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_polymesh_shapes</code><span class="sig-paren">(</span><em>data</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_polymesh_shapes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_polymesh_specular_colour">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_polymesh_specular_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_polymesh_specular_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specular colour for an intersection resilt with a
+polygon mesh.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shape</strong> &#8211; the polygon mesh to get the colour from</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Param:</th><td class="field-body">intersection_result: A dictionary of intersection results</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a colour tuple</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_rectangle_create">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_rectangle_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>bounds</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_rectangle_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a rectangle.
+An untransformed rectangle sits on the XY plane, at Z=0, with the
+minimum and maximum bounds for X and Y set by the bounds parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the rectangle.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the rectangle</li>
+<li><strong>bounds</strong> &#8211; a dictionary with the following values
+&#8216;top&#8217;: the minimum Y value of the rectangle
+&#8216;bottom&#8217;: the maximum Y value of the rectangle
+&#8216;left&#8217;: the minimum X value of the rectangle
+&#8216;right&#8217;: the maximum X value of the rectangle</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the rectangle.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to render a rectangle</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_rectangle_intersect">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_rectangle_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_rectangle_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a rectangle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the rectangle</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_triangle_create">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_triangle_create</code><span class="sig-paren">(</span><em>points</em>, <em>colours</em>, <em>reflections=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_triangle_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a triangle.</p>
+<p>colour: the colour of the triangle.
+specular: the reflective colour of the triangle.
+points: a list or tuple of three cartesians points,
+being the vertices ofthe triangle</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colours</strong> &#8211; </li>
+<li><strong>reflections</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to render a triangle</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_triangle_diffuse_colour">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_triangle_diffuse_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_triangle_diffuse_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the diffuse colour of a point on a triangle, where
+different colours have been specified for each vertex (colour
+shading). If no colour shading is used, the function returns
+the standard diffuse colour.
+:param shape: the triangle to get the colour from
+:param intersection_result: A dictionary of intersection results. This
+parameter is not used, but kept to match the gnature of other colour
+functions
+:return: a colour tuple</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_triangle_intersect">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_triangle_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_triangle_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a triangle.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the triangle</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.planarshapes.shape_triangle_specular_colour">
+<code class="descclassname">raytracer.planarshapes.</code><code class="descname">shape_triangle_specular_colour</code><span class="sig-paren">(</span><em>self</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.planarshapes.shape_triangle_specular_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the specular colour of a point on a triangle, where
+different colours have been specified for each vertex (colour
+shading). If no colour shading is used, the function returns
+the standard specular colour.
+:param shape: the triangle to get the colour from
+:param intersection_result: A dictionary of intersection results. This
+parameter is not used, but kept to match the signature of other colour
+functions
+:return: a colour tuple</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.quadraticshapes">
+<span id="raytracer-quadraticshapes-module"></span><h2>raytracer.quadraticshapes module<a class="headerlink" href="#module-raytracer.quadraticshapes" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_capped_cone_create">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_capped_cone_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>topcap={}</em>, <em>bottomcap={}</em>, <em>y_top=None</em>, <em>y_bottom=None</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_capped_cone_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the necessary data for rendering a capped cone. An
+untransformed cone is in parallel to the Y axis, having a radius
+equal to the Y position. The apex of the untransformed cone is at X=0,
+Y=0, Z=0. Optionally, the minumum and maximum values of Y for the rendered
+cone can be specified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the cylinder.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the cylinder.</li>
+<li><strong>topcap</strong> &#8211; a dictionary with the following two optional members
+&#8216;diffuse_colour&#8217;: the diffuse colour for the &#8216;top&#8217; cap of the cylinder
+&#8216;specular_colour&#8217;: the specular colour for the &#8216;top&#8217; cap of the
+cylinder</li>
+<li><strong>bottomcap</strong> &#8211; a dictionary with the following two optional members
+&#8216;diffuse_colour&#8217;: the diffuse colour for the &#8216;bottom&#8217; cap of the
+cylinder
+&#8216;specular_colour&#8217;: the specular colour for the &#8216;bottom&#8217; cap of the
+cylinder</li>
+<li><strong>y_top</strong> &#8211; The minimum Y value in an untransformed cone. If this
+parameter is None, the default of 0 will be used.</li>
+<li><strong>y_bottom</strong> &#8211; The maximum Y value in an untransformed cone. If this
+parameter is None, the default of 1 will be used.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the cylinder.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple with the data needed to render a capped cone.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_capped_cone_diffuse_colour">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_capped_cone_diffuse_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_capped_cone_diffuse_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diffuse colour for an intersection point with a capped
+cone. This function is needed because different colours can be specified
+for cylinder body and both caps.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the cone to query</li>
+<li><strong>intersect_result</strong> &#8211; a dictionary of intersection results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the diffuse colour for the specified intersection</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_capped_cone_intersect">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_capped_cone_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_capped_cone_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a capped cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the capped cylinder</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<dl class="docutils">
+<dt>To do: Implement optionality for cap intersection test. Thourough checking</dt>
+<dd>for all instances needed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_capped_cone_specular_colour">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_capped_cone_specular_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_capped_cone_specular_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specular colour for an intersection point with a capped
+cone. This function is needed because specular colours can be specified
+for cylinder body and both caps.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the cone to query</li>
+<li><strong>intersect_result</strong> &#8211; a dictionary of intersection results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_capped_cylinder_create">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_capped_cylinder_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>topcap={}</em>, <em>bottomcap={}</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_capped_cylinder_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a capped cylinder tuple.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the cylinder</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the cylinder</li>
+<li><strong>topcap</strong> &#8211; a dictionary with the following two optional members
+&#8216;diffuse_colour&#8217;: the diffuse colour for the &#8216;top&#8217; cap
+of the cylinder
+&#8216;specular_colour&#8217;: the specular colour for the &#8216;top&#8217; cap
+of the cylinder</li>
+<li><strong>bottomcap</strong> &#8211; a dictionary with the following two optional members
+&#8216;diffuse_colour&#8217;: the diffuse colour for the &#8216;bottom&#8217;
+cap of the cylinder
+&#8216;specular_colour&#8217;: the specular colour for the &#8216;bottom&#8217;
+cap of the cylinder</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the cylinder</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple with data for rendering a capped cylinder</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_capped_cylinder_diffuse_colour">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_capped_cylinder_diffuse_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_capped_cylinder_diffuse_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diffuse colour at the intersection point with a capped
+cylinder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the capped cylinder</li>
+<li><strong>intersect_result</strong> &#8211; the intersection results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_capped_cylinder_intersect">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_capped_cylinder_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_capped_cylinder_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a capped cylinder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the capped cylinder</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.s</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p>To do: implement optionality for caps</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_capped_cylinder_specular_colour">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_capped_cylinder_specular_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_capped_cylinder_specular_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specular colour at the intersection point with a capped
+cylinder.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the capped cylinder</li>
+<li><strong>intersect_result</strong> &#8211; the intersection results</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_cone_create">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_cone_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>y_top=None</em>, <em>y_bottom=None</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_cone_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the necessary data for rendering a cone.  An
+untransformed cone is in parallel to the Y axis, having a radius
+equal to the Y position. The apex of the untransformed cone is at X=0,
+Y=0, Z=0. Optionally, the minumum and maximum values of Y for the rendered
+cone can be specified.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the cylinder.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the cylinder.</li>
+<li><strong>y_top</strong> &#8211; The minimum Y value in an untransformed cone. If this
+parameter is None, the default of 0 will be used.</li>
+<li><strong>y_bottom</strong> &#8211; The maximum Y value in an untransformed cone. If
+this parameter is None, the default of 1 will be used.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the cylinder.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple with the data needed to render a cone.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_cone_intersect">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_cone_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_cone_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the capped cylinder</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_cone_test_point">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_cone_test_point</code><span class="sig-paren">(</span><em>shape</em>, <em>point</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_cone_test_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests if a point transformed into cone-space is inside the Y-dimensions
+of the cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the cone to test against</li>
+<li><strong>point</strong> &#8211; the point to test</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Boolean</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_cone_ybottom">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_cone_ybottom</code><span class="sig-paren">(</span><em>shape</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_cone_ybottom" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the maximum Y value in an untransformed cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shape</strong> &#8211; the cone to query</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the maximum Y value in an untransformed cone</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_cone_ytop">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_cone_ytop</code><span class="sig-paren">(</span><em>shape</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_cone_ytop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the minimum Y value in an untransformed cone.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>shape</strong> &#8211; the cone to query</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the minimum Y value in an untransformed coneempty_shape</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_cylinder_create">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_cylinder_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_cylinder_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a cylinder tuple.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>colour</strong> &#8211; the colour of the cylinder.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the cylinder.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the cylinder</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_cylinder_intersect">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_cylinder_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_cylinder_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a cylinder.</p>
+<p>shape: the shape tuple for the cylinder
+ray: the ray to perform the intersection test with</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">False if no intersection, or a dictionary of results when
+there is an intersection.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_sphere_create">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_sphere_create</code><span class="sig-paren">(</span><em>colour</em>, <em>specular</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_sphere_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a tuple with the data necessary to render a sphere.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>colour</strong> &#8211; the colour of the sphere.</li>
+<li><strong>specular</strong> &#8211; the reflective colour of the sphere.</li>
+<li><strong>transform</strong> &#8211; the transformation to apply to the sphere.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a tuple containg data to redner a sphere</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.quadraticshapes.shape_sphere_intersect">
+<code class="descclassname">raytracer.quadraticshapes.</code><code class="descname">shape_sphere_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.quadraticshapes.shape_sphere_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Intersection test function for a sphere. An untranslated sphere is
+located at X=0, Y=0, Z=0, with a radius of 1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape tuple for the sphere</li>
+<li><strong>ray</strong> &#8211; the ray to perform the intersection test with</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">False if no intersection, or a dictionary of results when
+there is an intersection.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.scene">
+<span id="raytracer-scene-module"></span><h2>raytracer.scene module<a class="headerlink" href="#module-raytracer.scene" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="raytracer.scene.Scene">
+<em class="property">class </em><code class="descclassname">raytracer.scene.</code><code class="descname">Scene</code><a class="headerlink" href="#raytracer.scene.Scene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="raytracer.scene.Scene.add_light">
+<code class="descname">add_light</code><span class="sig-paren">(</span><em>light</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.add_light" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a light to the scene
+:param light: the light to add
+:param name: a text handle for the light</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.scene.Scene.add_shape">
+<code class="descname">add_shape</code><span class="sig-paren">(</span><em>shape</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.add_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a shape to the scene
+:param shape: the shape to add
+:param name: a text handle for the shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.scene.Scene.add_view">
+<code class="descname">add_view</code><span class="sig-paren">(</span><em>view_obj</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.add_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a view to the scene.
+:return: an array of lights
+:param view_obj: the view to add
+:param name: a string handle for the view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.scene.Scene.get_lights">
+<code class="descname">get_lights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.get_lights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the array of lights in the scene.
+:return: an array of lights</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.scene.Scene.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>view_name</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders the scene using the specified view. The output type must be
+set prior to calling this method.
+:param view_name: the handle of the view to use
+:return: the output of the rendered scene, or None if no output type
+is set
+:rtype: an instance of a child class of Output, being the same object
+passed as a paramter into set_output_type</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.scene.Scene.set_output_type">
+<code class="descname">set_output_type</code><span class="sig-paren">(</span><em>output</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.set_output_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the output type for rendering the scene.
+:param output: an instance of a child class of Output</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.scene.Scene.test_intersect">
+<code class="descname">test_intersect</code><span class="sig-paren">(</span><em>ray</em>, <em>exclude_shapes=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.test_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests intersection of a ray with all the shapes in the scene.
+:param ray: the ray to test against the shapes
+:param exclude_shapes: a list of shapes to exclude from the
+intersection test</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.shape">
+<span id="raytracer-shape-module"></span><h2>raytracer.shape module<a class="headerlink" href="#module-raytracer.shape" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="raytracer.shape.shape_diffuse_colour">
+<code class="descclassname">raytracer.shape.</code><code class="descname">shape_diffuse_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.shape.shape_diffuse_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the diffuse colour for a shape that is stored in the shape
+tuple.
+:param shape: a shape
+:param intersect_result: a dictionary of intersection results. This
+parameter is not used.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.shape.shape_empty_shape">
+<code class="descclassname">raytracer.shape.</code><code class="descname">shape_empty_shape</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.shape.shape_empty_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#8220;Returns a list with some starting elements necessary for a shape.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">[&#8216;shape&#8217;, None, None, None, None, None, shape_diffuse_colour,
+shape_specular_colour, None, {}]</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.shape.shape_point_inside">
+<code class="descclassname">raytracer.shape.</code><code class="descname">shape_point_inside</code><span class="sig-paren">(</span><em>shape</em>, <em>cartesian</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.shape.shape_point_inside" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="raytracer.shape.shape_reverse_transform">
+<code class="descclassname">raytracer.shape.</code><code class="descname">shape_reverse_transform</code><span class="sig-paren">(</span><em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.shape.shape_reverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms the normal from an intersection with a shape into
+scene-space, if there is a Transformation set for the shape</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>intersect_result</strong> &#8211; a dictionary of intersection results.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the dictionary of intersection results, with member
+&#8216;normal&#8217; added.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.shape.shape_set_transform">
+<code class="descclassname">raytracer.shape.</code><code class="descname">shape_set_transform</code><span class="sig-paren">(</span><em>shape</em>, <em>transform</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.shape.shape_set_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the transformation for a shape.
+:param shape: a shape
+:param transform: a Transformation object</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.shape.shape_specular_colour">
+<code class="descclassname">raytracer.shape.</code><code class="descname">shape_specular_colour</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.shape.shape_specular_colour" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the specular colour for a shape that is stored in the shape
+tuple.
+:param shape: a shape
+:param intersect_result: a dictionary of intersection results. This
+parameter is not used.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.shape.shape_test_intersect">
+<code class="descclassname">raytracer.shape.</code><code class="descname">shape_test_intersect</code><span class="sig-paren">(</span><em>shape</em>, <em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.shape.shape_test_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests a ray for intersection against a shape. This function transforms
+the ray into shape-space before calling the shape&#8217;s intersection test
+function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>shape</strong> &#8211; the shape to test against</li>
+<li><strong>ray</strong> &#8211; the ray to test</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a dictionary of intersection results if the ray intersects, else
+False if the ray does not intersect.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.transformation">
+<span id="raytracer-transformation-module"></span><h2>raytracer.transformation module<a class="headerlink" href="#module-raytracer.transformation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="raytracer.transformation.Transform">
+<em class="property">class </em><code class="descclassname">raytracer.transformation.</code><code class="descname">Transform</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.transformation.Transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>A class to support matrix transformations of rays and cartesians</p>
+<dl class="method">
+<dt id="raytracer.transformation.Transform.inverse_transform">
+<code class="descname">inverse_transform</code><span class="sig-paren">(</span><em>normal</em>, <em>translate=False</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.transformation.Transform.inverse_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Applies inverse transformation to a vector. (Used for normals.)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>normal</strong> &#8211; a cartesian to transform</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">the transformed vector.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.transformation.Transform.matrix">
+<code class="descname">matrix</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.transformation.Transform.matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the calculated matrix.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Matrix object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.transformation.Transform.no_transform">
+<code class="descname">no_transform</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.transformation.Transform.no_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns True if the transform would not result in any change to a
+ray or cartesian, else False</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">boolean</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.transformation.Transform.options">
+<code class="descname">options</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.transformation.Transform.options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a dictionary of transformation options.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.transformation.Transform.set_options">
+<code class="descname">set_options</code><span class="sig-paren">(</span><em>options</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.transformation.Transform.set_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets transformation options.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>options</strong> &#8211; <p>a dictionary with the following optional elements:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>&#8216;translate&#8217;: a dictionary with the following elements:</dt>
+<dd>o &#8216;x&#8217;: the distance to translate in the X dimension
+o &#8216;y&#8217;: the distance to translate in the Y dimension
+o &#8216;z&#8217;: the distance to translate in the Z dimension</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>&#8216;scale&#8217;: a dictionary with the following elements:</dt>
+<dd>o &#8216;x&#8217;: the amount to scale in the X dimension
+o &#8216;y&#8217;: the amount to scale in the Y dimension
+o &#8216;z&#8217;: the amount to scale in the Z dimension</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>&#8216;rotation&#8217;: a dictionary with the following elements:</dt>
+<dd><dl class="first docutils">
+<dt>o &#8216;vector&#8217;: a cartesian vector to use as an axis to rotate</dt>
+<dd>about</dd>
+</dl>
+<p class="last">o &#8216;angle&#8217;: the angle to rotate about the vector, in degrees</p>
+</dd>
+</dl>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.transformation.Transform.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>ray</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.transformation.Transform.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a given ray.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>ray</strong> &#8211; a ray to transform.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">ray, transformed</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="raytracer.transformation.Transform.transform_point">
+<code class="descname">transform_point</code><span class="sig-paren">(</span><em>point</em>, <em>inverse=False</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.transformation.Transform.transform_point" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a point. (A point can only be transformed by
+translation.)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>point</strong> &#8211; a cartesian to transform</li>
+<li><strong>inverse</strong> &#8211; A boolean. If True the inverse transformation is
+applied</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">the translated point.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer.view">
+<span id="raytracer-view-module"></span><h2>raytracer.view module<a class="headerlink" href="#module-raytracer.view" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="raytracer.view.view_create">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_create</code><span class="sig-paren">(</span><em>eye_z</em>, <em>physical_rectangle</em>, <em>view_rectangle</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_create" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a view.</p>
+<blockquote>
+<div><p>eye_z: The Z-position of the eye point. This should be a negative value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param physical_rectangle:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The rectangle of the physical output to draw
+onto. This is value is a dictionary:
+&#8216;left&#8217;: the left-hand edge of the physical output to draw onto
+&#8216;right&#8217;: the right-hand edge of the physical output to draw onto
+&#8216;top&#8217;: the top edge of the physical output to draw onto
+&#8216;bottom&#8217;: the bottom edge of the physical output to draw onto</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">param view_rectangle:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">The rectangle of the logical view to draw at
+where z=0. This is a dictionary:
+&#8216;left&#8217;: the left-hand edge
+&#8216;right&#8217;: the right-hand edge
+&#8216;top&#8217;: the top edge
+&#8216;bottom&#8217;: the bottom edge</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>transformation</strong> &#8211; A transformation to apply to the view(optional)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A list of view parameters, or None on failure</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.view.view_render">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>output_type</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders a view of a scene.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to render</li>
+<li><strong>scene_obj</strong> &#8211; The scene to render</li>
+<li><strong>output_type</strong> &#8211; An instance of class Output</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.view.view_render_pixel">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>physical_x</em>, <em>physical_y</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders one pixel of a view</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to render</li>
+<li><strong>scene_obj</strong> &#8211; The scene to render</li>
+<li><strong>physical_x</strong> &#8211; The X co-ordinate of the pixel</li>
+<li><strong>physical_y</strong> &#8211; The Y co-ordinate of the pixel</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.view.view_set_antialias">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_set_antialias</code><span class="sig-paren">(</span><em>view</em>, <em>on=False</em>, <em>x=1</em>, <em>y=1</em>, <em>stochastic=False</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_set_antialias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the antialias parameters for a view.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>on</strong> &#8211; Boolean value dictating to using antialias while rendering
+or not</li>
+<li><strong>stochastic</strong> &#8211; Boolean value dictating use of stochastic/random
+antialiasing</li>
+<li><strong>x</strong> &#8211; How many times to divide a pixel on the horizontal axis</li>
+<li><strong>y</strong> &#8211; How many times to divide a pixel on the vertical axis</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.view.view_set_lighting_model">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_set_lighting_model</code><span class="sig-paren">(</span><em>view</em>, <em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_set_lighting_model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the lighting model for a view</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>model</strong> &#8211; Lighting model to use while rendering the scene</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.view.view_set_transform">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_set_transform</code><span class="sig-paren">(</span><em>view</em>, <em>transform</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_set_transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set or change the transformation for a view.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>transform</strong> &#8211; The Transformation to apply</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-raytracer">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-raytracer" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">raytracer package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-raytracer.cartesian">raytracer.cartesian module</a></li>
+<li><a class="reference internal" href="#module-raytracer.colour">raytracer.colour module</a></li>
+<li><a class="reference internal" href="#module-raytracer.light">raytracer.light module</a></li>
+<li><a class="reference internal" href="#module-raytracer.lighting_model">raytracer.lighting_model module</a></li>
+<li><a class="reference internal" href="#module-raytracer.matrix">raytracer.matrix module</a></li>
+<li><a class="reference internal" href="#module-raytracer.output">raytracer.output module</a></li>
+<li><a class="reference internal" href="#module-raytracer.planarshapes">raytracer.planarshapes module</a></li>
+<li><a class="reference internal" href="#module-raytracer.quadraticshapes">raytracer.quadraticshapes module</a></li>
+<li><a class="reference internal" href="#module-raytracer.scene">raytracer.scene module</a></li>
+<li><a class="reference internal" href="#module-raytracer.shape">raytracer.shape module</a></li>
+<li><a class="reference internal" href="#module-raytracer.transformation">raytracer.transformation module</a></li>
+<li><a class="reference internal" href="#module-raytracer.view">raytracer.view module</a></li>
+<li><a class="reference internal" href="#module-raytracer">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/raytracer.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/raytracer.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

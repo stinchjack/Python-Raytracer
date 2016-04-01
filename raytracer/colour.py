@@ -1,10 +1,11 @@
+import gmpy2
+from gmpy2 import *
+
 """Functions for dealing with colours.
 
 A colour is stored as a tuple, with the first element being
 the string 'colour' as an identifier, and the last three being
-red green and blue values. """
-import gmpy2
-from gmpy2 import *
+red green and blue valuesempty_shape"""
 
 COLOUR_R = 1
 COLOUR_G = 2
@@ -18,8 +19,8 @@ def colour_create(r, g, b):
     :param  g: The green component of the colour
     :param  b: The blue component of the colour
 
-    :return: A tuple: ('colour',r,g,b)
-    """
+    :return: A tuple: ('colour',r,g,b)"""
+
     return ('colour', r, g, b)
 
 
@@ -29,9 +30,8 @@ def colour_add(c1, c2):
     :param  c1: A colour tuple
     :param  c2: A colour tuple
 
-    :return: A couple tuple, the result of adding c1 and c2
+    :return: A couple tuple, the result of adding c1 and c2"""
 
-    """
     return ('colour', c1[1] + c2[1], c1[2] + c2[2], c1[3] + c2[3])
 
 

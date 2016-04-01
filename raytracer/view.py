@@ -6,7 +6,7 @@ from raytracer.light import *
 from raytracer.output import *
 from raytracer.shape import *
 from raytracer.scene import *
-from raytracer.lightingModel import *
+from raytracer.lighting_model import *
 import random
 
 """Functions for dealing with views. A view is simply a perspective on a
@@ -65,8 +65,7 @@ A view is stored as a list with the following elements:
 
     * The current X-position during rendering(intended for internal use)
 
-    * The current Y-position during rendering(intended for internal use)
-    """
+    * The current Y-position during rendering(intended for internal use)"""
 
 VIEW_LIGHTINGMODEL = 1
 VIEW_OUTPUT = 2
@@ -102,7 +101,7 @@ def view_create(eye_z,  physical_rectangle, view_rectangle, transform=None):
 
     :param transformation: A transformation to apply to the view(optional)
 
-    :return: A list of view parameters, or None on failure."""
+    :return: A list of view parameters, or None on failure"""
     if not type(physical_rectangle) is dict:
         return None
     if not type(view_rectangle) is dict:
@@ -128,9 +127,8 @@ def view_set_transform(view, transform):
     """Set or change the transformation for a view.
 
      :param view: The view to change
-     :param transform: The transformation to apply
+     :param transform: The Transformation to apply"""
 
-    """
     if isinstance(transform, Transform):
         view[VIEW_TRANSFORM] = transform
     elif type(transform) is dict:
@@ -146,9 +144,8 @@ def view_set_antialias(view, on=False, x=1, y=1, stochastic=False):
      :param stochastic: Boolean value dictating use of stochastic/random
         antialiasing
      :param x: How many times to divide a pixel on the horizontal axis
-     :param y: How many times to divide a pixel on the vertical axis
+     :param y: How many times to divide a pixel on the vertical axis"""
 
-    """
     view[VIEW_ANTIALIAS]['on'] = on
     view[VIEW_ANTIALIAS]['x'] = x
     view[VIEW_ANTIALIAS]['y'] = y
@@ -188,8 +185,7 @@ def view_render_pixel(view, scene_obj, physical_x, physical_y):
      :param view: The view to render
      :param scene_obj: The scene to render
      :param physical_x: The X co-ordinate of the pixel
-     :param physical_y: The Y co-ordinate of the pixel
-    """
+     :param physical_y: The Y co-ordinate of the pixel"""
 
     zero = mpfr(0)
     do_random = view[VIEW_ANTIALIAS]['stochastic']
@@ -210,7 +206,7 @@ def view_render_pixel(view, scene_obj, physical_x, physical_y):
                 # Vector(a_view_x -eye[1],a_view_y -eye[2], zero-eye[3]))
                 ray = ray_create(eye, cartesian_create(
                     a_view_x - eye[1], a_view_y - eye[2], zero - eye[3]))
-                result = scene_obj.testIntersect(ray)
+                result = scene_obj.test_intersect(ray)
                 if(result is not False):
                     result['ray'] = ray
                     colour = \
@@ -233,7 +229,7 @@ def view_render_pixel(view, scene_obj, physical_x, physical_y):
                 view[VIEW_ANTIALIAS_DATA]['y_step'])
             ray = ray_create(eye, cartesian_create(
                 a_view_x - eye[1], a_view_y - eye[2], zero - eye[3]))
-            result = scene_obj.testIntersect(ray)
+            result = scene_obj.test_intersect(ray)
             if(result is not False):
                 result['ray'] = ray
                 colour = colour_scale(
@@ -263,8 +259,8 @@ def view_render(view, scene_obj, output_type):
 
      :param view: The view to render
      :param scene_obj: The scene to render
-     :param output_type: An instance of class Output
-    """
+     :param output_type: An instance of class Output"""
+
     output_type.set_rectangle(view[VIEW_PHYSICALRECTANGLE])
     if not isinstance(scene_obj, Scene):
         return None

@@ -1,3 +1,6 @@
+import gmpy2
+from gmpy2 import *
+
 """Functions for dealing with cartesian values and rays.
 A cartesian is stored as a tuple, with the first element being the
 string 'cartesian' as an identifier, and the last three being X, Y and Z
@@ -12,14 +15,8 @@ A lineseg2d is a tuple used to store a line segment, where that line is in
 two dimensions, the thrid being discarded. (Used for polygon intersection
 tests).
 
-Authour: Jack Stinchcombe <stinchjack@gmail.com>
+Authour: Jack Stinchcombe <stinchjack@gmail.com>"""
 
-"""
-
-import gmpy2
-from gmpy2 import *
-
-# ['cartesian',0,0,0,NONe]
 CARTESIAN_X = 1
 CARTESIAN_Y = 2
 CARTESIAN_Z = 3
@@ -54,9 +51,9 @@ def cartesian_create(x, y, z):
 def cartesian_copy(c):
     """Creates a copy of a cartesian
 
-        :param c: a cartesian to copy
-
-        :return: a copy of c"""
+    :param c: a cartesian to copy
+    :return: a copy of empty_shape
+    """
     return ('cartesian', c[1], c[2], c[3], c[4], c[5])
 
 
@@ -67,7 +64,7 @@ def cartesian_add(c1, c2):
         :param c2: a cartesian
 
         :return: a cartesian, the result of adding c1 and c2
-        """
+    """
     return ('cartesian', c1[1] + c2[1], c1[2] + c2[2], c1[3] + c2[3])
 
 
@@ -77,7 +74,8 @@ def cartesian_sub(c1, c2):
         :param c1: a cartesian
         :param c2: a cartesian
         :return: a cartesian, the result of subtracting c2 from c1
-        """
+    """
+
     return ('cartesian', c1[1] - c2[1], c1[2] - c2[2], c1[3] - c2[3])
 
 
@@ -85,7 +83,8 @@ def cartesian_dot(c1, c2):
     """Calculates the dot product of cartesians c1 and c2
         :param c1: a cartesian
         :param c2: a cartesian
-        :return: the dot product of cartesians c1 and c2"""
+        :return: the dot product of cartesians c1 and c2
+    """
     return (c1[1] * c2[1]) + (c1[2] * c2[2]) + (c1[3] * c2[3])
 
 
@@ -96,8 +95,7 @@ def cartesian_scale(c1, scale):
         :param scale: the value to scale/multiply the c1 by.
 
         :return: c1 multiplied by scale
-
-        """
+    """
     return ('cartesian', c1[1] * scale, c1[2] * scale, c1[3] * scale)
 
 
@@ -106,8 +104,8 @@ def cartesian_len(c):
 
         c1: a cartesian
         :return: the length of given c1
+    """
 
-        """
     return sqrt((c[1] * c[1]) + (c[2] * c[2]) + (c[3] * c[3]))
 
 
@@ -117,7 +115,7 @@ def cartesian_normalise(c):
 
         :param c: a cartesian
         :return: a normalised cartesian
-        """
+    """
     return cartesian_scale(c, mpfr(1.0) /
                            sqrt((c[1] * c[1]) +
                                 (c[2] * c[2]) +
@@ -132,7 +130,7 @@ def cartesian_cross(c1, c2):
 
         :return: cross-product of c1 and c2
 
-        """
+    """
     return ('cartesian', (c1[2] * c2[3]) - (c1[3] * c2[2]),
             (c1[3] * c2[1]) - (c1[1] * c2[3]),
             (c1[1] * c2[2]) - (c1[2] * c2[1]), None, None)
@@ -146,7 +144,7 @@ def transform_matrix_mul_cartesian(matrix, cartesian):
     :param cartesian: a cartesian tuple
 
     :return: cartesian
-        """
+    """
     return ('cartesian',
             (matrix[0][0] * cartesian[1]) + (matrix[0][1] * cartesian[2]) +
             (matrix[0][2] * cartesian[3]),
@@ -198,37 +196,36 @@ def ray_is_shadow(ray):
 
 
 def ray_calc_pt(ray, t):
-    """Calculatesa point along a ray, returning a cartesian. The vector
+    """Calculates a point along a ray, returning a cartesian. The vector
     part of the the ray is scaled by t and added to the start point of the
     array.
 
     :param ray: a ray tuple
     :param t: the position along the ray, proportional to the vector
               component of the ray.
-    :return: *a cartesian, calculated by the expression
-             ray start + (ray vector * t)*
-        """
+    :return: a cartesian, calculated by the expression
+             ray start + (ray vector * t)
+    """
     return ('cartesian', ray[1][1] + (ray[2][1] * t),
             ray[1][2] + (ray[2][2] * t),
             ray[1][3] + (ray[2][3] * t), None, None)
 
 
 def lineseg2d_create(start, end):
-    """Creates a lineseg2d tuple"""
+    """Creates a lineseg2d tuple
+    """
     return ('lineseg2d', start, end)
 
 
 def lineseg2d_ccw(A, B, C):
-    """
-    Line intersection code derived from
+    """Line intersection code derived from
     http://bryceboe.com/2006/10/23/line-segment-intersection-algorithm/
     """
     return (C[1] - A[1]) * (B[0] - A[0]) > (B[1] - A[1]) * (C[0] - A[0])
 
 
 def lineseg2d_intersect(ls1, ls2):
-    """
-    Determines if two line segments intersect with each other.
+    """Determines if two line segments intersect with each other.
     (Used for polygon intersection tests).
 
     Line intersection code derived from

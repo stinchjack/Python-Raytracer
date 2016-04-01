@@ -6,8 +6,7 @@ from raytracer.shape import *
 """Functions for planar shapes: discs, rectangles, polygons, triangles,
 and polygon meshes.
 
-..to do: complete docstrings, restest all functions.
-"""
+..to do: complete docstrings, retest all functions."""
 
 
 def shape_disc_intersect(shape, ray):
@@ -19,7 +18,7 @@ def shape_disc_intersect(shape, ray):
         :param ray: the ray to perform the intersection test with
 
         :return: False if no intersection, or a dictionary of results when
-                there is an intersection.
+                 there is an intersection.
         """
     if ray[RAY_VECTOR][3] == 0:
         return False
@@ -44,8 +43,8 @@ def shape_disc_create(colour, specular, transform=None):
         :param transform: the transformation to apply to the disc.
 
         :return: a tuple containg data to render a disc
-
         """
+
     shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'disc'
     shape[SHAPE_DIFFUSECOLOUR] = colour
@@ -58,11 +57,12 @@ def shape_disc_create(colour, specular, transform=None):
 def shape_rectangle_intersect(shape, ray):
     """Intersection test function for a rectangle.
 
-        :param shape: the shape tuple for the rectangle
-        :param ray: the ray to perform the intersection test with
+    :param shape: the shape tuple for the rectangle
+    :param ray: the ray to perform the intersection test with
 
-        :return: False if no intersection, or a dictionary of results when
-                there is an intersection."""
+    :return: False if no intersection, or a dictionary of results when
+            there is an intersection
+    """
     if ray[RAY_VECTOR][3] == 0:
         return False
     t = (0 - ray[RAY_START][3]) / ray[RAY_VECTOR][3]
@@ -128,7 +128,6 @@ def shape_polygon_convert2d(shape, point):
         :param shape: the polygon related to the point
         :param point: a cartesian point to flatten
         :return: a tuple with a 2D co-oridnate
-
         """
     for axis2d in shape[SHAPE_DATA]['kept_axes']:
 
@@ -149,11 +148,13 @@ def shape_polygon_convert2d(shape, point):
 def shape_polygon_intersect(shape, ray):
     """Intersection test function for a polygon.
 
-        :param shape: the shape tuple for the rectangle
-        :param ray: the ray to perform the intersection test with
+    :param shape: the shape tuple for the rectangle
+    :param ray: the ray to perform the intersection test with
 
-        :return: False if no intersection, or a dictionary of results when
-                there is an intersection."""
+    :return: False if no intersection, or a dictionary of results when
+            there is an intersection
+    """
+
     denom = cartesian_dot(ray[2], shape[SHAPE_DATA]['normal'])
     if denom == 0:
         return False
@@ -190,12 +191,12 @@ def shape_polygon_intersect(shape, ray):
 def shape_polygon_create(data={}):
     """Creates a tuple with the data necessary to render a polygon.
 
-        :param colour: the colour of the polygon.
-        :param specular: the reflective colour of the polygon.
-        :transform: the transformation to apply to the polygon.
+    :param colour: the colour of the polygon.
+    :param specular: the reflective colour of the polygon.
+    :transform: the transformation to apply to the polygon.
 
-        :return: a tuple containg data to render a polygon
-        """
+    :return: a tuple containg data to render a polygon
+    """
     shape = shape_empty_shape()
     shape[SHAPE_INTERSECT_FUNC] = shape_polygon_intersect
 
@@ -282,11 +283,18 @@ def shape_polygon_create(data={}):
     return shape
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Code for a triangle
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+def shape_triangle_diffuse_colour(shape, intersect_result):
+    """Calculate the diffuse colour of a point on a triangle, where
+    different colours have been specified for each vertex (colour
+    shading). If no colour shading is used, the function returns
+    the standard diffuse colour.
+    :param shape: the triangle to get the colour from
+    :param intersection_result: A dictionary of intersection results. This
+    parameter is not used, but kept to match the gnature of other colour
+    functions
+    :return: a colour tuple
+    """
 
-def shape_triangle_diffuse_colour(shape, intersectResult):
     if not shape[SHAPE_DATA]['colorShade']:
         return shape[SHAPE_DIFFUSECOLOUR]
 
@@ -307,7 +315,18 @@ def shape_triangle_diffuse_colour(shape, intersectResult):
     return colour_add(colour_add(cp0, cp1), cp2)
 
 
-def shape_triangle_specular_colour(self, intersectResult):
+def shape_triangle_specular_colour(self, intersect_result):
+    """Calculate the specular colour of a point on a triangle, where
+    different colours have been specified for each vertex (colour
+    shading). If no colour shading is used, the function returns
+    the standard specular colour.
+    :param shape: the triangle to get the colour from
+    :param intersection_result: A dictionary of intersection results. This
+    parameter is not used, but kept to match the signature of other colour
+    functions
+    :return: a colour tuple
+    """
+
     if not shape[SHAPE_DATA]['reflectShade']:
         return shape[SHAPE_SPECULARCOLOUR]
 
@@ -329,6 +348,14 @@ def shape_triangle_specular_colour(self, intersectResult):
 
 
 def shape_triangle_intersect(shape, ray):
+    """Intersection test function for a triangle.
+
+    :param shape: the shape tuple for the triangle
+    :param ray: the ray to perform the intersection test with
+
+    :return: False if no intersection, or a dictionary of results when
+            there is an intersection
+    """
 
     # p = ray[2].cross(self.e2)
     p = cartesian_cross(ray[2], shape[SHAPE_DATA]['e2'])
@@ -371,16 +398,17 @@ def shape_triangle_intersect(shape, ray):
 def shape_triangle_create(points, colours, reflections=None):
     """Creates a tuple with the data necessary to render a triangle.
 
-        colour: the colour of the triangle.
-        specular: the reflective colour of the triangle.
-        points: a list or tuple of three cartesians points,
-        being the vertices ofthe triangle
+    colour: the colour of the triangle.
+    specular: the reflective colour of the triangle.
+    points: a list or tuple of three cartesians points,
+    being the vertices ofthe triangle
 
-        :param colours:
-        :param reflections:
+    :param colours:
+    :param reflections:
 
-        :return: a tuple containg data to render a triangle
-        """
+    :return: a tuple containg data to render a triangle
+    """
+
     shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'triangle'
     shape[SHAPE_INTERSECT_FUNC] = shape_triangle_intersect
@@ -429,26 +457,42 @@ def shape_triangle_create(points, colours, reflections=None):
     return shape
 
 
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-# Code for a poly mesh
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
-def shape_polymesh_diffuseColour(shape, intersectResult):
-    # if not 'hit_polygon' in intersectResult:
-    # return self.basicColour
+def shape_polymesh_diffuse_colour(shape, intersect_result):
+    """Returns the diffuse colour for an intersection resilt with a
+    polygon mesh.
 
-    return intersectResult['hit_polygon'][SHAPE_DIFFUSECOLOUR_FUNC](
-        intersectResult['hit_polygon'], intersectResult)
+    :param shape: the polygon mesh to get the colour from
+    :param: intersection_result: A dictionary of intersection results
+    :return: a colour tuple
+    """
+
+    return intersect_result['hit_polygon'][SHAPE_DIFFUSECOLOUR_FUNC](
+        intersect_result['hit_polygon'], intersect_result)
 
 
-def shape_polymesh_specularColour(shape, intersectResult):
-    # if not 'hit_polygon' in intersectResult:
-    # return self.refelectColour
+def shape_polymesh_specular_colour(shape, intersect_result):
+    """Returns the specular colour for an intersection resilt with a
+    polygon mesh.
 
-    return intersectResult['hit_polygon'][SHAPE_SPECULARCOLOUR_FUNC](
-        intersectResult['hit_polygon'], intersectResult)
+    :param shape: the polygon mesh to get the colour from
+    :param: intersection_result: A dictionary of intersection results
+    :return: a colour tuple
+    """
+
+    return intersect_result['hit_polygon'][SHAPE_SPECULARCOLOUR_FUNC](
+        intersect_result['hit_polygon'], intersect_result)
 
 
 def shape_polymesh_intersect(shape, ray):
+    """Intersection test function for a polygon mesg.
+
+    :param shape: the shape tuple for the polygon mesh
+    :param ray: the ray to perform the intersection test with
+
+    :return: False if no intersection, or a dictionary of results when
+            there is an intersection
+    """
+
     final_result = False
 
     for t in shape[SHAPE_DATA]['polygons']:

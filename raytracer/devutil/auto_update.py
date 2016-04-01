@@ -214,12 +214,18 @@ def update_sphinx_docs():
 
     sphinx_apidoc_result = subprocess.run('sphinx-apidoc -o %s %s' %
                                           (os.path.join("docs", ""),
-                                           par_dir))
+                                           os.path.join(par_dir)
+                                           ))
 
     if sphinx_apidoc_result.returncode == 1:
         return "Sphinx documentation build error"
 
     print("\r\nRunning sphinx-build to generate HTML documentation ...\r\n")
+    print(os.getcwd())
+    print("sphinx-build -b html %s -c %s %s" %
+          (cur_dir, os.path.join('source', ''),
+           os.path.join('build', 'html', '')))
+
     # TODO: check stdout for warnings
     sphinx_build_result = \
         subprocess.run(
