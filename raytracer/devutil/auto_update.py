@@ -2,6 +2,7 @@
 import datetime
 import glob
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -192,6 +193,8 @@ def update_git_repo(current_branch):
 
 
 def update_sphinx_docs():
+    regex_warn_err = re.compile(".*(warning|error).*", re.I)
+
     # Generate documentation
     print("%s%s\r\nGenerating documentation ...\r\n" %
           (colorama.Fore.BLUE, colorama.Style.BRIGHT))
@@ -214,27 +217,57 @@ def update_sphinx_docs():
 
     sphinx_apidoc_result = subprocess.run('sphinx-apidoc -o %s %s' %
                                           (os.path.join("docs", ""),
-                                           os.path.join(par_dir)
-                                           ))
+                                           os.path.join(par_dir)),
+                                          stderr=subprocess.PIPE)
+    if sphinx_apidoc_result.stderr is not None:
+        sphinx_apidoc_stderr = \
+            sphinx_apidoc_result.stderr.decode('utf-8').split('\n')
+        print("\r\n".join(sphinx_apidoc_stderr))
 
-    if sphinx_apidoc_result.returncode == 1:
+    if sphinx_apidoc_result.returncode > 0:
         return "Sphinx documentation build error"
+    sphinx_apidoc_stderr = \
+        sphinx_apidoc_result.stderr.decode('utf-8').split('\n')
+    for line in sphinx_apidoc_stderr:
+        err = regex_warn_err.search(line)
+        if err is not None:
+            return "sphinx-apidoc produced warnings or errors"
 
     print("\r\nRunning sphinx-build to generate HTML documentation ...\r\n")
-    print(os.getcwd())
-    print("sphinx-build -b html %s -c %s %s" %
-          (cur_dir, os.path.join('source', ''),
-           os.path.join('build', 'html', '')))
 
     # TODO: check stdout for warnings
     sphinx_build_result = \
         subprocess.run(
             "sphinx-build -b html %s -c %s %s" %
             (cur_dir, os.path.join('source', ''),
-             os.path.join('build', 'html', '')))
+             os.path.join('build', 'html', '')),
+            stderr=subprocess.PIPE)
+
+    sphinx_build_stderr = \
+        sphinx_build_result.stderr.decode('utf-8').split('\n')
+    print("\r\n".join(sphinx_build_stderr))
 
     if sphinx_build_result.returncode > 0:
         return "Sphinx documentation build error"
+
+    ok_warnings = \
+        ["modules.rst:: WARNING: document isn't included in any toctree",
+         "index.rst:: WARNING: document isn't included in any toctree",
+         "html_static_path entry",
+         "toctree contains reference to nonexisting document 'modules'"]
+
+    for line in sphinx_build_stderr:
+        err = regex_warn_err.search(line)
+        if err is not None:
+            err_msg = err.group()
+            warning_OK = False
+            for warning in ok_warnings:
+                if warning in err.group():
+                    warning_OK = True
+
+            if not warning_OK:
+                return "sphinx-apidoc produced warnings or errors " + \
+                       "that need to be fixed"
 
     print("Removing Sphinx executables from project " +
           "documentation directory ...")
@@ -283,7 +316,7 @@ def auto_update():
 
     pep8_pass = check_pep8()
 
-    # If there are PEP8 Viloations, try fixing them
+    # If there are PEP8 Violations, try fixing them
     if not pep8_pass:
         pep8_pass = False
 

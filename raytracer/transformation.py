@@ -26,41 +26,42 @@ class Transform:
 
         :param options: a dictionary with the following optional elements:
 
-                'translate': a dictionary with the following elements:
-                             'x': the distance to translate in the X dimension
-                             'y': the distance to translate in the Y dimension
-                             'z': the distance to translate in the Z dimension
+        * 'translate': a dictionary with the following elements:
+            o 'x': the distance to translate in the X dimension
+            o 'y': the distance to translate in the Y dimension
+            o 'z': the distance to translate in the Z dimension
 
-                'scale': a dictionary with the following elements:
-                         'x': the amount to scale in the X dimension
-                         'y': the amount to scale in the Y dimension
-                         'z': the amount to scale in the Z dimension
+        * 'scale': a dictionary with the following elements:
+            o 'x': the amount to scale in the X dimension
+            o 'y': the amount to scale in the Y dimension
+            o 'z': the amount to scale in the Z dimension
 
-                'rotation': a dictionary with the following elements:
-                            'vector': a cartesian vector to use as an axis to
-                            rotate about
-                            'angle': the angle to rotate about the vector,
-                            in degrees"""
+        * 'rotation': a dictionary with the following elements:
+            o 'vector': a cartesian vector to use as an axis to rotate about
+            o 'angle': the angle to rotate about the vector, in degrees
+        """
         self.set_options(options)
 
     def no_transform(self):
         """Returns True if the transform would not result in any change to a
         ray or cartesian, else False
 
-        :return: boolean"""
+        :return: boolean
+        """
         return self.__no_transform__
 
     def matrix(self):
         """Returns the calculated matrix.
 
-        :return: Matrix object"""
+        :return: Matrix object
+        """
         return self.__matrix__
 
     def options(self):
-        """
-        Returns a dictionary of transformation options.
+        """Returns a dictionary of transformation options.
 
-        :return: dictionary"""
+        :return: dictionary
+        """
         return self.__options
 
     def set_options(self, options):
@@ -68,21 +69,19 @@ class Transform:
 
         :param options: a dictionary with the following optional elements:
 
-            * 'translate': a dictionary with the following elements:
-                o 'x': the distance to translate in the X dimension
-                o 'y': the distance to translate in the Y dimension
-                o 'z': the distance to translate in the Z dimension
+        * 'translate': a dictionary with the following elements:
+            o 'x': the distance to translate in the X dimension
+            o 'y': the distance to translate in the Y dimension
+            o 'z': the distance to translate in the Z dimension
 
-            * 'scale': a dictionary with the following elements:
-                o 'x': the amount to scale in the X dimension
-                o 'y': the amount to scale in the Y dimension
-                o 'z': the amount to scale in the Z dimension
+        * 'scale': a dictionary with the following elements:
+            o 'x': the amount to scale in the X dimension
+            o 'y': the amount to scale in the Y dimension
+            o 'z': the amount to scale in the Z dimension
 
-            * 'rotation': a dictionary with the following elements:
-                o 'vector': a cartesian vector to use as an axis to rotate
-                            about
-                o 'angle': the angle to rotate about the vector, in degrees
-
+        * 'rotation': a dictionary with the following elements:
+            o 'vector': a cartesian vector to use as an axis to rotate about
+            o 'angle': the angle to rotate about the vector, in degrees
         """
 
         self.__options = options
@@ -175,7 +174,7 @@ class Transform:
 
         :param normal: a cartesian to transform
 
-        :return: the transformed vector."""
+        :return: the transformed vector"""
 
         if self.__no_transform__:
             return normal
