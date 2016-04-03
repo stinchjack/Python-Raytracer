@@ -8,6 +8,62 @@ import raytracer.cartesian as cartesian
 import random
 
 
+class TestCylinderProdcedures(unittest.TestCase):
+
+    def setUp(self):
+        self.cylinder = quadraticshapes.shape_cylinder_create(
+            colour.colour_create(.5, .5, .5),
+            colour.colour_create(.5, .5, .5))
+        self.cylinder2 = quadraticshapes.shape_cylinder_create(
+            colour.colour_create(.1, .1, .1),
+            colour.colour_create(.2, .2, .2),
+            transformation.Transform({
+                'scale': {'x': 2.0, 'y': 2.0, 'z': 1.0},
+                'rotate': {'vector': cartesian.cartesian_create(1, 0, 0),
+                           'angle': 30},
+            }))
+
+    def test_func_shape_cylinder_create(self):
+
+        self.assertEqual(self.cylinder,
+                         ['shape',
+                          'cylinder',
+                          ('colour', 0.5, 0.5, 0.5),
+                          ('colour', 0.5, 0.5, 0.5),
+                          quadraticshapes.shape_cylinder_intersect,
+                          None,
+                          shape.shape_diffuse_colour,
+                          shape.shape_specular_colour,
+                          None,
+                          {}])
+
+        self.assertEqual(self.cylinder2[: 8],
+                         ['shape', 'cylinder',
+                          ('colour', 0.1, 0.1, 0.1),
+                          ('colour', 0.2, 0.2, 0.2),
+                          quadraticshapes.shape_cylinder_intersect,
+                          None,
+                          shape.shape_diffuse_colour,
+                          shape.shape_specular_colour])
+
+        self.assertIsInstance(self.cylinder2[8], transformation.Transform)
+
+    def test_func_shape_cylinder_intersect(self):
+        # Test an untransformed cylinder for correct interesection tests
+
+        ray_dir = cartesian.cartesian_create(0, 1, 0)
+        # check rays paralell to cylinder miss
+        for i in range(1, 50):
+            ray_z_pos = random.random()
+            ray_x_pos = random.random()
+            ray_start = cartesian.cartesian_create(ray_x_pos, -2, ray_z_pos)
+            ray = cartesian.ray_create(ray_start, ray_dir)
+            result = \
+                quadraticshapes.shape_cylinder_intersect(self.cylinder, ray)
+            self.assertFalse(result, "Cylinder intersection result when" +
+                             "ray in paralell to cylinder")
+
+
 class TestConeProdcedures(unittest.TestCase):
 
     def setUp(self):
@@ -94,5 +150,7 @@ class TestConeProdcedures(unittest.TestCase):
                                 'ray_z_dir: %f' % (
                     "intersect_result", "ray",
                     ray_x_dir, ray_z_dir))
+
+
 if __name__ == '__main__':
     unittest.main()
