@@ -6,7 +6,7 @@
 Welcome to Python_Raytracer's documentation!
 ============================================
 
-Not-Contents:
+Contents:
 
 .. toctree::
    :maxdepth: 2

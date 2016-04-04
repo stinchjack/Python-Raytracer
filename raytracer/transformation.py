@@ -84,17 +84,18 @@ class Transform:
             o 'angle': the angle to rotate about the vector, in degrees
         """
 
-        self.__options = options
         scalematrix = None
         rotatematrix = None
         translatematrix = None
         __inverse_matrix__ = None
         if ('translate' in options):
             if 'cartesian' not in options['translate']:
-                options['translate'] = cartesian_create(mpfr(
-                    options['translate']['x']), mpfr(
-                    options['translate']['y']), mpfr(
-                    options['translate']['z']))
+                options['translate'] = cartesian_create(
+                    mpfr(options['translate']['x']),
+                    mpfr(options['translate']['y']),
+                    mpfr(options['translate']['z']))
+
+        self.__options__ = options
 
         if ('scale' not in options and
                 'translate' not in options and 'rotate' not in options):
@@ -105,8 +106,9 @@ class Transform:
             self.__no_transform__ = False
 
         if 'scale' in options:
-            scalematrix = ScaleMatrix(1.0 / mpfr(options['scale']['x']), mpfr(
-                1.0 / mpfr(options['scale']['y'])),
+            scalematrix = ScaleMatrix(
+                1.0 / mpfr(options['scale']['x']),
+                1.0 / mpfr(options['scale']['y']),
                 1.0 / mpfr(options['scale']['z']))
         if 'rotate' in options:
             vector = cartesian_normalise(options['rotate']['vector'])
@@ -133,7 +135,8 @@ class Transform:
 
         :param ray: a ray to transform.
 
-        :return: ray, transformed"""
+        :return: the ray, transformed
+        """
 
         if self.__no_transform__:
             return ray
@@ -141,15 +144,16 @@ class Transform:
         ray_dir = ray[RAY_VECTOR]
         ray_point = ray[RAY_START]
 
-        if 'translate' in self.__options__:
-            ray_point = cartesian_sub(
-                ray_point, self.__options__['translate'])
-
         if isinstance(self.__matrix__, Matrix):
             ray_dir = transform_matrix_mul_cartesian(
                 self.__matrix__.matrix, ray_dir)
             ray_point = transform_matrix_mul_cartesian(
                 self.__matrix__.matrix, ray_point)
+
+        if 'translate' in self.__options__:
+            ray_point = cartesian_sub(
+                ray_point, self.__options__['translate'])
+
         return ray_create(ray_point, ray_dir, ray[RAY_ISSHADOW])
 
     def transform_point(self, point, inverse=False):
@@ -161,7 +165,8 @@ class Transform:
         :param inverse: A boolean. If True the inverse transformation is
                         applied
 
-        :return: the translated point."""
+        :return: the translated point
+        """
 
         if 'translate' in self.__options__:
             if inverse:
@@ -174,7 +179,8 @@ class Transform:
 
         :param normal: a cartesian to transform
 
-        :return: the transformed vector"""
+        :return: the transformed vector
+        """
 
         if self.__no_transform__:
             return normal

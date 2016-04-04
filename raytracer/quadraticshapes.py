@@ -60,7 +60,7 @@ def shape_sphere_create(colour, specular, transform=None):
     :param specular: the reflective colour of the sphere.
     :param transform: the transformation to apply to the sphere.
 
-    :return: a tuple containg data to redner a sphere
+    :return: a tuple containg data to render a sphere
     """
 
     shape = shape_emptyShape()

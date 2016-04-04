@@ -509,8 +509,8 @@ def shape_polymesh_intersect(shape, ray):
 def shape_polymesh_create(data):
     shape = shape_empty_shape()
     shape[SHAPE_INTERSECT_FUNC] = shape_polymesh_intersect
-    shape[SHAPE_DIFFUSECOLOUR_FUNC] = shape_polymesh_diffuseColour
-    shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_polymesh_specularColour
+    shape[SHAPE_DIFFUSECOLOUR_FUNC] = shape_polymesh_diffuse_colour
+    shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_polymesh_specular_colour
     if 'colour' in data:
         colour = data['colour']
     else:
