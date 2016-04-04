@@ -9,10 +9,10 @@
     * Write more examples
     * Complete doc strings and improve Sphinx formatting
     * Add comprehensive unit tests
-   
-    Known bugs:
+  
+  Known bugs:
     * Cylinder and Capped Cylinder intersection code does
 
-    Features to add:
+  Features to add:
     *   Reflections
     *   More shapes - e.g. torus
