@@ -1,4 +1,19 @@
 # Python Raytracer
 
 
-This is a project started in my own interest in my own time.
+A raytracer for Python.
+
+* Docs available in the docs directory.
+* A quick example is available in the examples directory.
+
+To do:
+    * Write more examples
+    * Complete doc strings and improve Sphinx formatting
+    * Add comprehensive unit tests
+   
+    Known bugs:
+    * Cylinder and Capped Cylinder intersection code does
+
+    Features to add:
+    *   Reflections
+    *   More shapes - e.g. torus
