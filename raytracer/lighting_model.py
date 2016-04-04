@@ -78,6 +78,10 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
                                      0 - result['normal'][VECTOR_Y],
                                      0 - result['normal'][VECTOR_Z])
 
+        if (result['hit_polygon'][SHAPE_DIFFUSECOLOUR] ==
+                ('colour', 1, 0, 0)):
+            pass
+            # mport pdb; pdb.set_trace()
         # norml = Vector(result['normal'])
         # sh_ray_dir = Vector(light[LIGHT_POINT_POINT]-result['point'])
 
@@ -105,6 +109,8 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
             # if d<0: d= 0-d
             diff = colour_scale(
                 light[LIGHT_POINT_COLOUR], cartesian_dot(light_ray, norml))
+
+            # ff = ('colour', 1,1,1)
             # print(light_ray)
             # print(norml)
             # print(cartesian_dot(light_ray, norml))
