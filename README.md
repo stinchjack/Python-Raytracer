@@ -1,11 +1,11 @@
 # Python Raytracer
 
-A raytracer for Python.
+  A raytracer for Python:
 
    * Docs available in the docs directory.
    * A quick example is available in the examples directory.
 
-To do:
+  To do:
     * Write more examples
     * Complete doc strings and improve Sphinx formatting
     * Add comprehensive unit tests
