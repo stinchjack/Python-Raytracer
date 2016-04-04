@@ -1,10 +1,9 @@
 # Python Raytracer
 
-
 A raytracer for Python.
 
-* Docs available in the docs directory.
-* A quick example is available in the examples directory.
+   * Docs available in the docs directory.
+   * A quick example is available in the examples directory.
 
 To do:
     * Write more examples
