@@ -65,14 +65,10 @@ class PIL_Output(Output):
                 :param y: the y co-ordinate of the colour to set.
                 :param colour: the colour to set"""
 
-        colour = ['colour', colour[1], colour[2], colour[3]]
-        if colour[1] < 0:
-            colour[1] = 0
-        if colour[2] < 0:
-            colour[2] = 0
-        if colour[3] < 0:
-            colour[3] = 0
-
+        if colour[1]<0: colour[1] = 0
+        if colour[2]<0: colour[2] = 0
+        if colour[3]<0: colour[3] = 0
+        
         self.__pixels__[x, y] = (
             colour[1] * 255, colour[2] * 255, colour[3] * 255)
 

@@ -11,7 +11,8 @@ class MappedImage:
 
 class MappedPILImage(MappedImage):
 
-    __image = None
+    __image__ = None
+    __pixels__ = None
 
     def __init__(self, filename):
         self.__image__ = Image.open(filename)

@@ -28,9 +28,9 @@ class MappedPILImage(MappedImage):
 def sphere_map_to_rect(shape, intersect_result):
     p = intersect_result['raw_point']
     a1 = math.degrees(math.asin(p[1]))
-    if (p[1]>= 0 and p[3]>= 0):
+    if (p[1] >= 0 and p[3] >= 0):
         a1 = (90.0 - a1) + 90.0
-    elif (p[1] <= 0 and p[3]<=0):
+    elif (p[1] <= 0 and p[3] <= 0):
         a1 = (-90.0 - a1) - 90.0
 
     a1 = a1 + 180.0

@@ -54,6 +54,9 @@ def shape_diffuse_colour(shape, intersect_result=None):
     :param intersect_result: a dictionary of intersection results. This
     parameter is not used.
     """
+    
+    print (shape)
+    sys.exit()
 
     if shape[SHAPE_DIFFUSECOLOUR_FUNC] is None:
 
@@ -63,8 +66,8 @@ def shape_diffuse_colour(shape, intersect_result=None):
         else:
             return None
 
-    elif (shape[SHAPE_DIFFUSECOLOUR_FUNC] is not None
-          and shape[SHAPE_DATA]['diffuseMap'] is not None):
+    elif (shape[SHAPE_DIFFUSECOLOUR_FUNC] is not None and
+          'diffuseMap' in shape[SHAPE_DATA]):
         xy_data = shape[SHAPE_DIFFUSECOLOUR_FUNC](
             shape, intersect_result)
         return shape[SHAPE_DATA]['diffuseMap'].colour(shape, xy_data)

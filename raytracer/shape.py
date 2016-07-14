@@ -64,7 +64,7 @@ def shape_diffuse_colour(shape, intersect_result=None):
             return None
 
     elif (shape[SHAPE_DIFFUSECOLOUR_FUNC] is not None and
-          shape[SHAPE_DATA]['diffuseMap'] is not None):
+          'diffuseMap' in shape[SHAPE_DATA]):
         xy_data = shape[SHAPE_DIFFUSECOLOUR_FUNC](
             shape, intersect_result)
         return shape[SHAPE_DATA]['diffuseMap'].colour(shape, xy_data)

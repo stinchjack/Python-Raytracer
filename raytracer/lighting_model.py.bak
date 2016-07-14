@@ -63,12 +63,12 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
         # cartesian_add(ray.start, cartesian_scale(ray.vector, result['t']))
         result['point'] = ray_calc_pt(ray, result['t'])
 
-    #diffuse_colour = result['shape'][
+    # diffuse_colour = result['shape'][
     #    SHAPE_DIFFUSECOLOUR_FUNC](result['shape'], result)
 
     diffuse_colour = shape_diffuse_colour(
         result['shape'], result)
-    
+
     end_colour = lighting_model[LIGHTINGMODEL_BASIC_AMBIENT]
 
     lights = scene_obj.get_lights()
@@ -90,10 +90,7 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
                                      0 - result['normal'][VECTOR_Y],
                                      0 - result['normal'][VECTOR_Z])
 
-        if (result['hit_polygon'][SHAPE_DIFFUSECOLOUR] ==
-                ('colour', 1, 0, 0)):
-            pass
-            # mport pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         # norml = Vector(result['normal'])
         # sh_ray_dir = Vector(light[LIGHT_POINT_POINT]-result['point'])
 
@@ -109,19 +106,17 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
         # print("result['point']: %s"%result['point'])
 
         # print("lightingMOdelShape %s"%result['shape'])
-        r = scene_obj.test_intersect(shadow_ray, result['shape'])
 
-        if (LIGHTINGMODEL_NOSHADOWS & lightingmodel_flags == 0):
+        if (LIGHTINGMODEL_NOSHADOWS & lightingmodel_flags > 0):
             r = False
+        else:
+            r = scene_obj.test_intersect(shadow_ray, result['shape'])
 
         if r is False:  # if not in shadow
 
-            # light_ray =
-            # Vector((light[LIGHT_POINT_POINT] - result['point'])).normalise()
             light_ray = cartesian_normalise(cartesian_sub(
                 light[LIGHT_POINT_POINT], result['point']))
 
-            # if d<0: d= 0-d
             diff = colour_scale(
                 light[LIGHT_POINT_COLOUR], cartesian_dot(light_ray, norml))
 
@@ -136,6 +131,11 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
             else:
                 end_colour = colour_add(
                     end_colour, colour_mul(diff, diffuse_colour))
+
+            # print(light_ray)
+            # print(norml)
+            #print(cartesian_dot(light_ray, norml))
+            #import pdb; pdb.set_trace();
 
 # if 'shape_part' in result and result['shape_part']=='bottomcap_result':
 # print("diffuse_colour:")

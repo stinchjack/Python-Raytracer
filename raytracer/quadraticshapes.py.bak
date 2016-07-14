@@ -63,7 +63,7 @@ def shape_sphere_create(colour, specular, transform=None):
     :return: a tuple containg data to render a sphere
     """
 
-    shape = shape_empty_shape()
+    shape = shape_empty_hape()
     shape[SHAPE_SHAPE] = 'sphere'
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
