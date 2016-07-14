@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>scene module &mdash; Python_Raytracer 1.0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1.0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="Python_Raytracer 1.0.0 documentation" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-scene">
+<span id="scene-module"></span><h1>scene module<a class="headerlink" href="#module-scene" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="scene.Scene">
+<em class="property">class </em><code class="descclassname">scene.</code><code class="descname">Scene</code><a class="headerlink" href="#scene.Scene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="scene.Scene.add_light">
+<code class="descname">add_light</code><span class="sig-paren">(</span><em>light</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#scene.Scene.add_light" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a light to the scene
+:param light: the light to add
+:param name: a text handle for the light</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scene.Scene.add_shape">
+<code class="descname">add_shape</code><span class="sig-paren">(</span><em>shape</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#scene.Scene.add_shape" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a shape to the scene
+:param shape: the shape to add
+:param name: a text handle for the shape</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scene.Scene.add_view">
+<code class="descname">add_view</code><span class="sig-paren">(</span><em>view_obj</em>, <em>name=None</em><span class="sig-paren">)</span><a class="headerlink" href="#scene.Scene.add_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a view to the scene.
+:return: an array of lights
+:param view_obj: the view to add
+:param name: a string handle for the view</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scene.Scene.get_lights">
+<code class="descname">get_lights</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#scene.Scene.get_lights" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the array of lights in the scene.
+:return: an array of lights</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scene.Scene.render">
+<code class="descname">render</code><span class="sig-paren">(</span><em>view_name</em><span class="sig-paren">)</span><a class="headerlink" href="#scene.Scene.render" title="Permalink to this definition">¶</a></dt>
+<dd><p>Renders the scene using the specified view. The output type must be
+set prior to calling this method.
+:param view_name: the handle of the view to use
+:return: the output of the rendered scene, or None if no output type</p>
+<blockquote>
+<div>is set</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">an instance of a child class of Output, being the same object
+passed as a paramter into set_output_type</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="scene.Scene.set_output_type">
+<code class="descname">set_output_type</code><span class="sig-paren">(</span><em>output</em><span class="sig-paren">)</span><a class="headerlink" href="#scene.Scene.set_output_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the output type for rendering the scene.
+:param output: an instance of a child class of Output</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="scene.Scene.test_intersect">
+<code class="descname">test_intersect</code><span class="sig-paren">(</span><em>ray</em>, <em>exclude_shapes=[]</em><span class="sig-paren">)</span><a class="headerlink" href="#scene.Scene.test_intersect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests intersection of a ray with all the shapes in the scene.
+:param ray: the ray to test against the shapes
+:param exclude_shapes: a list of shapes to exclude from the</p>
+<blockquote>
+<div>intersection tests</div></blockquote>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/docs/scene.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Jack Stinchcombe.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+      |
+      <a href="../_sources/docs/scene.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
