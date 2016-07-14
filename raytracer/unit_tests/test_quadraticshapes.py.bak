@@ -98,7 +98,8 @@ class TestConeProdcedures(unittest.TestCase):
                           ('colour', 0.2, 0.2, 0.2),
                           quadraticshapes.shape_cone_intersect,
                           None,
-                          None, None])
+                          shape.shape_diffuse_colour,
+                          shape.shape_specular_colour])
 
         self.assertIsInstance(self.cone2[8], transformation.Transform)
         self.assertEqual(self.cone2[9], {'y_bottom': 1, 'y_top': 0})

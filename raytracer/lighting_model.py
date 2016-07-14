@@ -63,8 +63,11 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
         # cartesian_add(ray.start, cartesian_scale(ray.vector, result['t']))
         result['point'] = ray_calc_pt(ray, result['t'])
 
-    diffuse_colour = result['shape'][
-        SHAPE_DIFFUSECOLOUR_FUNC](result['shape'], result)
+    # diffuse_colour = result['shape'][
+    #    SHAPE_DIFFUSECOLOUR_FUNC](result['shape'], result)
+
+    diffuse_colour = shape_diffuse_colour(
+        result['shape'], result)
 
     end_colour = lighting_model[LIGHTINGMODEL_BASIC_AMBIENT]
 

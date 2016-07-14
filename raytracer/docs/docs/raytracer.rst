@@ -44,6 +44,14 @@ raytracer.lighting_model module
     :undoc-members:
     :show-inheritance:
 
+raytracer.mapping module
+------------------------
+
+.. automodule:: raytracer.mapping
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 raytracer.matrix module
 -----------------------
 

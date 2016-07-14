@@ -55,11 +55,19 @@ def shape_diffuse_colour(shape, intersect_result=None):
     parameter is not used.
     """
 
-    if(type(shape[SHAPE_DIFFUSECOLOUR]) is tuple and
-            'colour' in shape[SHAPE_DIFFUSECOLOUR]):
-        return shape[SHAPE_DIFFUSECOLOUR]
-    else:
-        return None
+    if shape[SHAPE_DIFFUSECOLOUR_FUNC] is None:
+
+        if(type(shape[SHAPE_DIFFUSECOLOUR]) is tuple and
+                'colour' in shape[SHAPE_DIFFUSECOLOUR]):
+            return shape[SHAPE_DIFFUSECOLOUR]
+        else:
+            return None
+
+    elif (shape[SHAPE_DIFFUSECOLOUR_FUNC] is not None and
+          shape[SHAPE_DATA]['diffuseMap'] is not None):
+        xy_data = shape[SHAPE_DIFFUSECOLOUR_FUNC](
+            shape, intersect_result)
+        return shape[SHAPE_DATA]['diffuseMap'].colour(shape, xy_data)
 
 
 def shape_specular_colour(shape, intersect_result=None):
@@ -81,8 +89,8 @@ def shape_empty_shape():
     :return: ['shape', None, None, None, None, None, shape_diffuse_colour,
              shape_specular_colour, None, {}]"""
 
-    return ['shape', None, None, None, None, None, shape_diffuse_colour,
-            shape_specular_colour, None, {}]
+    return ['shape', None, None, None, None, None, None,
+            None, None, {}]
 
 
 def shape_point_inside(shape, cartesian):

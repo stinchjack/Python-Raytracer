@@ -27,14 +27,16 @@ class TestPlanarShapeProdcedures(unittest.TestCase):
                                      ('colour', 0.5, 0.5, 0.5),
                                      ('colour', 0.5, 0.5, 0.5),
                                      planarshapes.shape_disc_intersect,
-                                     None, None, None, None, {}])
+                                     None, shape.shape_diffuse_colour,
+                                     shape.shape_specular_colour, None, {}])
 
         self.assertEqual(self.disc2[: 8], ['shape', 'disc',
                                            ('colour', 0.1, 0.1, 0.1),
                                            ('colour', 0.2, 0.2, 0.2),
                                            planarshapes.shape_disc_intersect,
                                            None,
-                                           None, None])
+                                           shape.shape_diffuse_colour,
+                                           shape.shape_specular_colour])
         self.assertIsInstance(self.disc2[8], transformation.Transform)
         self.assertEqual(self.disc2[9], {})
 
