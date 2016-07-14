@@ -19,8 +19,7 @@ elements:
 * a function for getting the specular colour at a particluar intersection
   point on the object
 * a Transformation for the shape
-* a dictionary of other shape data, as needed by particular shapes
-"""
+* a dictionary of other shape data, as needed by particular shapes"""
 
 SHAPE_SHAPE = 1
 SHAPE_DIFFUSECOLOUR = 2
@@ -36,8 +35,7 @@ SHAPE_DATA = 9
 def shape_set_transform(shape, transform):
     """Sets the transformation for a shape.
     :param shape: a shape
-    :param transform: a Transformation object
-    """
+    :param transform: a Transformation object"""
 
     if isinstance(transform, Transform):
         shape[SHAPE_TRANSFORM] = transform
@@ -52,8 +50,7 @@ def shape_diffuse_colour(shape, intersect_result=None):
     tuple.
     :param shape: a shape
     :param intersect_result: a dictionary of intersection results. This
-    parameter is not used.
-    """
+    parameter is not used. """
 
     if(type(shape[SHAPE_DIFFUSECOLOUR]) is tuple and
             'colour' in shape[SHAPE_DIFFUSECOLOUR]):
