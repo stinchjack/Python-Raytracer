@@ -73,17 +73,7 @@ class Scene:
         self.__views__[name] = view_obj
 
     def render(self, view_name, lighting_model_flags=0):
-        """
-        Renders the scene using the specified view. The output type must be
-        set prior to calling this method.
-        :param view_name: the handle of the view to use
-        :return: the output of the rendered scene, or None if no output type
-        is set
-        :param lightingmodel_flags: Flags that affect behaviour of the lighting
-        model
-        :rtype: an instance of a child class of Output, being the same object
-        passed as a parameter into set_output_type
-        """
+
         if(self.__output__ is None):
             return None
         raytracer.view.view_render(

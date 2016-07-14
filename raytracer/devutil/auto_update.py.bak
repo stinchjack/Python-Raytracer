@@ -58,8 +58,7 @@ os.chdir(base_dir)
 git_executable = os.path.join(python_dir[0] + ":\\",
                               'git', 'cmd', 'git') + " "
 
-git_executable = "C:\\Users\\jack-2\\AppData\\Local\\Programs\\git\\bin\\git"
-
+git_executable = "C:\\Users\\jack-2\\AppData\\Local\\Programs\\git\\bin"
 
 def check_pep8():
     """Runs the PEP8 style checker.
