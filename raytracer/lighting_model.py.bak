@@ -63,12 +63,14 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
         # cartesian_add(ray.start, cartesian_scale(ray.vector, result['t']))
         result['point'] = ray_calc_pt(ray, result['t'])
 
-    # diffuse_colour = result['shape'][
-    #    SHAPE_DIFFUSECOLOUR_FUNC](result['shape'], result)
-
-    diffuse_colour = shape_diffuse_colour(
-        result['shape'], result)
-
+    if result['shape'][SHAPE_DIFFUSECOLOUR_FUNC] is not None:
+        diffuse = result['shape'][
+           SHAPE_DIFFUSECOLOUR_FUNC](result['shape'], result)
+    else:
+        diffuse = shape_diffuse_colour(result['shape'], result)
+    
+    diffuse_colour = get_colour_from_mapping (diffuse, result)
+    
     end_colour = lighting_model[LIGHTINGMODEL_BASIC_AMBIENT]
 
     lights = scene_obj.get_lights()
@@ -134,8 +136,8 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
 
             # print(light_ray)
             # print(norml)
-            #print(cartesian_dot(light_ray, norml))
-            #import pdb; pdb.set_trace();
+            # print(cartesian_dot(light_ray, norml))
+            # import pdb; pdb.set_trace();
 
 # if 'shape_part' in result and result['shape_part']=='bottomcap_result':
 # print("diffuse_colour:")

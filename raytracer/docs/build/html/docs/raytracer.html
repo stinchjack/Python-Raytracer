@@ -609,12 +609,12 @@ to allow</li>
 <div class="section" id="module-raytracer.mapping">
 <span id="raytracer-mapping-module"></span><h2>raytracer.mapping module<a class="headerlink" href="#module-raytracer.mapping" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
-<dt id="raytracer.mapping.MappedImage">
-<em class="property">class </em><code class="descclassname">raytracer.mapping.</code><code class="descname">MappedImage</code><a class="headerlink" href="#raytracer.mapping.MappedImage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dt id="raytracer.mapping.MappedCircularRamp">
+<em class="property">class </em><code class="descclassname">raytracer.mapping.</code><code class="descname">MappedCircularRamp</code><span class="sig-paren">(</span><em>colour_array</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.MappedCircularRamp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#raytracer.mapping.Texture" title="raytracer.mapping.Texture"><code class="xref py py-class docutils literal"><span class="pre">raytracer.mapping.Texture</span></code></a></p>
 <dl class="method">
-<dt id="raytracer.mapping.MappedImage.colour">
-<code class="descname">colour</code><span class="sig-paren">(</span><em>uv_tuple</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.MappedImage.colour" title="Permalink to this definition">¶</a></dt>
+<dt id="raytracer.mapping.MappedCircularRamp.colour">
+<code class="descname">colour</code><span class="sig-paren">(</span><em>uv_tuple</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.MappedCircularRamp.colour" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -622,7 +622,7 @@ to allow</li>
 <dl class="class">
 <dt id="raytracer.mapping.MappedPILImage">
 <em class="property">class </em><code class="descclassname">raytracer.mapping.</code><code class="descname">MappedPILImage</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.MappedPILImage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#raytracer.mapping.MappedImage" title="raytracer.mapping.MappedImage"><code class="xref py py-class docutils literal"><span class="pre">raytracer.mapping.MappedImage</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#raytracer.mapping.Texture" title="raytracer.mapping.Texture"><code class="xref py py-class docutils literal"><span class="pre">raytracer.mapping.Texture</span></code></a></p>
 <dl class="method">
 <dt id="raytracer.mapping.MappedPILImage.colour">
 <code class="descname">colour</code><span class="sig-paren">(</span><em>uv_tuple</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.MappedPILImage.colour" title="Permalink to this definition">¶</a></dt>
@@ -630,9 +630,30 @@ to allow</li>
 
 </dd></dl>
 
+<dl class="class">
+<dt id="raytracer.mapping.Texture">
+<em class="property">class </em><code class="descclassname">raytracer.mapping.</code><code class="descname">Texture</code><a class="headerlink" href="#raytracer.mapping.Texture" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="raytracer.mapping.Texture.colour">
+<code class="descname">colour</code><span class="sig-paren">(</span><em>uv_tuple</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.Texture.colour" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.mapping.cylinder_map_to_rect">
+<code class="descclassname">raytracer.mapping.</code><code class="descname">cylinder_map_to_rect</code><span class="sig-paren">(</span><em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.cylinder_map_to_rect" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="raytracer.mapping.get_colour_from_mapping">
+<code class="descclassname">raytracer.mapping.</code><code class="descname">get_colour_from_mapping</code><span class="sig-paren">(</span><em>colour_mapping</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.get_colour_from_mapping" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="function">
 <dt id="raytracer.mapping.sphere_map_to_rect">
-<code class="descclassname">raytracer.mapping.</code><code class="descname">sphere_map_to_rect</code><span class="sig-paren">(</span><em>shape</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.sphere_map_to_rect" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.mapping.</code><code class="descname">sphere_map_to_rect</code><span class="sig-paren">(</span><em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.sphere_map_to_rect" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>

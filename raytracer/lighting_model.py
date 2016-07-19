@@ -5,6 +5,7 @@ from raytracer.light import *
 from raytracer.output import *
 import raytracer.scene as scene
 from raytracer.view import *
+from raytracer.mapping import *
 
 """Lighting module functions.
 
@@ -63,11 +64,13 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
         # cartesian_add(ray.start, cartesian_scale(ray.vector, result['t']))
         result['point'] = ray_calc_pt(ray, result['t'])
 
-    # diffuse_colour = result['shape'][
-    #    SHAPE_DIFFUSECOLOUR_FUNC](result['shape'], result)
+    if result['shape'][SHAPE_DIFFUSECOLOUR_FUNC] is not None:
+        diffuse = result['shape'][
+            SHAPE_DIFFUSECOLOUR_FUNC](result['shape'], result)
+    else:
+        diffuse = shape_diffuse_colour(result['shape'], result)
 
-    diffuse_colour = shape_diffuse_colour(
-        result['shape'], result)
+    diffuse_colour = get_colour_from_mapping(diffuse, result)
 
     end_colour = lighting_model[LIGHTINGMODEL_BASIC_AMBIENT]
 

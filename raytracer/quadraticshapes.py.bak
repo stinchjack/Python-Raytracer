@@ -49,6 +49,8 @@ def shape_sphere_intersect(shape, ray):
     result = {'t': t}
 
     result['raw_point'] = ray_calc_pt(ray, t)
+    if result['raw_point'][1]>1:
+        import pdb; pdb.set_trace();
     result['raw_normal'] = result['raw_point']
     return result
 
@@ -63,7 +65,7 @@ def shape_sphere_create(colour, specular, transform=None):
     :return: a tuple containg data to render a sphere
     """
 
-    shape = shape_empty_hape()
+    shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'sphere'
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular

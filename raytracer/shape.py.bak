@@ -54,23 +54,13 @@ def shape_diffuse_colour(shape, intersect_result=None):
     :param intersect_result: a dictionary of intersection results. This
     parameter is not used.
     """
-    
-    print (shape)
-    sys.exit()
 
-    if shape[SHAPE_DIFFUSECOLOUR_FUNC] is None:
-
-        if(type(shape[SHAPE_DIFFUSECOLOUR]) is tuple and
-                'colour' in shape[SHAPE_DIFFUSECOLOUR]):
-            return shape[SHAPE_DIFFUSECOLOUR]
-        else:
-            return None
-
-    elif (shape[SHAPE_DIFFUSECOLOUR_FUNC] is not None and
-          'diffuseMap' in shape[SHAPE_DATA]):
-        xy_data = shape[SHAPE_DIFFUSECOLOUR_FUNC](
-            shape, intersect_result)
-        return shape[SHAPE_DATA]['diffuseMap'].colour(shape, xy_data)
+    if(type(shape[SHAPE_DIFFUSECOLOUR]) is tuple and
+            ('colour' in shape[SHAPE_DIFFUSECOLOUR] or
+             'colour_mapping' in shape[SHAPE_DIFFUSECOLOUR])):
+        return shape[SHAPE_DIFFUSECOLOUR]
+    else:
+        return None
 
 
 def shape_specular_colour(shape, intersect_result=None):
@@ -80,7 +70,9 @@ def shape_specular_colour(shape, intersect_result=None):
     :param intersect_result: a dictionary of intersection results. This
     parameter is not used. """
     if(type(shape[SHAPE_SPECULARCOLOUR]) is tuple and
-            'colour' in shape[SHAPE_SPECULARCOLOUR]):
+            ('colour' in shape[SHAPE_SPECULARCOLOUR]
+             or 'colour_mapping' in shape[SHAPE_SPECULARCOLOUR])):
+
         return shape[SHAPE_SPECULARCOLOUR]
     else:
         return None
