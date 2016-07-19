@@ -302,7 +302,7 @@ def view_render_pixel_antialias_edge_detect_get_surrounding_eight(view):
 
 
 def view_render_pixel_antialias_edge_detect(
-        view, scene_obj, lighting_model_flags=0):
+        view, scene_obj, lighting_model_flags=0, force_antialias=False):
     """
     Performs edge-detecting antialiasing for the current pixel of a render.
 
@@ -310,6 +310,8 @@ def view_render_pixel_antialias_edge_detect(
     :param scene_obj: The scene to render
     :param lightingmodel_flags: Flags that affect behaviour of the lighting
                                 model
+    :param force_antialias: Boolean - disregard edge detection and antialias
+                                      anyhow
     :return: a colour tuple
     """
 
@@ -319,26 +321,40 @@ def view_render_pixel_antialias_edge_detect(
     surrounding_coordinates = \
         view_render_pixel_antialias_edge_detect_get_surrounding_eight(view)
 
-    do_antialias = False
+    if force_antialias:
+        do_antialias = True
+    else:
+        do_antialias = False
+        for coordinate in surrounding_coordinates:
+            if (coordinate[0] in
+                    view[VIEW_ANTIALIAS_DATA]['edge_detection_map']):
+                if (coordinate[1] in
+                        view[VIEW_ANTIALIAS_DATA]
+                        ['edge_detection_map'][coordinate[0]]):
+                    cell = (view[VIEW_ANTIALIAS_DATA]['edge_detection_map']
+                            [coordinate[0]][coordinate[1]])
 
-    for coordinate in surrounding_coordinates:
-        if coordinate[0] in view[VIEW_ANTIALIAS_DATA]['edge_detection_map']:
-            if (coordinate[1] in
-                    view[VIEW_ANTIALIAS_DATA]
-                    ['edge_detection_map'][coordinate[0]]):
-                cell = (view[VIEW_ANTIALIAS_DATA]['edge_detection_map']
-                        [coordinate[0]][coordinate[1]])
+                    cell_colour = cell[1]
 
-                cell_colour = cell[1]
+                    color_diff = (abs(clr[1] - cell_colour[1] +
+                                      abs(clr[2] - cell_colour[2]) +
+                                      abs(clr[3] - cell_colour[2])))
 
-                color_diff = (abs(clr[1] - cell_colour[1] +
-                                  abs(clr[2] - cell_colour[2]) +
-                                  abs(clr[3] - cell_colour[2])))
+                    if (color_diff >=
+                            view[VIEW_ANTIALIAS]['edge_detect_threshold']):
+                        do_antialias = True
+                        # if adjacent cell not antialised ...
+                        if not cell[0]:
+                            tmp_v_x = view[VIEW_VIEW_X]
+                            tmp_v_y = view[VIEW_VIEW_Y]
+                            view[VIEW_VIEW_X] = coordinate[0]
+                            view[VIEW_VIEW_Y] = coordinate[1]
 
-                if (color_diff >=
-                        view[VIEW_ANTIALIAS]['edge_detect_threshold']):
-                    do_antialias = True
-                    break
+                            view_render_pixel_antialias_edge_detect(
+                                view, scene_obj, lighting_model_flags,
+                                True)
+                            view[VIEW_VIEW_X] = tmp_v_x
+                            view[VIEW_VIEW_Y] = tmp_v_y
 
     # view[VIEW_ANTIALIAS_DATA]['edge_detection_map']
     if do_antialias:
@@ -355,7 +371,8 @@ def view_render_pixel_antialias_edge_detect(
 
                 color_scale(clr, 1.0 /
                             (view[VIEW_ANTIALIAS]['count'] + 1.0)))
-
+    view[VIEW_ANTIALIAS_DATA]['edge_detection_map'][(
+        view[VIEW_VIEW_X])][view[VIEW_VIEW_Y]] = (do_antialias, clr)
     return clr
 
 

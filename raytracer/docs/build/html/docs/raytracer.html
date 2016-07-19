@@ -1951,7 +1951,7 @@ model</li>
 
 <dl class="function">
 <dt id="raytracer.view.view_render_pixel_antialias_edge_detect">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_edge_detect</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_edge_detect" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_edge_detect</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em>, <em>force_antialias=False</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_edge_detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs edge-detecting antialiasing for the current pixel of a render.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1962,6 +1962,8 @@ model</li>
 <li><strong>scene_obj</strong> &#8211; The scene to render</li>
 <li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
 model</li>
+<li><strong>force_antialias</strong> &#8211; Boolean - disregard edge detection and antialias
+anyhow</li>
 </ul>
 </td>
 </tr>
