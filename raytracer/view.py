@@ -136,7 +136,8 @@ def view_set_transform(view, transform):
 
 
 def view_set_antialias(
-        view, on=False, x=1, y=1, stochastic=False, edge_detect=False):
+        view, on=False, x=1, y=1, stochastic=False,
+        edge_detect=False, ed_threshold=.3):
     """Sets the antialias parameters for a view.
 
      :param view: The view to change
@@ -153,6 +154,7 @@ def view_set_antialias(
     view[VIEW_ANTIALIAS]['y'] = mpfr(y)
     view[VIEW_ANTIALIAS]['stochastic'] = stochastic
     view[VIEW_ANTIALIAS]['edge_detect'] = edge_detect
+    view[VIEW_ANTIALIAS]['edge_detect_threshold'] = ed_threshold
     view[VIEW_ANTIALIAS]['count'] = mpfr(x * y)
     if on:
         count = mpfr(x * y)
@@ -282,6 +284,22 @@ def view_render_pixel_antialias_edge_detect_get_surrounding_eight(view):
                 (view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS]['x_step']),
                 view[VIEW_VIEW_Y] + view[VIEW_ANTIALIAS]['y_step'])
 
+    if (view[VIEW_VIEW_X] < view[VIEW_VIEWRECTANGLE]['right']):
+        coordinates.append(
+            (view[VIEW_VIEW_X] + view[VIEW_ANTIALIAS]['x_step']),
+            view[VIEW_VIEW_Y])
+        if (view[VIEW_VIEW_Y] > view[VIEW_VIEWRECTANGLE]['top']):
+            coordinates.append(
+                (view[VIEW_VIEW_X] + view[VIEW_ANTIALIAS]['x_step']),
+                view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS]['y_step'])
+
+        if (view[VIEW_VIEW_Y] < view[VIEW_VIEWRECTANGLE]['bottom']):
+            coordinates.append(
+                (view[VIEW_VIEW_X] + view[VIEW_ANTIALIAS]['x_step']),
+                view[VIEW_VIEW_Y] + view[VIEW_ANTIALIAS]['y_step'])
+
+    return coordinates
+
 
 def view_render_pixel_antialias_edge_detect(
         view, scene_obj, lighting_model_flags=0):
@@ -298,14 +316,47 @@ def view_render_pixel_antialias_edge_detect(
     clr = view_render_pixel_no_antialias(
         view, scene_obj, lighting_model_flags)
 
-    # view[VIEW_ANTIALIAS_DATA]['edge_detection_map']
+    surrounding_coordinates = \
+        view_render_pixel_antialias_edge_detect_get_surrounding_eight(view)
 
-    if view[VIEW_ANTIALIAS]['stochastic']:
-        clr_aa = view_render_pixel_antialias_stochastic(
-            view, scene_obj, lighting_model_flags)
-    else:
-        clr_aa = view_render_pixel_antialias_grid_pattern(
-            view, scene_obj, lighting_model_flags)
+    do_antialias = False
+
+    for coordinate in surrounding_coordinates:
+        if coordinate[0] in view[VIEW_ANTIALIAS_DATA]['edge_detection_map']:
+            if (coordinate[1] in
+                    view[VIEW_ANTIALIAS_DATA]
+                    ['edge_detection_map'][coordinate[0]]):
+                cell = (view[VIEW_ANTIALIAS_DATA]['edge_detection_map']
+                        [coordinate[0]][coordinate[1]])
+
+                cell_colour = cell[1]
+
+                color_diff = (abs(clr[1] - cell_colour[1] +
+                                  abs(clr[2] - cell_colour[2]) +
+                                  abs(clr[3] - cell_colour[2])))
+
+                if (color_diff >=
+                        view[VIEW_ANTIALIAS]['edge_detect_threshold']):
+                    do_antialias = True
+                    break
+
+    # view[VIEW_ANTIALIAS_DATA]['edge_detection_map']
+    if do_antialias:
+        if view[VIEW_ANTIALIAS]['stochastic']:
+            clr_aa = view_render_pixel_antialias_stochastic(
+                view, scene_obj, lighting_model_flags)
+        else:
+            clr_aa = view_render_pixel_antialias_grid_pattern(
+                view, scene_obj, lighting_model_flags)
+
+            clr = colour_add(
+                color_scale(clr_aa, view[VIEW_ANTIALIAS]['count'] /
+                            (view[VIEW_ANTIALIAS]['count'] + 1.0)),
+
+                color_scale(clr, 1.0 /
+                            (view[VIEW_ANTIALIAS]['count'] + 1.0)))
+
+    return clr
 
 
 def view_render_pixel_antialias_stochastic(
