@@ -1866,13 +1866,6 @@ applied</li>
 <div class="section" id="module-raytracer.view">
 <span id="raytracer-view-module"></span><h2>raytracer.view module<a class="headerlink" href="#module-raytracer.view" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
-<dt id="raytracer.view.view_antialis_stochastic">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_antialis_stochastic</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_antialis_stochastic" title="Permalink to this definition">¶</a></dt>
-<dd><p>d
-:return: a colour tuple</p>
-</dd></dl>
-
-<dl class="function">
 <dt id="raytracer.view.view_create">
 <code class="descclassname">raytracer.view.</code><code class="descname">view_create</code><span class="sig-paren">(</span><em>eye_z</em>, <em>physical_rectangle</em>, <em>view_rectangle</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a view.</p>
@@ -1950,6 +1943,75 @@ model</li>
 <li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
 model</li>
 </ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.view.view_render_pixel_antialias_grid_pattern">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_grid_pattern</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_grid_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs non-stochastic antialiasing for the current pixel of a render.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>view</strong> &#8211; The view to render</li>
+<li><strong>scene_obj</strong> &#8211; The scene to render</li>
+<li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
+model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.view.view_render_pixel_antialias_stochastic">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_stochastic</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_stochastic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs stochastic antialiasing for the current pixel of a render.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>view</strong> &#8211; The view to render</li>
+<li><strong>scene_obj</strong> &#8211; The scene to render</li>
+<li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
+model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour tuple</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.view.view_render_pixel_no_antialias">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_no_antialias</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_no_antialias" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs the current pixel of a render without antialiasing.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>view</strong> &#8211; The view to render</li>
+<li><strong>scene_obj</strong> &#8211; The scene to render</li>
+<li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
+model</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour tuple</p>
 </td>
 </tr>
 </tbody>

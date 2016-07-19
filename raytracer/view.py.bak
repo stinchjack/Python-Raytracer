@@ -166,10 +166,24 @@ def view_set_antialias(view, on=False, x=1, y=1, stochastic=False):
              view[VIEW_VIEWRECTANGLE]['top']) /\
             (mpfr(view[VIEW_PHYSICALRECTANGLE]['bottom']) -
              mpfr(view[VIEW_PHYSICALRECTANGLE]['top']))
-        view[VIEW_ANTIALIAS_DATA]['a_view_step_x'] = view[VIEW_ANTIALIAS_DATA]['x_step'] / \
+        view[VIEW_ANTIALIAS_DATA]['a_view_step_x'] = \
+            view[VIEW_ANTIALIAS_DATA]['x_step'] / \
             mpfr(view[VIEW_ANTIALIAS]['x'])
-        view[VIEW_ANTIALIAS_DATA]['a_view_step_y'] = view[VIEW_ANTIALIAS_DATA]['y_step'] / \
+        view[VIEW_ANTIALIAS_DATA]['a_view_step_y'] = \
+            view[VIEW_ANTIALIAS_DATA]['y_step'] / \
             mpfr(view[VIEW_ANTIALIAS]['y'])
+
+    if not on:
+        view[VIEW_ANTIALIAS_DATA]['antialias_function'] = \
+            view_render_pixel_no_antialias
+
+    if on:
+        if stochastic:
+            view[VIEW_ANTIALIAS_DATA]['antialias_function'] = \
+                view_render_pixel_antialias_stochastic
+        else:
+            view[VIEW_ANTIALIAS_DATA]['antialias_function'] = \
+                view_render_pixel_antialias_grid_pattern
 
 
 def view_set_lighting_model(view, model):
@@ -192,84 +206,103 @@ def view_render_pixel(view, scene_obj, physical_x, physical_y, output_type,
                                  model
      """
 
-    zero = mpfr(0)
-    do_random = view[VIEW_ANTIALIAS]['stochastic']
-    antialias = view[VIEW_ANTIALIAS]['on']
-    clr = colour_create(0, 0, 0)
-    eye = view[VIEW_EYE]
-    if view[VIEW_ANTIALIAS]['on']:
-        colour_sc = view[VIEW_ANTIALIAS_DATA]['colour_scale']
-
-    if view[VIEW_ANTIALIAS]['on'] and not view[VIEW_ANTIALIAS]['stochastic']:
-        a_view_x = view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS_DATA]['x_step']
-
-        while a_view_x < view[VIEW_VIEW_X]:
-            a_view_y = view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS_DATA]['y_step']
-            while a_view_y < view[VIEW_VIEW_Y]:
-
-                ray = ray_create(eye, cartesian_create(
-                    a_view_x - eye[1], a_view_y - eye[2], zero - eye[3]))
-                result = scene_obj.test_intersect(ray)
-                if(result is not False):
-                    result['ray'] = ray
-                    colour = \
-                        colour_scale(view[VIEW_LIGHTINGMODEL]
-                                     [LIGHTINGMODEL_BASIC_CALCFUNC](
-                            view[VIEW_LIGHTINGMODEL], scene_obj,
-                            result, lighting_model_flags), colour_sc)
-                    clr = colour_add(clr, colour)
-                a_view_y = a_view_y + \
-                    view[VIEW_ANTIALIAS_DATA]['a_view_step_y']
-            a_view_x = a_view_x + view[VIEW_ANTIALIAS_DATA]['a_view_step_x']
-
-    elif view[VIEW_ANTIALIAS]['on'] and view[VIEW_ANTIALIAS]['stochastic']:
-        for i in range(view[VIEW_ANTIALIAS_DATA]['count']):
-            a_view_x = random.uniform(
-                view[VIEW_VIEW_X], view[VIEW_VIEW_X] +
-                view[VIEW_ANTIALIAS_DATA]['x_step'])
-            a_view_y = random.uniform(
-                view[VIEW_VIEW_Y], view[VIEW_VIEW_Y] +
-                view[VIEW_ANTIALIAS_DATA]['y_step'])
-            ray = ray_create(eye, cartesian_create(
-                a_view_x - eye[1], a_view_y - eye[2], zero - eye[3]))
-            result = scene_obj.test_intersect(ray)
-            if(result is not False):
-                result['ray'] = ray
-                colour = colour_scale(
-                    view[VIEW_LIGHTINGMODEL]
-                    [LIGHTINGMODEL_BASIC_CALCFUNC]
-                    (view[VIEW_LIGHTINGMODEL],
-                     scene_obj, result), colour_sc)
-                clr = colour_add(clr, colour)
-
-    elif not view[VIEW_ANTIALIAS]['on']:
-        ray = ray_create(eye, cartesian_create(
-            view[VIEW_VIEW_X] - eye[1], view[VIEW_VIEW_Y] - eye[2],
-            zero - eye[3]))
-
-        result = scene_obj.test_intersect(ray)
-
-        if(result is not False):
-            result['ray'] = ray
-            clr = view[VIEW_LIGHTINGMODEL][LIGHTINGMODEL_BASIC_CALCFUNC](
-                view[VIEW_LIGHTINGMODEL], scene_obj, result,
-                lighting_model_flags)
+    clr = view[VIEW_ANTIALIAS_DATA]['antialias_function'](
+        view, scene_obj, lighting_model_flags)
 
     output_type.set_pixel(physical_x, physical_y, clr)
     return clr
 
 
-def view_antialis_stochastic(view, scene_obj, lighting_model_flags=0):
-    """d
+def view_render_pixel_no_antialias(view, scene_obj, lighting_model_flags=0):
+    """
+    Performs the current pixel of a render without antialiasing.
+
+    :param view: The view to render
+    :param scene_obj: The scene to render
+    :param lightingmodel_flags: Flags that affect behaviour of the lighting
+                                model
     :return: a colour tuple
     """
-    a_view_x = view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS_DATA]['x_step']
-    while a_view_x < view_x:
-        a_view_y = view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS_DATA]['y_step']
-        while a_view_y < view_y:
+    ray = ray_create(view[VIEW_EYE],
+                     cartesian_create(
+        view[VIEW_VIEW_X] - view[VIEW_EYE][1],
+        view[VIEW_VIEW_Y] - view[VIEW_EYE][2],
+        mpfr(0) - view[VIEW_EYE][3]))
 
-            ray = ray_create(eye, cartesian_create(
-                a_view_x - eye[1], a_view_y - eye[2], zero - eye[3]))
+    result = scene_obj.test_intersect(ray)
+
+    if(result is not False):
+        result['ray'] = ray
+        clr = view[VIEW_LIGHTINGMODEL][LIGHTINGMODEL_BASIC_CALCFUNC](
+            view[VIEW_LIGHTINGMODEL], scene_obj, result,
+            lighting_model_flags)
+        return clr
+
+    return ('colour', 0, 0, 0)
+
+
+def view_render_pixel_antialias_stochastic \
+        (view, scene_obj, lighting_model_flags=0):
+    """
+    Performs stochastic antialiasing for the current pixel of a render.
+
+    :param view: The view to render
+    :param scene_obj: The scene to render
+    :param lightingmodel_flags: Flags that affect behaviour of the lighting
+                                model
+    :return: a colour tuple
+    """
+    clr = colour_create(0, 0, 0)
+    zero = mpfr(0)
+    for i in range(view[VIEW_ANTIALIAS_DATA]['count']):
+        a_view_x = random.uniform(
+            view[VIEW_VIEW_X], view[VIEW_VIEW_X] +
+            view[VIEW_ANTIALIAS_DATA]['x_step'])
+        a_view_y = random.uniform(
+            view[VIEW_VIEW_Y], view[VIEW_VIEW_Y] +
+            view[VIEW_ANTIALIAS_DATA]['y_step'])
+        ray = ray_create(view[VIEW_EYE],
+                         cartesian_create(
+            a_view_x - view[VIEW_EYE][1],
+            a_view_y - view[VIEW_EYE][2],
+            zero - view[VIEW_EYE][3]))
+        result = scene_obj.test_intersect(ray)
+        if(result is not False):
+            result['ray'] = ray
+            colour = colour_scale(
+                view[VIEW_LIGHTINGMODEL]
+                [LIGHTINGMODEL_BASIC_CALCFUNC]
+                (view[VIEW_LIGHTINGMODEL],
+                 scene_obj, result),
+                view[VIEW_ANTIALIAS_DATA]['colour_scale'])
+            clr = colour_add(clr, colour)
+    return clr
+
+
+def view_render_pixel_antialias_grid_pattern \
+        (view, scene_obj, lighting_model_flags=0):
+    """
+    Performs non-stochastic antialiasing for the current pixel of a render.
+
+    :param view: The view to render
+    :param scene_obj: The scene to render
+    :param lightingmodel_flags: Flags that affect behaviour of the lighting
+                                model
+    :return: a colour tuple
+    """
+    zero = mpfr(0)
+    clr = colour_create(0, 0, 0)
+    a_view_x = view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS_DATA]['x_step']
+    # import pdb; pdb.set_trace();
+    while a_view_x < view[VIEW_VIEW_X]:
+        a_view_y = view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS_DATA]['y_step']
+        while a_view_y < view[VIEW_VIEW_Y]:
+
+            ray = ray_create(view[VIEW_EYE],
+                             cartesian_create(
+                a_view_x - view[VIEW_EYE][1],
+                a_view_y - view[VIEW_EYE][2],
+                zero - view[VIEW_EYE][3]))
             result = scene_obj.test_intersect(ray)
             if(result is not False):
                 result['ray'] = ray
@@ -277,7 +310,8 @@ def view_antialis_stochastic(view, scene_obj, lighting_model_flags=0):
                     colour_scale(view[VIEW_LIGHTINGMODEL]
                                  [LIGHTINGMODEL_BASIC_CALCFUNC](
                         view[VIEW_LIGHTINGMODEL], scene_obj,
-                        result, lighting_model_flags), colour_sc)
+                        result, lighting_model_flags),
+                        view[VIEW_ANTIALIAS_DATA]['colour_scale'])
                 clr = colour_add(clr, colour)
             a_view_y = a_view_y + \
                 view[VIEW_ANTIALIAS_DATA]['a_view_step_y']
@@ -303,6 +337,8 @@ def view_render(view, scene_obj, output_type, lighting_model_flags=0):
               view[VIEW_VIEWRECTANGLE]['left']) / \
              (view[VIEW_PHYSICALRECTANGLE]['right'] -
               view[VIEW_PHYSICALRECTANGLE]['left'])
+
+    print('x_step: %f"', x_step)
     y_step = (mpfr(view[VIEW_VIEWRECTANGLE]['bottom']) -
               view[VIEW_VIEWRECTANGLE]['top']) / \
              (mpfr(view[VIEW_PHYSICALRECTANGLE]['bottom']) -
