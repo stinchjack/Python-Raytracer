@@ -147,15 +147,15 @@ def view_set_antialias(view, on=False, x=1, y=1, stochastic=False):
      :param y: How many times to divide a pixel on the vertical axis"""
 
     view[VIEW_ANTIALIAS]['on'] = on
-    view[VIEW_ANTIALIAS]['x'] = x
-    view[VIEW_ANTIALIAS]['y'] = y
+    view[VIEW_ANTIALIAS]['x'] = mpfr(x)
+    view[VIEW_ANTIALIAS]['y'] = mpfr(y)
     view[VIEW_ANTIALIAS]['stochastic'] = stochastic
-    view[VIEW_ANTIALIAS]['count'] = x * y
+    view[VIEW_ANTIALIAS]['count'] = mpfr(x * y)
     if on:
-        count = x * y
-        view[VIEW_ANTIALIAS_DATA]['count'] = view[
-            VIEW_ANTIALIAS]['x'] * view[VIEW_ANTIALIAS]['y']
-        view[VIEW_ANTIALIAS_DATA]['colour_scale'] = mpfr(1.0) / count
+        count = mpfr(x * y)
+        view[VIEW_ANTIALIAS_DATA]['count'] = mpfr(view[
+            VIEW_ANTIALIAS]['x'] * view[VIEW_ANTIALIAS]['y'])
+        view[VIEW_ANTIALIAS_DATA]['colour_scale'] = mpfr(1.0) / mpfr(count)
         view[VIEW_ANTIALIAS_DATA]['x_step'] = \
             (view[VIEW_VIEWRECTANGLE]['right'] -
              view[VIEW_VIEWRECTANGLE]['left']) /\
@@ -293,10 +293,19 @@ def view_render_pixel_antialias_grid_pattern(
     zero = mpfr(0)
     clr = colour_create(0, 0, 0)
     a_view_x = view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS_DATA]['x_step']
-    # import pdb; pdb.set_trace();
-    while a_view_x < view[VIEW_VIEW_X]:
+
+    xc = 0
+    yc = 0
+    # while a_view_x < view[VIEW_VIEW_X]:
+    for i in range(0, int(view[VIEW_ANTIALIAS]['y'])):
         a_view_y = view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS_DATA]['y_step']
-        while a_view_y < view[VIEW_VIEW_Y]:
+        xc = xc + 1
+        a_view_x = a_view_x + view[VIEW_ANTIALIAS_DATA]['a_view_step_x']
+        # while a_view_y < view[VIEW_VIEW_Y]:
+        for j in range(0, int(view[VIEW_ANTIALIAS]['y'])):
+            yc = yc + 1
+            a_view_y = a_view_y + \
+                view[VIEW_ANTIALIAS_DATA]['a_view_step_y']
 
             ray = ray_create(view[VIEW_EYE],
                              cartesian_create(
@@ -313,9 +322,7 @@ def view_render_pixel_antialias_grid_pattern(
                         result, lighting_model_flags),
                         view[VIEW_ANTIALIAS_DATA]['colour_scale'])
                 clr = colour_add(clr, colour)
-            a_view_y = a_view_y + \
-                view[VIEW_ANTIALIAS_DATA]['a_view_step_y']
-        a_view_x = a_view_x + view[VIEW_ANTIALIAS_DATA]['a_view_step_x']
+
     return clr
 
 
@@ -338,7 +345,6 @@ def view_render(view, scene_obj, output_type, lighting_model_flags=0):
              (view[VIEW_PHYSICALRECTANGLE]['right'] -
               view[VIEW_PHYSICALRECTANGLE]['left'])
 
-    print('x_step: %f"', x_step)
     y_step = (mpfr(view[VIEW_VIEWRECTANGLE]['bottom']) -
               view[VIEW_VIEWRECTANGLE]['top']) / \
              (mpfr(view[VIEW_PHYSICALRECTANGLE]['bottom']) -
