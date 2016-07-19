@@ -1,10 +1,16 @@
 import math
 from gmpy2 import *
 from raytracer.cartesian import *
+from raytracer.colour import *
 from PIL import Image
 
 """
-Basic classes and functions for texture mapping
+Basic classes and functions for texture mapping.
+
+Todo:
+    * Implement Uv mapping for cones, triangles, squares, discs.
+    * Add feature to texture class so it can be rotated, flipped, and tiled
+    
 """
 
 
@@ -17,34 +23,37 @@ class Texture:
 class CircularRampTexture(Texture):
 
     __colour_array__ = []
+    __colour_dist__ = None
 
     def __init__(self, colour_array):
         self.__colour_array__ = colour_array
+        self.__colour_dist__ = 1.0 / mpfr(len(self.__colour_array__) - 1)
+        self.___point707__ = sqrt(.5)
 
     def colour(self, uv_tuple):
-        u = uv_tuple[0]
-        v = uv_tuple[1]
-        colour_dist = 1.0 / mpfr(len(self.__colour_array__) - 1)
-        dist = sqrt((u - 0.5) * (u - 0.5) + (v - 0.5) * (v - 0.5))
 
-        i = int(dist / colour_dist)
+        dist = sqrt((uv_tuple[0] - 0.5) *
+                    (uv_tuple[0] - 0.5) +
+                    (uv_tuple[0] - 0.5) *
+                    (uv_tuple[0] - 0.5)) / self.___point707__
+
+        i = int(math.trunc(dist / self.__colour_dist__))
+
         if i > (len(self.__colour_array__) - 1):
             i = i - 1
 
         clr1 = self.__colour_array__[i]
         clr2 = self.__colour_array__[i + 1]
 
-        p1 = (dist / colour_dist) - i
+        p1 = (dist / self.__colour_dist__) - i
 
-        return colour_add(colour_scale(clr1, p1), colour_scale(clr2, 1 - p1))
-
-"""
-Class for holding a PIL image as a texture
-"""
+        return colour_add(colour_scale(clr1, 1 - p1), colour_scale(clr2, p1))
 
 
 class PILImageTexture(Texture):
-
+    """
+    Class for holding a PIL image as a texture
+    """
     __image__ = None
     __pixels__ = None
 
@@ -78,15 +87,14 @@ class PILImageTexture(Texture):
 
         return ('colour', clr[0] / 255.0, clr[1] / 255.0, clr[2] / 255.0)
 
-"""
-Maps an intersection result for a cylinder to a UV pair.
-
-        :return: tuple (u, v)
-        :param intersect_result: the intersection result dictionary
-"""
-
 
 def cylinder_map_to_rect(intersect_result):
+    """
+    Maps an intersection result for a cylinder to a UV pair.
+
+            :return: tuple (u, v)
+            :param intersect_result: the intersection result dictionary
+    """
     p = intersect_result['raw_point']
 
     x = p[1]
@@ -108,6 +116,12 @@ def cylinder_map_to_rect(intersect_result):
 
 
 def sphere_map_to_rect(intersect_result):
+    """
+    Maps an intersection result for a sphere to a UV pair.
+
+            :return: tuple (u, v)
+            :param intersect_result: the intersection result dictionary
+    """
     p = intersect_result['raw_point']
 
     radius = sqrt((p[1] * p[1]) + (p[3] * p[3]))
@@ -141,7 +155,7 @@ def get_colour_from_mapping(colour_mapping, intersect_result):
     if 'colour' in colour_mapping:
         return colour_mapping
 
-    if not 'colour_mapping' in colour_mapping:
+    if 'colour_mapping' not in colour_mapping:
         return None
 
     xy = colour_mapping[1](intersect_result)
