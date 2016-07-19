@@ -10,10 +10,13 @@ Basic classes and functions for texture mapping.
 Todo:
     * Implement Uv mapping for cones, triangles, squares, discs.
     * Add feature to texture class so it can be rotated, flipped, and tiled
+    * Add further patterns e.g. ColorRamp, ColourBands
+    * Add more documentation
 """
 
 
 class Texture:
+    """ Base class for all textures s"""
 
     def colour(self, uv_tuple):
         return None
@@ -33,14 +36,17 @@ class CircularRampTexture(Texture):
 
         dist = sqrt((uv_tuple[0] - 0.5) *
                     (uv_tuple[0] - 0.5) +
-                    (uv_tuple[0] - 0.5) *
-                    (uv_tuple[0] - 0.5)) / self.___point707__
+                    (uv_tuple[1] - 0.5) *
+                    (uv_tuple[1] - 0.5)) / self.___point707__
 
         i = int(math.trunc(dist / self.__colour_dist__))
 
-        if i > (len(self.__colour_array__) - 1):
+        if i >= (len(self.__colour_array__) - 1):
             i = i - 1
 
+        if (i == 3):
+            import pdb
+            pdb.set_trace()
         clr1 = self.__colour_array__[i]
         clr2 = self.__colour_array__[i + 1]
 

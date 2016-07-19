@@ -129,10 +129,10 @@ def view_set_transform(view, transform):
      :param view: The view to change
      :param transform: The Transformation to apply"""
 
-if isinstance(transform, Transform):
-    view[VIEW_TRANSFORM] = transform
-elif type(transform) is dict:
-    view[VIEW_TRANSFORM] = Transform(transform)
+    if isinstance(transform, Transform):
+        view[VIEW_TRANSFORM] = transform
+    elif type(transform) is dict:
+        view[VIEW_TRANSFORM] = Transform(transform)
 
 
 def view_set_antialias(view, on=False, x=1, y=1, stochastic=False):

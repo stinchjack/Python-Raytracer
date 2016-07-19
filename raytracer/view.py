@@ -32,10 +32,10 @@ A view is stored as a list with the following elements:
         'bottom': the bottom edge
 
     * A dictionary of antialiasing setting for the view:
-        'on': Boolean value dictating to using antialias while rendering
+        'on': Boolean value dictating to using anti-alias while rendering
         or not
         'stochastic': Boolean value dictating use of stochastic/random
-        antialiasing
+        anti-aliasing
         'x': How many times to divide the pixel on the horizontal axis
         'y': How many times to divide the pixel on the vertical axis
 
@@ -46,21 +46,21 @@ A view is stored as a list with the following elements:
     * The Z-position of the eye point. This should be a negative value. The X
         and Y co-ordinates of the eye are in the middle of the logical view
 
-    * The cartesian co-ordinate of the eye, calucated from the Z-position of
+    * The Cartesian co-ordinate of the eye, calculated from the Z-position of
         the eye point and rectangle of the logical view
 
-    * A dictionary of data inteded for internal use with anitalising:
+    * A dictionary of data intended for internal use with anitalising:
 
         'count': The total number of subsamples taken for each pixel, i.e.
             member 'x' times member 'y'
         'colour_scale': The multiplier for each colour subsample to be scaled
             by. This is the inverse of member 'count'
         'x_step': The scene distance to move horizontally for each horizontal
-            pixel on the phyiscal output
+            pixel on the physical output
         'y_step': The scene distance to move vertically for each vertical
-            pixel on the phyiscal output
-        'a_view_step_x': The horizontal step distance to use for subsampling
-        'a_view_step_y': The vertical step distance to use for subsampling
+            pixel on the physical output
+        'a_view_step_x': The horizontal step distance to use for sub sampling
+        'a_view_step_y': The vertical step distance to use for sub sampling
 
 
     * The current X-position during rendering(intended for internal use)
@@ -205,9 +205,6 @@ def view_render_pixel(view, scene_obj, physical_x, physical_y,
             a_view_y = view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS_DATA]['y_step']
             while a_view_y < view_y:
 
-                # ray =
-                # ray_create(eye,
-                # Vector(a_view_x -eye[1],a_view_y -eye[2], zero-eye[3]))
                 ray = ray_create(eye, cartesian_create(
                     a_view_x - eye[1], a_view_y - eye[2], zero - eye[3]))
                 result = scene_obj.test_intersect(ray)
