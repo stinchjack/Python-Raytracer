@@ -337,7 +337,7 @@ given ray but scaled by the given amount</p>
 <dl class="function">
 <dt id="raytracer.cartesian.transform_matrix_mul_cartesian">
 <code class="descclassname">raytracer.cartesian.</code><code class="descname">transform_matrix_mul_cartesian</code><span class="sig-paren">(</span><em>matrix</em>, <em>cartesian</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.cartesian.transform_matrix_mul_cartesian" title="Permalink to this definition">¶</a></dt>
-<dd><p>Multiplies a matrix by a cartesian, resulting in a transformed
+<dd><p>Multiplies a matrix by a Cartesian, resulting in a transformed
 cartesian.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1866,6 +1866,13 @@ applied</li>
 <div class="section" id="module-raytracer.view">
 <span id="raytracer-view-module"></span><h2>raytracer.view module<a class="headerlink" href="#module-raytracer.view" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="raytracer.view.view_antialis_stochastic">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_antialis_stochastic</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_antialis_stochastic" title="Permalink to this definition">¶</a></dt>
+<dd><p>d
+:return: a colour tuple</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="raytracer.view.view_create">
 <code class="descclassname">raytracer.view.</code><code class="descname">view_create</code><span class="sig-paren">(</span><em>eye_z</em>, <em>physical_rectangle</em>, <em>view_rectangle</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a view.</p>
@@ -1929,7 +1936,7 @@ model</li>
 
 <dl class="function">
 <dt id="raytracer.view.view_render_pixel">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>physical_x</em>, <em>physical_y</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>physical_x</em>, <em>physical_y</em>, <em>output_type</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renders one pixel of a view</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />

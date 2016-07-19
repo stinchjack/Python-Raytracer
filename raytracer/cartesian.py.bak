@@ -137,7 +137,7 @@ def cartesian_cross(c1, c2):
 
 
 def transform_matrix_mul_cartesian(matrix, cartesian):
-    """Multiplies a matrix by a Cartesian, resulting in a transformed
+    """Multiplies a matrix by a cartesian, resulting in a transformed
     cartesian.
 
     :param matrix: a matrix

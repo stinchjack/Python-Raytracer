@@ -150,8 +150,9 @@ def view_set_antialias(view, on=False, x=1, y=1, stochastic=False):
     view[VIEW_ANTIALIAS]['x'] = x
     view[VIEW_ANTIALIAS]['y'] = y
     view[VIEW_ANTIALIAS]['stochastic'] = stochastic
-
+    view[VIEW_ANTIALIAS]['count'] = x * y
     if on:
+        count = x * y
         view[VIEW_ANTIALIAS_DATA]['count'] = view[
             VIEW_ANTIALIAS]['x'] * view[VIEW_ANTIALIAS]['y']
         view[VIEW_ANTIALIAS_DATA]['colour_scale'] = mpfr(1.0) / count
@@ -165,9 +166,11 @@ def view_set_antialias(view, on=False, x=1, y=1, stochastic=False):
              view[VIEW_VIEWRECTANGLE]['top']) /\
             (mpfr(view[VIEW_PHYSICALRECTANGLE]['bottom']) -
              mpfr(view[VIEW_PHYSICALRECTANGLE]['top']))
-        view[VIEW_ANTIALIAS_DATA]['a_view_step_x'] = x_step / \
+        view[VIEW_ANTIALIAS_DATA]['a_view_step_x'] = \
+            view[VIEW_ANTIALIAS_DATA]['x_step'] / \
             mpfr(view[VIEW_ANTIALIAS]['x'])
-        view[VIEW_ANTIALIAS_DATA]['a_view_step_y'] = y_step / \
+        view[VIEW_ANTIALIAS_DATA]['a_view_step_y'] = \
+            view[VIEW_ANTIALIAS_DATA]['y_step'] / \
             mpfr(view[VIEW_ANTIALIAS]['y'])
 
 
@@ -179,7 +182,7 @@ def view_set_lighting_model(view, model):
     view[VIEW_LIGHTINGMODEL] = model
 
 
-def view_render_pixel(view, scene_obj, physical_x, physical_y,
+def view_render_pixel(view, scene_obj, physical_x, physical_y, output_type,
                       lighting_model_flags=0):
     """Renders one pixel of a view
 
@@ -201,9 +204,10 @@ def view_render_pixel(view, scene_obj, physical_x, physical_y,
 
     if view[VIEW_ANTIALIAS]['on'] and not view[VIEW_ANTIALIAS]['stochastic']:
         a_view_x = view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS_DATA]['x_step']
-        while a_view_x < view_x:
+
+        while a_view_x < view[VIEW_VIEW_X]:
             a_view_y = view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS_DATA]['y_step']
-            while a_view_y < view_y:
+            while a_view_y < view[VIEW_VIEW_Y]:
 
                 ray = ray_create(eye, cartesian_create(
                     a_view_x - eye[1], a_view_y - eye[2], zero - eye[3]))
@@ -221,12 +225,12 @@ def view_render_pixel(view, scene_obj, physical_x, physical_y,
             a_view_x = a_view_x + view[VIEW_ANTIALIAS_DATA]['a_view_step_x']
 
     elif view[VIEW_ANTIALIAS]['on'] and view[VIEW_ANTIALIAS]['stochastic']:
-        for i in range(count):
+        for i in range(view[VIEW_ANTIALIAS_DATA]['count']):
             a_view_x = random.uniform(
-                view[VIEW_VIEW_X], view_x +
+                view[VIEW_VIEW_X], view[VIEW_VIEW_X] +
                 view[VIEW_ANTIALIAS_DATA]['x_step'])
             a_view_y = random.uniform(
-                view[VIEW_VIEW_Y], view_y +
+                view[VIEW_VIEW_Y], view[VIEW_VIEW_Y] +
                 view[VIEW_ANTIALIAS_DATA]['y_step'])
             ray = ray_create(eye, cartesian_create(
                 a_view_x - eye[1], a_view_y - eye[2], zero - eye[3]))
@@ -253,6 +257,33 @@ def view_render_pixel(view, scene_obj, physical_x, physical_y,
                 view[VIEW_LIGHTINGMODEL], scene_obj, result,
                 lighting_model_flags)
 
+    output_type.set_pixel(physical_x, physical_y, clr)
+    return clr
+
+
+def view_antialis_stochastic(view, scene_obj, lighting_model_flags=0):
+    """d
+    :return: a colour tuple
+    """
+    a_view_x = view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS_DATA]['x_step']
+    while a_view_x < view_x:
+        a_view_y = view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS_DATA]['y_step']
+        while a_view_y < view_y:
+
+            ray = ray_create(eye, cartesian_create(
+                a_view_x - eye[1], a_view_y - eye[2], zero - eye[3]))
+            result = scene_obj.test_intersect(ray)
+            if(result is not False):
+                result['ray'] = ray
+                colour = \
+                    colour_scale(view[VIEW_LIGHTINGMODEL]
+                                 [LIGHTINGMODEL_BASIC_CALCFUNC](
+                        view[VIEW_LIGHTINGMODEL], scene_obj,
+                        result, lighting_model_flags), colour_sc)
+                clr = colour_add(clr, colour)
+            a_view_y = a_view_y + \
+                view[VIEW_ANTIALIAS_DATA]['a_view_step_y']
+        a_view_x = a_view_x + view[VIEW_ANTIALIAS_DATA]['a_view_step_x']
     return clr
 
 
@@ -294,8 +325,8 @@ def view_render(view, scene_obj, output_type, lighting_model_flags=0):
                                 view[VIEW_PHYSICALRECTANGLE]['bottom']):
 
             clr = view_render_pixel(view, scene_obj, physical_x, physical_y,
-                                    lighting_model_flags)
-            output_type.set_pixel(physical_x, physical_y, clr)
+                                    output_type, lighting_model_flags)
+
             view[VIEW_VIEW_Y] = view[VIEW_VIEW_Y] + y_step
 
         view[VIEW_VIEW_X] = view[VIEW_VIEW_X] + x_step
