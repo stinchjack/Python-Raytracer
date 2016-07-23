@@ -150,17 +150,6 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
 # print("norml:")
 # print(norml)
 
-# banana
-
-        # end_colour = colour_add(
-        #                          end_colour, colour_mul(
-        #                          colour_scale(light[LIGHT_POINT_COLOUR],
-        #               cartesian_dot(cartesian_normalise(cartesian_sub(
-        #                light[LIGHT_POINT_POINT], result['point'])),
-        #            norml)), diffuseColour ))
-        # else:
-        # print(shadow_ray)
-        # exit()
     return end_colour
 
 
