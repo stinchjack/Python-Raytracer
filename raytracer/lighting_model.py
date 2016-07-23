@@ -59,9 +59,7 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
 
     if 'point' not in result:
         ray = result['ray']
-        # result['point'] = ray.start+(ray.vector.scale(result['t']))
-        # result['point'] =
-        # cartesian_add(ray.start, cartesian_scale(ray.vector, result['t']))
+
         result['point'] = ray_calc_pt(ray, result['t'])
 
     if result['shape'][SHAPE_DIFFUSECOLOUR_FUNC] is not None:
@@ -78,13 +76,6 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
 
     for l in lights:
         light = lights[l]
-        # shadow_ray = Ray(light[LIGHT_POINT_POINT], Vector(result['point']-
-        # light[LIGHT_POINT_POINT]), True)
-
-        # print("result['point']: %s"%result['point'])
-        # print("result['normal']: %s"%result['normal'])
-
-        # if(result['normal'].dot(result['ray'].vector)<0):
 
         if(cartesian_dot(result['normal'], result['ray'][RAY_VECTOR]) < 0):
             norml = result['normal']
@@ -93,22 +84,11 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
                                      0 - result['normal'][VECTOR_Y],
                                      0 - result['normal'][VECTOR_Z])
 
-        # import pdb; pdb.set_trace()
-        # norml = Vector(result['normal'])
-        # sh_ray_dir = Vector(light[LIGHT_POINT_POINT]-result['point'])
-
         rs = cartesian_add(
             result['point'], cartesian_scale(norml, mpfr(".0001")))
 
-        # shadow_ray = Ray(rs, Vector(light[LIGHT_POINT_POINT]-
-        # result['point']), True)
         shadow_ray = ray_create(rs, cartesian_sub(
             light[LIGHT_POINT_POINT], result['point']), True)
-
-        # print("result['normal']: %s"%snorml)
-        # print("result['point']: %s"%result['point'])
-
-        # print("lightingMOdelShape %s"%result['shape'])
 
         if (LIGHTINGMODEL_NOSHADOWS & lightingmodel_flags > 0):
             r = False
@@ -123,32 +103,12 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
             diff = colour_scale(
                 light[LIGHT_POINT_COLOUR], cartesian_dot(light_ray, norml))
 
-            # ff = ('colour', 1,1,1)
-            # print(light_ray)
-            # print(norml)
-            # print(cartesian_dot(light_ray, norml))
-            # print("--==--==-=-    ")
             if (LIGHTINGMODEL_NODIFFUSE & lightingmodel_flags > 0):
                 end_colour = colour_add
                 (end_colour, colour_scale(diffuse_colour, mpfr(0.5)))
             else:
                 end_colour = colour_add(
                     end_colour, colour_mul(diff, diffuse_colour))
-
-            # print(light_ray)
-            # print(norml)
-            # print(cartesian_dot(light_ray, norml))
-            # import pdb; pdb.set_trace();
-
-# if 'shape_part' in result and result['shape_part']=='bottomcap_result':
-# print("diffuse_colour:")
-# print(diffuse_colour)
-# print("diff:")
-# print(diff)
-# print("result[raw_normal]:")
-# print(result['raw_normal'])
-# print("norml:")
-# print(norml)
 
     return end_colour
 
