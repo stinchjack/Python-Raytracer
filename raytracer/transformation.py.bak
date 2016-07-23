@@ -178,6 +178,7 @@ class Transform:
         """Applies inverse transformation to a vector. (Used for normals.)
 
         :param normal: a cartesian to transform
+
         :return: the transformed vector
         """
 

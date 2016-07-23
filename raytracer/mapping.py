@@ -44,15 +44,62 @@ class CircularRampTexture(Texture):
         if i >= (len(self.__colour_array__) - 1):
             i = i - 1
 
-        if (i == 3):
-            import pdb
-            pdb.set_trace()
         clr1 = self.__colour_array__[i]
         clr2 = self.__colour_array__[i + 1]
 
         p1 = (dist / self.__colour_dist__) - i
 
         return colour_add(colour_scale(clr1, 1 - p1), colour_scale(clr2, p1))
+
+
+class BandedSprialTexture(Texture):
+
+    __colour_array__ = []
+    __colour_dist__ = None
+
+    def __init__(self, colour_array, twists=5):
+        self.__colour_array__ = colour_array
+
+        self.___point707__ = sqrt(.5)
+        self.__twists__ = twists
+        self.__twist_width__ = 1.0 / mpfr(twists)
+        self.__band_width__ = self.__twist_width__ / len(colour_array)
+
+    def colour(self, uv_tuple):
+
+        u = (uv_tuple[0] * 2.0) - 1.0
+        v = (uv_tuple[1] * 2.0) - 1.0
+
+        dist = sqrt((u * u) + (v * v))
+
+        y_from_ctr = v
+
+        if dist != 0:
+            x_on_circ = (u / dist)
+        else:
+            return 0
+
+        angle = degrees(acos(x_on_circ))
+
+        if y_from_ctr < 0:
+            angle = 90 + (90 - angle)
+        else:
+            angle = 180 + angle
+
+        dist = dist * self.___point707__
+
+        twist = math.trunc(dist / self.__twist_width__)
+        if twist > (self.__twists__ - 1):
+            twist = (self.__twists__ - 1)
+
+        pos_in_twist = (dist - (twist * self.__twist_width__))
+        pos_in_twist = pos_in_twist - ((angle / 360.0) * self.__twist_width__)
+
+        band = pos_in_twist / self.__band_width__
+        if band < 0:
+            band = len(self.__colour_array__) + band
+
+        return self.__colour_array__[int(math.trunc(band))]
 
 
 class PILImageTexture(Texture):
