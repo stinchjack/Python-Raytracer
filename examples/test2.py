@@ -32,10 +32,6 @@ view_set_antialias(view, True, 5, 5, True, True, .4)
 scene.add_view(view, 'view')
 
 
-#sphere = shape_cylinder_create(
-#    ('colour_mapping', cylinder_map_to_rect, PILImageTexture("C:\\Users\\jack-2\\Desktop\\tumblr\\http___65.media.tumblr.com_81e915b5bdc8937ed4dc24519d63ab87_tumblr_o7mtlcDEDS1shlzkjo1_1280.jpg")),
-#    colour_create(0,0,0))
-
 sphere = shape_cylinder_create(
     ('colour_mapping', cylinder_map_to_rect,
     BandedSprialTexture([colour_create(1,0,0), colour_create(1,1,0) , colour_create(1,0,1) , colour_create(1,1,1)])),
