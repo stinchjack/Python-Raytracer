@@ -287,6 +287,8 @@ def auto_update():
     # Check the repository branch is not dev or master
     branch_data = get_repo_branches()
 
+    # import pdb; pdb.set_trace();
+
     if branch_data['current'] == 'dev' or branch_data['current'] == 'master':
         return "The current git repository branch is '%s'. " % \
             (branch_data['current'], "This script should not be run " +
