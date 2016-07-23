@@ -16,18 +16,29 @@ Todo:
 
 
 class Texture:
-    """ Base class for all textures s"""
+    """ Base class for all textures"""
 
     def colour(self, uv_tuple):
+        """
+        Calculates a colour from a UV tuple
+                :param uv_tuple: a tuple with a UV pair to generate a
+                                 texture from
+        """
         return None
 
 
 class CircularRampTexture(Texture):
-
+    """ A texture of concentric blended colours
+    """
     __colour_array__ = []
     __colour_dist__ = None
 
     def __init__(self, colour_array):
+        """
+        Class constructor
+
+                :param colour_array: an array of colour tuples
+        """
         self.__colour_array__ = colour_array
         self.__colour_dist__ = 1.0 / mpfr(len(self.__colour_array__) - 1)
         self.___point707__ = sqrt(.5)
@@ -53,11 +64,19 @@ class CircularRampTexture(Texture):
 
 
 class BandedSprialTexture(Texture):
-
+    """ A texture of spirally banded colours
+    """
     __colour_array__ = []
     __colour_dist__ = None
 
     def __init__(self, colour_array, twists=5):
+        """
+        Class constructor
+                :param colour_array: an array of colour tuples
+                :param twists: the number of times each colour spirals
+                               from the centre to the edge
+
+        """
         self.__colour_array__ = colour_array
 
         self.___point707__ = sqrt(.5)
@@ -110,6 +129,12 @@ class PILImageTexture(Texture):
     __pixels__ = None
 
     def __init__(self, filename):
+        """
+        Class constructor
+                :param filename: the path of the image file to use
+
+        """
+
         self.__image__ = Image.open(filename)
         self.__pixels__ = self.__image__.load()
 
@@ -204,11 +229,18 @@ def sphere_map_to_rect(intersect_result):
 
 
 def get_colour_from_mapping(colour_mapping, intersect_result):
+    """
+        Returns a colour from a Texture object. If a colour_mapping is a
+        colour tuple, then the colour tuple will be returned
+
+            :param colour_mapping: a colour mapping tuple or colour tuple
+            :param intersect_result: an intersection result dictionary
+    """
     if 'colour' in colour_mapping:
         return colour_mapping
 
     if 'colour_mapping' not in colour_mapping:
         return None
 
-    xy = colour_mapping[1](intersect_result)
-    return colour_mapping[2].colour(xy)
+    uv_pair = colour_mapping[1](intersect_result)
+    return colour_mapping[2].colour(uv_pair)
