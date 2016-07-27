@@ -5,5 +5,5 @@ setup(name='Distutils',
       description='Python Raytracer',
       author='Jack Stinchcombe',
       author_email='stinchjack@gmail.com',
-      packages=['raytracer'],
+      packages=['raytracer', 'raytracer.devutil', 'raytracer.unit_tests'],
      )

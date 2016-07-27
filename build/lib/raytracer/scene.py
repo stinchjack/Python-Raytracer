@@ -77,14 +77,14 @@ class Scene:
         Renders the scene using the specified view. The output type must be
         set prior to calling this method.
         :param view_name: the handle of the view to use
-        :return: the output of the rendered scene, or None if no output type
-                 is set
+        :return: the rendered output, or None if no output type is set
         """
         if(self.__output__ is None):
             return None
         raytracer.view.view_render(
             self.__views__[view_name])
-        return self.__views__[view_name][raytracer.view.VIEW_OUTPUT].get_output()
+        return (self.__views__[view_name]
+                [raytracer.view.VIEW_OUTPUT].get_output())
 
     def test_intersect(self, ray, exclude_shapes=[]):
         """Tests intersection of a ray with all the shapes in the scene.

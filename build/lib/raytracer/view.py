@@ -81,10 +81,13 @@ VIEW_VIEW_Y = 11
 VIEW_SCENE = 12
 
 
-def view_create(scene, eye_z,  physical_rectangle, view_rectangle, transform=None, output = None):
+def view_create(
+        scene, eye_z,  physical_rectangle,
+        view_rectangle, transform=None, output=None):
     """Creates a view.
 
-     :param eye_z: The Z-position of the eye point. This should be a negative value.
+     :param eye_z: The Z-position of the eye point. This should be a negative
+                   value.
 
      :param physical_rectangle: The rectangle of the physical output to draw
             onto. This is value is a dictionary:
@@ -119,7 +122,7 @@ def view_create(scene, eye_z,  physical_rectangle, view_rectangle, transform=Non
                              (view_rectangle['top'] +
                               view_rectangle['bottom']) /
                              mpfr(2.0), eye_z), {}, None, None,
-                             scene]
+            scene]
 
     view_set_antialias(view)
     return view
@@ -136,7 +139,7 @@ def view_set_transform(view, transform):
     elif type(transform) is dict:
         view[VIEW_TRANSFORM] = Transform(transform)
 
-        
+
 def view_set_output(view, output):
     """Set or change the transformation for a view.
 
@@ -145,11 +148,10 @@ def view_set_output(view, output):
 
     view[VIEW_OUTPUT] = output
 
-        
 
 def view_set_antialias(
-    view, on=False, x=1, y=1, stochastic=False,
-    edge_detect=False, ed_threshold=.3):
+        view, on=False, x=1, y=1, stochastic=False,
+        edge_detect=False, ed_threshold=.3):
     """Sets the antialias parameters for a view.
 
      :param view: The view to change
@@ -163,7 +165,7 @@ def view_set_antialias(
                           antialiasing
      :param x: How many times to divide a pixel on the horizontal axis
      :param y: How many times to divide a pixel on the vertical axis
-     
+
      """
 
     view[VIEW_ANTIALIAS]['on'] = on
@@ -213,7 +215,7 @@ def view_set_antialias(
             view_render_pixel_no_antialias
 
 
-def view_set_lighting_model(view, lightingmodel, options = None):
+def view_set_lighting_model(view, lightingmodel, options=None):
     """Sets the lighting model for a view
 
      :param view: The view to change
