@@ -77,7 +77,8 @@ class Scene:
         Renders the scene using the specified view. The output type must be
         set prior to calling this method.
         :param view_name: the handle of the view to use
-        :return: the rendered output, or None if no output type is set
+        :return: the output of the rendered scene, or None if no output type
+                 is set
         """
         if(self.__output__ is None):
             return None

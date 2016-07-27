@@ -46,17 +46,17 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="raytracer.devutil.html">raytracer.devutil package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#raytracer-devutil-auto-update-module">raytracer.devutil.auto_update module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#raytracer-devutil-quick-module">raytracer.devutil.quick module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-raytracer.devutil.auto_update">raytracer.devutil.auto_update module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-raytracer.devutil.quick">raytracer.devutil.quick module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-raytracer.devutil">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="raytracer.unit_tests.html">raytracer.unit_tests package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#raytracer-unit-tests-test-planarshapes-module">raytracer.unit_tests.test_planarshapes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#raytracer-unit-tests-test-quadraticshapes-module">raytracer.unit_tests.test_quadraticshapes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#raytracer-unit-tests-test-shape-module">raytracer.unit_tests.test_shape module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-contents">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests.test_planarshapes">raytracer.unit_tests.test_planarshapes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests.test_quadraticshapes">raytracer.unit_tests.test_quadraticshapes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests.test_shape">raytracer.unit_tests.test_shape module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -1627,9 +1627,7 @@ there is an intersection.</p>
 <dd><p>Renders the scene using the specified view. The output type must be
 set prior to calling this method.
 :param view_name: the handle of the view to use
-:return: the output of the rendered scene, or None if no output type</p>
-<blockquote>
-<div>is set</div></blockquote>
+:return: the rendered output, or None if no output type is set</p>
 </dd></dl>
 
 <dl class="method">
@@ -1895,7 +1893,8 @@ applied</li>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">param eye_z:</th><td class="field-body">The Z-position of the eye point. This should be a negative value.</td>
+<tr class="field-odd field"><th class="field-name">param eye_z:</th><td class="field-body">The Z-position of the eye point. This should be a negative
+value.</td>
 </tr>
 <tr class="field-even field"><th class="field-name" colspan="2">param physical_rectangle:</th></tr>
 <tr class="field-even field"><td>&nbsp;</td><td class="field-body">The rectangle of the physical output to draw
