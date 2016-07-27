@@ -1,3 +1,9 @@
+import gmpy2
+from gmpy2 import *
+from raytracer.cartesian import *
+from raytracer.colour import *
+from raytracer.transformation import *
+
 """Functions for dealing with lights
 
 A point light is stored as a tuple, with the first two elements being the
@@ -13,14 +19,7 @@ and in other proportions in the scene.
 
 A directional light is also stored as a tuple. The tuple elements are two
 identifying strings as per point lights, a function to test if a point is
-inside the shape, a colour, and a transformation of the shape. """
-
-
-import gmpy2
-from gmpy2 import *
-from cartesian import *
-from colour import *
-from transformation import *
+inside the shape, a colour, and a transformation of the shape"""
 
 LIGHT_TYPE = 1
 LIGHT_POINT_POINT = 2
@@ -41,9 +40,7 @@ def light_point_light_create(point, colour):
     :param point: A cartesian point (see cartesian module documentation)
     :param colour: A colour (see cartesian module documentation)
 
-    :return: A tuple of light parameters
-
-    """
+    :return: A tuple of light parameters"""
     return ('light', 'point', point, colour)
 
 
@@ -56,6 +53,7 @@ def light_directional_is_inside(light, point):
     :param point: A cartesian as a point to test
 
     :return: Boolean"""
+
     return light[2](light, point)
 
 
@@ -69,7 +67,7 @@ def light_cone_is_inside(light, point):
 
     :return: Boolean"""
 
-    p = light[LIGHT_CONE_TRANSFORM].transformPoint(point)
+    p = light[LIGHT_CONE_TRANSFORM].transform_point(point)
     if p[3] <= 0:
         return False
     r = p[3] * aspect
@@ -81,6 +79,7 @@ def light_cone_is_inside(light, point):
 
 def light_conelight_create(colour, transform):
     """Creates a tuple for a cone-shaped light"""
+
     return ('light', 'cone', light_cone_is_inside, colour, transform)
 
 
@@ -101,9 +100,9 @@ def light_tube_is_inside(point):
 
     :param point: A cartesian as a point to test
 
-    :return: Boolean
-        """
-    p = light[LIGHT_CONE_TRANSFORM].transformPoint(point)
+    :return: Boolean"""
+
+    p = light[LIGHT_CONE_TRANSFORM].transform_point(point)
     if p[3] <= 0:
         return False
     point_r2 = (p[VECTOR_X] * p[VECTOR_X]) + (p[VECTOR_Y] * p[VECTOR_Y])

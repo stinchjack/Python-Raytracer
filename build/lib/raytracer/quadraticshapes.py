@@ -1,10 +1,13 @@
+
+from raytracer.cartesian import *
+from raytracer.colour import *
+from raytracer.matrix import *
+from raytracer.transformation import *
+from raytracer.shape import *
+
 """Functions for quadratic shapes: spheres, cylinders, cones, capped cylinders,
-capped cones."""
-from cartesian import *
-from colour import *
-from matrix import *
-from transformation import *
-from shape import *
+capped cone
+"""
 
 
 def shape_sphere_intersect(shape, ray):
@@ -17,6 +20,7 @@ def shape_sphere_intersect(shape, ray):
     :return: False if no intersection, or a dictionary of results when
              there is an intersection.
     """
+
     a = cartesian_dot(ray[2], ray[2])
     b = mpfr(2) * cartesian_dot(ray[2], ray[1])
     c = cartesian_dot(ray[1], ray[1]) - mpfr(1)
@@ -56,9 +60,10 @@ def shape_sphere_create(colour, specular, transform=None):
     :param specular: the reflective colour of the sphere.
     :param transform: the transformation to apply to the sphere.
 
-    :return: a tuple containg data to redner a sphere
+    :return: a tuple containg data to render a sphere
     """
-    shape = shape_emptyShape()
+
+    shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'sphere'
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
@@ -76,6 +81,7 @@ def shape_cylinder_intersect(shape, ray):
     :return: False if no intersection, or a dictionary of results when
              there is an intersection.
     """
+
     four = mpfr(4)
     two = mpfr(2)
     zero = mpfr(0)
@@ -137,9 +143,9 @@ def shape_cylinder_create(colour, specular, transform=None):
 
     :param colour: the colour of the cylinder.
     :param specular: the reflective colour of the cylinder.
-    :param transform: the transformation to apply to the cylinder.
-
+    :param transform: the transformation to apply to the cylinder
     """
+
     shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'cylinder'
     shape[SHAPE_DIFFUSECOLOUR] = colour
@@ -158,6 +164,7 @@ def shape_capped_cylinder_diffuse_colour(shape, intersect_result):
 
     :return: a colour tuple
     """
+
     # print("intersectResult %s"%intersectResult)
     default = False
     if 'shape_part' not in intersect_result:
@@ -183,6 +190,7 @@ def shape_capped_cylinder_specular_colour(shape, intersect_result):
 
     :return: a colour tuple
     """
+
     # print("intersectResult %s"%intersectResult)
     default = False
     if 'shape_part' not in intersect_result:
@@ -210,6 +218,7 @@ def shape_capped_cylinder_intersect(shape, ray):
 
     To do: implement optionality for caps
     """
+
     if ray[RAY_VECTOR][2] == 0:
         topcap_result = False
         bottomcap_result = False
@@ -289,6 +298,7 @@ def shape_capped_cylinder_create(colour, specular, topcap={}, bottomcap={},
     :param transform: the transformation to apply to the cylinder
     :return: a tuple with data for rendering a capped cylinder
     """
+
     shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'capped_cylinder'
     shape[SHAPE_DIFFUSECOLOUR] = colour
@@ -310,6 +320,7 @@ def shape_cone_test_point(shape, point):
 
     :return: Boolean
     """
+
     r1 = point[2] > shape[SHAPE_DATA]['y_bottom']
     r2 = point[2] < shape[SHAPE_DATA]['y_top']
     return not(r1 or r2)
@@ -324,7 +335,9 @@ def shape_cone_intersect(shape, ray):
     :return: False if no intersection, or a dictionary of results when
              there is an intersection.
 
-    .. todo: Needs thourough checking for all cases"""
+    .. todo: Needs thourough checking for all cases.
+    """
+
     zero = mpfr(0)
 
     # if the ray is parallel to the cone and y_top is more than 0, no
@@ -419,6 +432,7 @@ def shape_cone_create(colour, specular, y_top=None, y_bottom=None,
 
     :return: a tuple with the data needed to render a cone.
     """
+
     shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'cone'
     shape[SHAPE_DIFFUSECOLOUR] = colour
@@ -448,7 +462,8 @@ def shape_cone_ytop(shape):
     """Returns the minimum Y value in an untransformed cone.
 
     :param shape: the cone to query
-    :return: the minimum Y value in an untransformed cone."""
+    :return: the minimum Y value in an untransformed coneempty_shape
+    """
     return shape[SHAPE_DATA]['y_top']
 
 
@@ -456,7 +471,8 @@ def shape_cone_ybottom(shape):
     """Returns the maximum Y value in an untransformed cone.
 
     :param shape: the cone to query
-    :return: the maximum Y value in an untransformed cone."""
+    :return: the maximum Y value in an untransformed cone
+    """
     return shape[SHAPE_DATA]['y_bottom']
 
 
@@ -470,6 +486,7 @@ def shape_capped_cone_diffuse_colour(shape, intersect_result):
 
     :return: the diffuse colour for the specified intersection
     """
+
     default = False
     if 'shape_part' not in intersect_result:
         return shape[SHAPE_DIFFUSECOLOUR]
@@ -495,6 +512,7 @@ def shape_capped_cone_specular_colour(shape, intersect_result):
 
     :return: a colour
     """
+
     default = False
     if 'shape_part' not in intersect_result:
         return shape[SHAPE_SPECULARCOLOUR]
@@ -614,6 +632,7 @@ def shape_capped_cone_create(colour, specular, topcap={},
 
     :return: a tuple with the data needed to render a capped cone.
     """
+
     shape = hape_cone_create(colour, specular, y_top, y_bottom, transform)
     if type(topcap) is dict:
         shape[SHAPE_DATA]['topcap'] = topcap

@@ -46,17 +46,17 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="raytracer.devutil.html">raytracer.devutil package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-raytracer.devutil.auto_update">raytracer.devutil.auto_update module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-raytracer.devutil.quick">raytracer.devutil.quick module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-raytracer.devutil">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#raytracer-devutil-auto-update-module">raytracer.devutil.auto_update module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#raytracer-devutil-quick-module">raytracer.devutil.quick module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.devutil.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="raytracer.unit_tests.html">raytracer.unit_tests package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests.test_planarshapes">raytracer.unit_tests.test_planarshapes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests.test_quadraticshapes">raytracer.unit_tests.test_quadraticshapes module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests.test_shape">raytracer.unit_tests.test_shape module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-raytracer.unit_tests">Module contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#raytracer-unit-tests-test-planarshapes-module">raytracer.unit_tests.test_planarshapes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#raytracer-unit-tests-test-quadraticshapes-module">raytracer.unit_tests.test_quadraticshapes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#raytracer-unit-tests-test-shape-module">raytracer.unit_tests.test_shape module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raytracer.unit_tests.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -560,29 +560,18 @@ having a radius of 1, where Y is between 0 and 1.</p>
 <span id="raytracer-lighting-model-module"></span><h2>raytracer.lighting_model module<a class="headerlink" href="#module-raytracer.lighting_model" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="raytracer.lighting_model.lightingmodel_basic_calculate">
-<code class="descclassname">raytracer.lighting_model.</code><code class="descname">lightingmodel_basic_calculate</code><span class="sig-paren">(</span><em>lighting_model</em>, <em>scene_obj</em>, <em>result</em>, <em>lightingmodel_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.lighting_model.lightingmodel_basic_calculate" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.lighting_model.</code><code class="descname">lightingmodel_basic_calculate</code><span class="sig-paren">(</span><em>lighting_model</em>, <em>scene_obj</em>, <em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.lighting_model.lightingmodel_basic_calculate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the colour where a ray intersects with an object.</p>
 <p>lightingmodel: a lighting model tuple.
 :param scene_obj: the Scene object
 :param result: the intersection test results
-:param lightingmodel_flags: Flags that affect behaviour of the lighting
-model:
-* LIGHTINGMODEL_NOSHADOWS: do not render shadows
-* LIGHTINGMODEL_NODIFFUSE: do not calucalte diffuse lighting</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a tuple of colour information</td>
-</tr>
-</tbody>
-</table>
+:return: a tuple of colour information</p>
 <p>To do: Implement reflections.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="raytracer.lighting_model.lightingmodel_basic_create">
-<code class="descclassname">raytracer.lighting_model.</code><code class="descname">lightingmodel_basic_create</code><span class="sig-paren">(</span><em>ambient_light=None</em>, <em>max_reflect=5</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.lighting_model.lightingmodel_basic_create" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.lighting_model.</code><code class="descname">lightingmodel_basic_create</code><span class="sig-paren">(</span><em>ambient_light=None</em>, <em>max_reflect=5</em>, <em>lighting_model_options={}</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.lighting_model.lightingmodel_basic_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a tuple with data for basic lighting model.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -590,7 +579,7 @@ model:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>ambient_light</strong> &#8211; The colour of the ambient light to apply</li>
-<li><strong>max_reflect</strong> &#8211; the maximum number of recrusive reflections
+<li><strong>max_reflect</strong> &#8211; the maximum number of recursive reflections
 to allow</li>
 </ul>
 </td>
@@ -601,8 +590,8 @@ to allow</li>
 </dd></dl>
 
 <dl class="function">
-<dt id="raytracer.lighting_model.lightingmodel_calculate">
-<code class="descclassname">raytracer.lighting_model.</code><code class="descname">lightingmodel_calculate</code><span class="sig-paren">(</span><em>lighting_model</em>, <em>scene_obj</em>, <em>result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.lighting_model.lightingmodel_calculate" title="Permalink to this definition">¶</a></dt>
+<dt id="raytracer.lighting_model.lightingmodel_set_options">
+<code class="descclassname">raytracer.lighting_model.</code><code class="descname">lightingmodel_set_options</code><span class="sig-paren">(</span><em>lighting_model</em>, <em>options={}</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.lighting_model.lightingmodel_set_options" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
@@ -612,6 +601,7 @@ to allow</li>
 <dt id="raytracer.mapping.BandedSprialTexture">
 <em class="property">class </em><code class="descclassname">raytracer.mapping.</code><code class="descname">BandedSprialTexture</code><span class="sig-paren">(</span><em>colour_array</em>, <em>twists=5</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.BandedSprialTexture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#raytracer.mapping.Texture" title="raytracer.mapping.Texture"><code class="xref py py-class docutils literal"><span class="pre">raytracer.mapping.Texture</span></code></a></p>
+<p>A texture of spirally banded colours</p>
 <dl class="method">
 <dt id="raytracer.mapping.BandedSprialTexture.colour">
 <code class="descname">colour</code><span class="sig-paren">(</span><em>uv_tuple</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.BandedSprialTexture.colour" title="Permalink to this definition">¶</a></dt>
@@ -623,6 +613,7 @@ to allow</li>
 <dt id="raytracer.mapping.CircularRampTexture">
 <em class="property">class </em><code class="descclassname">raytracer.mapping.</code><code class="descname">CircularRampTexture</code><span class="sig-paren">(</span><em>colour_array</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.CircularRampTexture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#raytracer.mapping.Texture" title="raytracer.mapping.Texture"><code class="xref py py-class docutils literal"><span class="pre">raytracer.mapping.Texture</span></code></a></p>
+<p>A texture of concentric blended colours</p>
 <dl class="method">
 <dt id="raytracer.mapping.CircularRampTexture.colour">
 <code class="descname">colour</code><span class="sig-paren">(</span><em>uv_tuple</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.CircularRampTexture.colour" title="Permalink to this definition">¶</a></dt>
@@ -646,11 +637,24 @@ to allow</li>
 <dt id="raytracer.mapping.Texture">
 <em class="property">class </em><code class="descclassname">raytracer.mapping.</code><code class="descname">Texture</code><a class="headerlink" href="#raytracer.mapping.Texture" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
-<p>Base class for all textures s</p>
+<p>Base class for all textures</p>
 <dl class="method">
 <dt id="raytracer.mapping.Texture.colour">
 <code class="descname">colour</code><span class="sig-paren">(</span><em>uv_tuple</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.Texture.colour" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><dl class="docutils">
+<dt>Calculates a colour from a UV tuple</dt>
+<dd><table class="first last docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">param uv_tuple:</th><td class="field-body">a tuple with a UV pair to generate a
+texture from</td>
+</tr>
+</tbody>
+</table>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -676,7 +680,23 @@ to allow</li>
 <dl class="function">
 <dt id="raytracer.mapping.get_colour_from_mapping">
 <code class="descclassname">raytracer.mapping.</code><code class="descname">get_colour_from_mapping</code><span class="sig-paren">(</span><em>colour_mapping</em>, <em>intersect_result</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.mapping.get_colour_from_mapping" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Returns a colour from a Texture object. If a colour_mapping is a
+colour tuple, then the colour tuple will be returned</p>
+<blockquote>
+<div><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">param colour_mapping:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">a colour mapping tuple or colour tuple</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">param intersect_result:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">an intersection result dictionary</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+</dd></dl>
 
 <dl class="function">
 <dt id="raytracer.mapping.sphere_map_to_rect">
@@ -1603,23 +1623,13 @@ there is an intersection.</p>
 
 <dl class="method">
 <dt id="raytracer.scene.Scene.render">
-<code class="descname">render</code><span class="sig-paren">(</span><em>view_name</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.render" title="Permalink to this definition">¶</a></dt>
+<code class="descname">render</code><span class="sig-paren">(</span><em>view_name</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.render" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renders the scene using the specified view. The output type must be
 set prior to calling this method.
 :param view_name: the handle of the view to use
-:return: the output of the rendered scene, or None if no output type
-is set
-:param lightingmodel_flags: Flags that affect behaviour of the lighting
-model
-:rtype: an instance of a child class of Output, being the same object
-passed as a parameter into set_output_type</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="raytracer.scene.Scene.set_output_type">
-<code class="descname">set_output_type</code><span class="sig-paren">(</span><em>output</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.scene.Scene.set_output_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the output type for rendering the scene.
-:param output: an instance of a child class of Output</p>
+:return: the output of the rendered scene, or None if no output type</p>
+<blockquote>
+<div>is set</div></blockquote>
 </dd></dl>
 
 <dl class="method">
@@ -1878,24 +1888,25 @@ applied</li>
 <span id="raytracer-view-module"></span><h2>raytracer.view module<a class="headerlink" href="#module-raytracer.view" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
 <dt id="raytracer.view.view_create">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_create</code><span class="sig-paren">(</span><em>eye_z</em>, <em>physical_rectangle</em>, <em>view_rectangle</em>, <em>transform=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_create" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_create</code><span class="sig-paren">(</span><em>scene</em>, <em>eye_z</em>, <em>physical_rectangle</em>, <em>view_rectangle</em>, <em>transform=None</em>, <em>output=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_create" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a view.</p>
 <blockquote>
-<div><p>eye_z: The Z-position of the eye point. This should be a negative value.</p>
-<table class="docutils field-list" frame="void" rules="none">
+<div><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">param physical_rectangle:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The rectangle of the physical output to draw
+<tr class="field-odd field"><th class="field-name">param eye_z:</th><td class="field-body">The Z-position of the eye point. This should be a negative value.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">param physical_rectangle:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">The rectangle of the physical output to draw
 onto. This is value is a dictionary:
 &#8216;left&#8217;: the left-hand edge of the physical output to draw onto
 &#8216;right&#8217;: the right-hand edge of the physical output to draw onto
 &#8216;top&#8217;: the top edge of the physical output to draw onto
 &#8216;bottom&#8217;: the bottom edge of the physical output to draw onto</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">param view_rectangle:</th></tr>
-<tr class="field-even field"><td>&nbsp;</td><td class="field-body">The rectangle of the logical view to draw at
+<tr class="field-odd field"><th class="field-name" colspan="2">param view_rectangle:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The rectangle of the logical view to draw at
 where z=0. This is a dictionary:
 &#8216;left&#8217;: the left-hand edge
 &#8216;right&#8217;: the right-hand edge
@@ -1919,7 +1930,7 @@ where z=0. This is a dictionary:
 
 <dl class="function">
 <dt id="raytracer.view.view_render">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_render</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>output_type</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render</code><span class="sig-paren">(</span><em>view</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renders a view of a scene.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1927,8 +1938,6 @@ where z=0. This is a dictionary:
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>view</strong> &#8211; The view to render</li>
-<li><strong>scene_obj</strong> &#8211; The scene to render</li>
-<li><strong>output_type</strong> &#8211; An instance of class Output</li>
 <li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
 model</li>
 </ul>
@@ -1940,7 +1949,7 @@ model</li>
 
 <dl class="function">
 <dt id="raytracer.view.view_render_pixel">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>physical_x</em>, <em>physical_y</em>, <em>output_type</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel</code><span class="sig-paren">(</span><em>view</em>, <em>physical_x</em>, <em>physical_y</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel" title="Permalink to this definition">¶</a></dt>
 <dd><p>Renders one pixel of a view</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1948,11 +1957,8 @@ model</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>view</strong> &#8211; The view to render</li>
-<li><strong>scene_obj</strong> &#8211; The scene to render</li>
 <li><strong>physical_x</strong> &#8211; The X co-ordinate of the pixel</li>
 <li><strong>physical_y</strong> &#8211; The Y co-ordinate of the pixel</li>
-<li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
-model</li>
 </ul>
 </td>
 </tr>
@@ -1962,7 +1968,7 @@ model</li>
 
 <dl class="function">
 <dt id="raytracer.view.view_render_pixel_antialias_edge_detect">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_edge_detect</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em>, <em>force_antialias=False</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_edge_detect" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_edge_detect</code><span class="sig-paren">(</span><em>view</em>, <em>force_antialias=False</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_edge_detect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs edge-detecting antialiasing for the current pixel of a render.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -1970,9 +1976,6 @@ model</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>view</strong> &#8211; The view to render</li>
-<li><strong>scene_obj</strong> &#8211; The scene to render</li>
-<li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
-model</li>
 <li><strong>force_antialias</strong> &#8211; Boolean - disregard edge detection and antialias
 anyhow</li>
 </ul>
@@ -2004,22 +2007,15 @@ currently being rendered</p>
 
 <dl class="function">
 <dt id="raytracer.view.view_render_pixel_antialias_grid_pattern">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_grid_pattern</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_grid_pattern" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_grid_pattern</code><span class="sig-paren">(</span><em>view</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_grid_pattern" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs non-stochastic antialiasing for the current pixel of a render.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>view</strong> &#8211; The view to render</li>
-<li><strong>scene_obj</strong> &#8211; The scene to render</li>
-<li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
-model</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>view</strong> &#8211; The view to render</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour tuple</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a colour tuple</td>
 </tr>
 </tbody>
 </table>
@@ -2027,22 +2023,15 @@ model</li>
 
 <dl class="function">
 <dt id="raytracer.view.view_render_pixel_antialias_stochastic">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_stochastic</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_stochastic" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_antialias_stochastic</code><span class="sig-paren">(</span><em>view</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_antialias_stochastic" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs stochastic antialiasing for the current pixel of a render.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>view</strong> &#8211; The view to render</li>
-<li><strong>scene_obj</strong> &#8211; The scene to render</li>
-<li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
-model</li>
-</ul>
-</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>view</strong> &#8211; The view to render</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a colour tuple</p>
-</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a colour tuple</td>
 </tr>
 </tbody>
 </table>
@@ -2050,7 +2039,7 @@ model</li>
 
 <dl class="function">
 <dt id="raytracer.view.view_render_pixel_no_antialias">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_no_antialias</code><span class="sig-paren">(</span><em>view</em>, <em>scene_obj</em>, <em>lighting_model_flags=0</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_no_antialias" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_render_pixel_no_antialias</code><span class="sig-paren">(</span><em>view</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_render_pixel_no_antialias" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs the current pixel of a render without antialiasing.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2058,7 +2047,6 @@ model</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>view</strong> &#8211; The view to render</li>
-<li><strong>scene_obj</strong> &#8211; The scene to render</li>
 <li><strong>lightingmodel_flags</strong> &#8211; Flags that affect behaviour of the lighting
 model</li>
 </ul>
@@ -2085,7 +2073,10 @@ model</li>
 or not</li>
 <li><strong>stochastic</strong> &#8211; Boolean value dictating use of stochastic/random
 antialiasing</li>
-<li><strong>stochastic</strong> &#8211; Boolean value dictating use edge detection</li>
+<li><strong>edge_detect</strong> &#8211; Boolean value dictating use edge detection</li>
+<li><strong>ed_threshold</strong> &#8211; a value between one and 0 indicating the difference
+between pixels necessary for edge-detecting
+antialiasing</li>
 <li><strong>x</strong> &#8211; How many times to divide a pixel on the horizontal axis</li>
 <li><strong>y</strong> &#8211; How many times to divide a pixel on the vertical axis</li>
 </ul>
@@ -2097,7 +2088,7 @@ antialiasing</li>
 
 <dl class="function">
 <dt id="raytracer.view.view_set_lighting_model">
-<code class="descclassname">raytracer.view.</code><code class="descname">view_set_lighting_model</code><span class="sig-paren">(</span><em>view</em>, <em>model</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_set_lighting_model" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">raytracer.view.</code><code class="descname">view_set_lighting_model</code><span class="sig-paren">(</span><em>view</em>, <em>lightingmodel</em>, <em>options=None</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_set_lighting_model" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets the lighting model for a view</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -2105,7 +2096,26 @@ antialiasing</li>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
 <li><strong>view</strong> &#8211; The view to change</li>
-<li><strong>model</strong> &#8211; Lighting model to use while rendering the scene</li>
+<li><strong>lightingmodel</strong> &#8211; Lighting model to use while rendering the scene</li>
+<li><strong>options</strong> &#8211; optional lighting model  options dictionary</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="raytracer.view.view_set_output">
+<code class="descclassname">raytracer.view.</code><code class="descname">view_set_output</code><span class="sig-paren">(</span><em>view</em>, <em>output</em><span class="sig-paren">)</span><a class="headerlink" href="#raytracer.view.view_set_output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set or change the transformation for a view.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>view</strong> &#8211; The view to change</li>
+<li><strong>transform</strong> &#8211; The Transformation to apply</li>
 </ul>
 </td>
 </tr>

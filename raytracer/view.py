@@ -51,7 +51,7 @@ A view is stored as a list with the following elements:
 
     * A dictionary of data intended for internal use with anitalising:
 
-        'count': The total number of subsamples taken for each pixel, i.e.
+        'count': The total number of sub samples taken for each pixel, i.e.
             member 'x' times member 'y'
         'colour_scale': The multiplier for each colour subsample to be scaled
             by. This is the inverse of member 'count'
@@ -78,12 +78,16 @@ VIEW_EYE = 8
 VIEW_ANTIALIAS_DATA = 9
 VIEW_VIEW_X = 10
 VIEW_VIEW_Y = 11
+VIEW_SCENE = 12
 
 
-def view_create(eye_z,  physical_rectangle, view_rectangle, transform=None):
+def view_create(
+        scene, eye_z,  physical_rectangle,
+        view_rectangle, transform=None, output=None):
     """Creates a view.
 
-     eye_z: The Z-position of the eye point. This should be a negative value.
+     :param eye_z: The Z-position of the eye point. This should be a negative
+                   value.
 
      :param physical_rectangle: The rectangle of the physical output to draw
             onto. This is value is a dictionary:
@@ -110,14 +114,15 @@ def view_create(eye_z,  physical_rectangle, view_rectangle, transform=None):
     view_rectangle['left'] = mpfr(view_rectangle['left'])
     view_rectangle['bottom'] = mpfr(view_rectangle['bottom'])
     view_rectangle['right'] = mpfr(view_rectangle['right'])
-    view = ['view', lightingmodel_basic_create(), None,
+    view = ['view', lightingmodel_basic_create(), output,
             physical_rectangle, view_rectangle, {},
             transform, mpfr(eye_z),
             cartesian_create((view_rectangle['left'] +
                               view_rectangle['right']) / mpfr(2.0),
                              (view_rectangle['top'] +
                               view_rectangle['bottom']) /
-                             mpfr(2.0), eye_z), {}, None, None]
+                             mpfr(2.0), eye_z), {}, None, None,
+            scene]
 
     view_set_antialias(view)
     return view
@@ -135,6 +140,15 @@ def view_set_transform(view, transform):
         view[VIEW_TRANSFORM] = Transform(transform)
 
 
+def view_set_output(view, output):
+    """Set or change the transformation for a view.
+
+     :param view: The view to change
+     :param transform: The Transformation to apply"""
+
+    view[VIEW_OUTPUT] = output
+
+
 def view_set_antialias(
         view, on=False, x=1, y=1, stochastic=False,
         edge_detect=False, ed_threshold=.3):
@@ -145,9 +159,14 @@ def view_set_antialias(
         or not
      :param stochastic: Boolean value dictating use of stochastic/random
         antialiasing
-     :param stochastic: Boolean value dictating use edge detection
+     :param edge_detect: Boolean value dictating use edge detection
+     :param ed_threshold: a value between one and 0 indicating the difference
+                          between pixels necessary for edge-detecting
+                          antialiasing
      :param x: How many times to divide a pixel on the horizontal axis
-     :param y: How many times to divide a pixel on the vertical axis"""
+     :param y: How many times to divide a pixel on the vertical axis
+
+     """
 
     view[VIEW_ANTIALIAS]['on'] = on
     view[VIEW_ANTIALIAS]['x'] = mpfr(x)
@@ -196,28 +215,28 @@ def view_set_antialias(
             view_render_pixel_no_antialias
 
 
-def view_set_lighting_model(view, model):
+def view_set_lighting_model(view, lightingmodel, options=None):
     """Sets the lighting model for a view
 
      :param view: The view to change
-     :param model: Lighting model to use while rendering the scene"""
-    view[VIEW_LIGHTINGMODEL] = model
+     :param lightingmodel: Lighting model to use while rendering the scene
+     :param options: optional lighting model  options dictionary
+     """
+    view[VIEW_LIGHTINGMODEL] = lighting
+    if type(options) is dict:
+        view[VIEW_LIGHTINGMODEL][LIGHTINGMODEL_OPTIONS] = options
 
 
-def view_render_pixel(view, scene_obj, physical_x, physical_y, output_type,
-                      lighting_model_flags=0):
+def view_render_pixel(view, physical_x, physical_y):
     """Renders one pixel of a view
 
      :param view: The view to render
-     :param scene_obj: The scene to render
      :param physical_x: The X co-ordinate of the pixel
      :param physical_y: The Y co-ordinate of the pixel
-     :param lightingmodel_flags: Flags that affect behaviour of the lighting
-                                 model
      """
 
     clr = view[VIEW_ANTIALIAS_DATA]['antialias_function'](
-        view, scene_obj, lighting_model_flags)
+        view)
 
     if 'rerender_list' in view[VIEW_ANTIALIAS_DATA]:
 
@@ -231,23 +250,20 @@ def view_render_pixel(view, scene_obj, physical_x, physical_y, output_type,
             view[VIEW_VIEW_Y] = item[1][1]
 
             view_render_pixel_antialias_edge_detect(
-                item[2],
-                item[3],
-                item[4], True)
+                item[2], True)
 
         view[VIEW_VIEW_X] = tmp_x
         view[VIEW_VIEW_Y] = tmp_y
 
-    output_type.set_pixel(physical_x, physical_y, clr)
+    view[VIEW_OUTPUT].set_pixel(physical_x, physical_y, clr)
     return clr
 
 
-def view_render_pixel_no_antialias(view, scene_obj, lighting_model_flags=0):
+def view_render_pixel_no_antialias(view):
     """
     Performs the current pixel of a render without antialiasing.
 
     :param view: The view to render
-    :param scene_obj: The scene to render
     :param lightingmodel_flags: Flags that affect behaviour of the lighting
                                 model
     :return: a colour tuple
@@ -258,13 +274,12 @@ def view_render_pixel_no_antialias(view, scene_obj, lighting_model_flags=0):
         view[VIEW_VIEW_Y] - view[VIEW_EYE][2],
         mpfr(0) - view[VIEW_EYE][3]))
 
-    result = scene_obj.test_intersect(ray)
+    result = view[VIEW_SCENE].test_intersect(ray)
 
     if(result is not False):
         result['ray'] = ray
-        clr = view[VIEW_LIGHTINGMODEL][LIGHTINGMODEL_BASIC_CALCFUNC](
-            view[VIEW_LIGHTINGMODEL], scene_obj, result,
-            lighting_model_flags)
+        clr = view[VIEW_LIGHTINGMODEL][LIGHTINGMODEL_CALCFUNC](
+            view[VIEW_LIGHTINGMODEL], view[VIEW_SCENE], result)
         return clr
 
     return ('colour', 0, 0, 0)
@@ -322,26 +337,18 @@ def view_render_pixel_antialias_edge_detect_get_surrounding_eight(view):
     return coordinates
 
 
-def view_render_pixel_antialias_edge_detect(
-        view, scene_obj, lighting_model_flags=0, force_antialias=False):
+def view_render_pixel_antialias_edge_detect(view, force_antialias=False):
     """
     Performs edge-detecting antialiasing for the current pixel of a render.
 
     :param view: The view to render
-    :param scene_obj: The scene to render
-    :param lightingmodel_flags: Flags that affect behaviour of the lighting
-                                model
     :param force_antialias: Boolean - disregard edge detection and antialias
                                       anyhow
     :return: a colour tuple
     """
 
-    if lighting_model_flags > 0:
-        print("recursion: depth %d", lighting_model_flags)
-
     if not force_antialias:
-        clr = view_render_pixel_no_antialias(
-            view, scene_obj, lighting_model_flags)
+        clr = view_render_pixel_no_antialias(view)
 
     surrounding_coordinates = \
         view_render_pixel_antialias_edge_detect_get_surrounding_eight(view)
@@ -374,10 +381,10 @@ def view_render_pixel_antialias_edge_detect(
     if do_antialias:
         if view[VIEW_ANTIALIAS]['stochastic']:
             clr_aa = view_render_pixel_antialias_stochastic(
-                view, scene_obj, lighting_model_flags)
+                view)
         else:
             clr_aa = view_render_pixel_antialias_grid_pattern(
-                view, scene_obj, lighting_model_flags)
+                view)
 
         if force_antialias:
             clr = clr_aa
@@ -408,8 +415,7 @@ def view_render_pixel_antialias_edge_detect(
 
                         view[VIEW_ANTIALIAS_DATA]['rerender_list'].append(
                             (view_render_pixel_antialias_edge_detect,
-                             coordinate, view,
-                             scene_obj, lighting_model_flags))
+                             coordinate, view))
 
     if view[VIEW_VIEW_X] not in \
             view[VIEW_ANTIALIAS_DATA]['edge_detection_map']:
@@ -420,15 +426,12 @@ def view_render_pixel_antialias_edge_detect(
     return clr
 
 
-def view_render_pixel_antialias_stochastic(
-        view, scene_obj, lighting_model_flags=0):
+def view_render_pixel_antialias_stochastic(view):
     """
     Performs stochastic antialiasing for the current pixel of a render.
 
     :param view: The view to render
-    :param scene_obj: The scene to render
-    :param lightingmodel_flags: Flags that affect behaviour of the lighting
-                                model
+
     :return: a colour tuple
     """
     clr = colour_create(0, 0, 0)
@@ -445,28 +448,25 @@ def view_render_pixel_antialias_stochastic(
             a_view_x - view[VIEW_EYE][1],
             a_view_y - view[VIEW_EYE][2],
             zero - view[VIEW_EYE][3]))
-        result = scene_obj.test_intersect(ray)
+        result = view[VIEW_SCENE].test_intersect(ray)
         if(result is not False):
             result['ray'] = ray
             colour = colour_scale(
                 view[VIEW_LIGHTINGMODEL]
-                [LIGHTINGMODEL_BASIC_CALCFUNC]
+                [LIGHTINGMODEL_CALCFUNC]
                 (view[VIEW_LIGHTINGMODEL],
-                 scene_obj, result),
+                 view[VIEW_SCENE], result),
                 view[VIEW_ANTIALIAS_DATA]['colour_scale'])
             clr = colour_add(clr, colour)
     return clr
 
 
-def view_render_pixel_antialias_grid_pattern(
-        view, scene_obj, lighting_model_flags=0):
+def view_render_pixel_antialias_grid_pattern(view):
     """
     Performs non-stochastic antialiasing for the current pixel of a render.
 
     :param view: The view to render
-    :param scene_obj: The scene to render
-    :param lightingmodel_flags: Flags that affect behaviour of the lighting
-                                model
+
     :return: a colour tuple
     """
     zero = mpfr(0)
@@ -491,30 +491,28 @@ def view_render_pixel_antialias_grid_pattern(
                 a_view_x - view[VIEW_EYE][1],
                 a_view_y - view[VIEW_EYE][2],
                 zero - view[VIEW_EYE][3]))
-            result = scene_obj.test_intersect(ray)
+            result = view[VIEW_SCENE].test_intersect(ray)
             if(result is not False):
                 result['ray'] = ray
                 colour = colour_scale(view[VIEW_LIGHTINGMODEL]
                                       [LIGHTINGMODEL_BASIC_CALCFUNC](
-                    view[VIEW_LIGHTINGMODEL], scene_obj,
-                    result, lighting_model_flags),
+                    view[VIEW_LIGHTINGMODEL], view[VIEW_SCENE],
+                    result),
                     view[VIEW_ANTIALIAS_DATA]['colour_scale'])
                 clr = colour_add(clr, colour)
 
     return clr
 
 
-def view_render(view, scene_obj, output_type, lighting_model_flags=0):
+def view_render(view):
     """Renders a view of a scene.
 
      :param view: The view to render
-     :param scene_obj: The scene to render
-     :param output_type: An instance of class Output
      :param lightingmodel_flags: Flags that affect behaviour of the lighting
                                  model"""
 
-    output_type.set_rectangle(view[VIEW_PHYSICALRECTANGLE])
-    if not isinstance(scene_obj, Scene):
+    view[VIEW_OUTPUT].set_rectangle(view[VIEW_PHYSICALRECTANGLE])
+    if not isinstance(view[VIEW_SCENE], Scene):
         return None
     view[VIEW_VIEW_Y] = view[VIEW_VIEWRECTANGLE]['top']
     view[VIEW_VIEW_X] = view[VIEW_VIEWRECTANGLE]['left']
@@ -545,8 +543,7 @@ def view_render(view, scene_obj, output_type, lighting_model_flags=0):
         for physical_y in range(view[VIEW_PHYSICALRECTANGLE]['top'],
                                 view[VIEW_PHYSICALRECTANGLE]['bottom']):
 
-            clr = view_render_pixel(view, scene_obj, physical_x, physical_y,
-                                    output_type, lighting_model_flags)
+            clr = view_render_pixel(view, physical_x, physical_y)
 
             view[VIEW_VIEW_Y] = view[VIEW_VIEW_Y] + y_step
 

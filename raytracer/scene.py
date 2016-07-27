@@ -72,24 +72,20 @@ class Scene:
 
         self.__views__[name] = view_obj
 
-    def render(self, view_name, lighting_model_flags=0):
+    def render(self, view_name):
         """
         Renders the scene using the specified view. The output type must be
         set prior to calling this method.
         :param view_name: the handle of the view to use
         :return: the output of the rendered scene, or None if no output type
-        is set
-        :param lightingmodel_flags: Flags that affect behaviour of the lighting
-        model
-        :rtype: an instance of a child class of Output, being the same object
-        passed as a parameter into set_output_type
+                 is set
         """
         if(self.__output__ is None):
             return None
         raytracer.view.view_render(
-            self.__views__[view_name], self,
-            self.__output__, lighting_model_flags)
-        return self.__output__.get_output()
+            self.__views__[view_name])
+        return (self.__views__[view_name]
+                [raytracer.view.VIEW_OUTPUT].get_output())
 
     def test_intersect(self, ray, exclude_shapes=[]):
         """Tests intersection of a ray with all the shapes in the scene.
@@ -123,13 +119,3 @@ class Scene:
         if curr_intersect_result is None:
             return False
         return curr_intersect_result
-
-    def set_output_type(self, output):
-        """Sets the output type for rendering the scene.
-        :param output: an instance of a child class of Output
-        """
-
-        if not isinstance(output, Output):
-            return None
-
-        self.__output__ = output
