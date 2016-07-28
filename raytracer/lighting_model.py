@@ -18,38 +18,36 @@ model tuple has the following elements:
 * A reference to the calculation function for the lighting model.
 * The ambient light colour
 * The maximum number of reflections
+* a dictionary of optional options:
+    'NoShadows': if True shadows will not be rendered
+    'NoDiffuse': if True diffuse shading will not be rendered
+
 
 To do: Implement reflections for the basic lighting model."""
 
 LIGHTINGMODEL_BASIC_CALCFUNC = 2
 LIGHTINGMODEL_BASIC_AMBIENT = 3
 LIGHTINGMODEL_BASIC_MAXREFLECT = 4
-
-LIGHTINGMODEL_NOSHADOWS = 1
-LIGHTINGMODEL_NODIFFUSE = 2
-
-
-def lightingmodel_calculate(lighting_model, scene_obj, result):
-    return lighting_model[LIGHTINGMODEL_BASIC_CALCFUNC](lighting_model,
-                                                        scene_obj, result,
-                                                        lightingmodel_flags=0)
+LIGHTINGMODEL_CALCFUNC = 2
+LIGHTINGMODEL_AMBIENT = 3
+LIGHTINGMODEL_MAXREFLECT = 4
+LIGHTINGMODEL_OPTIONS = 5
 
 
-def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
-                                  lightingmodel_flags=0):
+def lightingmodel_set_options(lighting_model, options={}):
+    lighting_model[LIGHTINGMODEL_OPTIONS] = options
+
+
+def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
     """Calculates the colour where a ray intersects with an object.
 
     lightingmodel: a lighting model tuple.
     :param scene_obj: the Scene object
     :param result: the intersection test results
-    :param lightingmodel_flags: Flags that affect behaviour of the lighting
-    model:
-    * LIGHTINGMODEL_NOSHADOWS: do not render shadows
-    * LIGHTINGMODEL_NODIFFUSE: do not calucalte diffuse lighting
-
     :return: a tuple of colour information
 
     To do: Implement reflections. """
+    
     if not type(result) is dict:
         return None
     if not isinstance(scene_obj, scene.Scene):
@@ -70,7 +68,8 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
 
     diffuse_colour = get_colour_from_mapping(diffuse, result)
 
-    end_colour = lighting_model[LIGHTINGMODEL_BASIC_AMBIENT]
+    
+    end_colour = lighting_model[LIGHTINGMODEL_AMBIENT]
 
     lights = scene_obj.get_lights()
 
@@ -90,7 +89,8 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
         shadow_ray = ray_create(rs, cartesian_sub(
             light[LIGHT_POINT_POINT], result['point']), True)
 
-        if (LIGHTINGMODEL_NOSHADOWS & lightingmodel_flags > 0):
+        if ('NoShadows' in lighting_model[LIGHTINGMODEL_OPTIONS] and
+                lighting_model[LIGHTINGMODEL_OPTIONS]['NoShadows'] is True):
             r = False
         else:
             r = scene_obj.test_intersect(shadow_ray, result['shape'])
@@ -103,26 +103,29 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result,
             diff = colour_scale(
                 light[LIGHT_POINT_COLOUR], cartesian_dot(light_ray, norml))
 
-            if (LIGHTINGMODEL_NODIFFUSE & lightingmodel_flags > 0):
-                end_colour = colour_add
-                (end_colour, colour_scale(diffuse_colour, mpfr(0.5)))
-            else:
+            if ('NoDiffuse' in lighting_model[LIGHTINGMODEL_OPTIONS] and
+                    lighting_model[LIGHTINGMODEL_OPTIONS]['NoDiffuse']):
                 end_colour = colour_add(
-                    end_colour, colour_mul(diff, diffuse_colour))
-
+                    end_colour, colour_scale(diffuse_colour, mpfr(0.5)))
+            else:
+                
+                end_colour = colour_add(
+                    end_colour, colour_mul(diffuse_colour, diff))
+                    
     return end_colour
 
 
-def lightingmodel_basic_create(ambient_light=None, max_reflect=5):
+def lightingmodel_basic_create(
+        ambient_light=None, max_reflect=5, lighting_model_options={}):
     """Creates a tuple with data for basic lighting model.
 
     :param ambient_light: The colour of the ambient light to apply
-    :param max_reflect: the maximum number of recrusive reflections
+    :param max_reflect: the maximum number of recursive reflections
                         to allow
 
     Returns: a lighting model tuple"""
 
     if ambient_light is None:
         ambient_light = colour_create(0, 0, 0)
-    return('lighting_model', 'basic', lightingmodel_basic_calculate,
-           ambient_light, max_reflect)
+    return['lighting_model', 'basic', lightingmodel_basic_calculate,
+           ambient_light, max_reflect, lighting_model_options]

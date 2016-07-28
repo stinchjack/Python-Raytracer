@@ -1,4 +1,8 @@
-from gmpy2 import *
+try:
+    from gmpy2 import *
+except ImportError:
+    from math import *
+    from mpfr_dummy import *
 from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.matrix import *
@@ -14,15 +18,16 @@ against each shape in the scene
 """
 
 
-class Scene:
-    __lights__ = {}
-    __shapes__ = {}
-    __views__ = {}
-    __shape_count__ = 0
-    __light_count__ = 0
-    __view_count__ = 0
-    __output__ = PIL_Output()
-
+class Scene(object):
+    def __init__(self):
+        self.__lights__ = {}
+        self.__shapes__ = {}
+        self.__views__ = {}
+        self.__shape_count__ = 0
+        self.__light_count__ = 0
+        self.__view_count__ = 0
+        self.__output__ = PIL_Output()
+        
     def add_shape(self, shape, name=None):
         """Add a shape to the scene
         :param shape: the shape to add
@@ -63,7 +68,9 @@ class Scene:
         :param name: a string handle for the view
         """
 
+        
         self.__view_count__ = self.__view_count__ + 1
+  
 
         # Assign a handle to the view if none give
         while name in self.__views__ or name is None:
@@ -72,24 +79,17 @@ class Scene:
 
         self.__views__[name] = view_obj
 
-    def render(self, view_name, lighting_model_flags=0):
+    def render(self, view_name):
         """
         Renders the scene using the specified view. The output type must be
         set prior to calling this method.
         :param view_name: the handle of the view to use
-        :return: the output of the rendered scene, or None if no output type
-        is set
-        :param lightingmodel_flags: Flags that affect behaviour of the lighting
-        model
-        :rtype: an instance of a child class of Output, being the same object
-        passed as a parameter into set_output_type
+        :return: the rendered output
         """
-        if(self.__output__ is None):
-            return None
         raytracer.view.view_render(
-            self.__views__[view_name], self,
-            self.__output__, lighting_model_flags)
-        return self.__output__.get_output()
+            self.__views__[view_name])
+        return (self.__views__[view_name]
+                [raytracer.view.VIEW_OUTPUT].get_output())
 
     def test_intersect(self, ray, exclude_shapes=[]):
         """Tests intersection of a ray with all the shapes in the scene.
@@ -123,13 +123,3 @@ class Scene:
         if curr_intersect_result is None:
             return False
         return curr_intersect_result
-
-    def set_output_type(self, output):
-        """Sets the output type for rendering the scene.
-        :param output: an instance of a child class of Output
-        """
-
-        if not isinstance(output, Output):
-            return None
-
-        self.__output__ = output

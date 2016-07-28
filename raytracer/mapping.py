@@ -1,5 +1,8 @@
 import math
-from gmpy2 import *
+try:
+    from gmpy2 import *
+except ImportError:
+    from mpfr_dummy import *
 from raytracer.cartesian import *
 from raytracer.colour import *
 from PIL import Image
@@ -96,7 +99,7 @@ class BandedSprialTexture(Texture):
         if dist != 0:
             x_on_circ = (u / dist)
         else:
-            return 0
+            x_on_circ = 0
 
         angle = degrees(acos(x_on_circ))
 
