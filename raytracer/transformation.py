@@ -1,5 +1,8 @@
-import gmpy2
-from gmpy2 import *
+try:
+    from gmpy2 import *
+except ImportError:
+    from math import *
+    from mpfr_dummy import *
 from raytracer.matrix import *
 from raytracer.cartesian import *
 from copy import *
@@ -9,7 +12,7 @@ from copy import *
 
 class Transform:
     """A class to support matrix transformations of rays and cartesians"""
-    __options__ = {}
+    
 
     def __str__(self):
         """Returns a string representation of a Transform.
@@ -18,7 +21,7 @@ class Transform:
 
         return ("{no_transform: %s options: %s " +
                 "matrix: %s inverse_matrix: %s}" %
-                (self.__no_transform, self.__options__, self.__matrix__,
+                (self.__no_transform__, self.__options__, self.__matrix__,
                  self.__inverse_matrix__))
 
     def __init__(self, options):
@@ -40,6 +43,11 @@ class Transform:
             o 'vector': a cartesian vector to use as an axis to rotate about
             o 'angle': the angle to rotate about the vector, in degrees
         """
+        self.__options__ = {}
+        self.__inverse_matrix__ = None
+        self.__matrix__ = None
+        self.__inverse_matrix__ = None
+        self.__no_transform__ = True
         self.set_options(options)
 
     def no_transform(self):
@@ -62,7 +70,7 @@ class Transform:
 
         :return: dictionary
         """
-        return self.__options
+        return self.__options__
 
     def set_options(self, options):
         """Sets transformation options.

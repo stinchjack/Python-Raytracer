@@ -1,4 +1,8 @@
-from gmpy2 import *
+try:
+    from gmpy2 import *
+except ImportError:
+    from math import *
+    from mpfr_dummy import *
 from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.matrix import *
@@ -14,15 +18,16 @@ against each shape in the scene
 """
 
 
-class Scene:
-    __lights__ = {}
-    __shapes__ = {}
-    __views__ = {}
-    __shape_count__ = 0
-    __light_count__ = 0
-    __view_count__ = 0
-    __output__ = PIL_Output()
-
+class Scene(object):
+    def __init__(self):
+        self.__lights__ = {}
+        self.__shapes__ = {}
+        self.__views__ = {}
+        self.__shape_count__ = 0
+        self.__light_count__ = 0
+        self.__view_count__ = 0
+        self.__output__ = PIL_Output()
+        
     def add_shape(self, shape, name=None):
         """Add a shape to the scene
         :param shape: the shape to add
@@ -63,7 +68,9 @@ class Scene:
         :param name: a string handle for the view
         """
 
+        
         self.__view_count__ = self.__view_count__ + 1
+  
 
         # Assign a handle to the view if none give
         while name in self.__views__ or name is None:
@@ -77,10 +84,8 @@ class Scene:
         Renders the scene using the specified view. The output type must be
         set prior to calling this method.
         :param view_name: the handle of the view to use
-        :return: the rendered output, or None if no output type is set
+        :return: the rendered output
         """
-        if(self.__output__ is None):
-            return None
         raytracer.view.view_render(
             self.__views__[view_name])
         return (self.__views__[view_name]

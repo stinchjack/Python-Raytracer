@@ -47,6 +47,7 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
     :return: a tuple of colour information
 
     To do: Implement reflections. """
+    
     if not type(result) is dict:
         return None
     if not isinstance(scene_obj, scene.Scene):
@@ -67,6 +68,7 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
 
     diffuse_colour = get_colour_from_mapping(diffuse, result)
 
+    
     end_colour = lighting_model[LIGHTINGMODEL_AMBIENT]
 
     lights = scene_obj.get_lights()
@@ -103,12 +105,13 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
 
             if ('NoDiffuse' in lighting_model[LIGHTINGMODEL_OPTIONS] and
                     lighting_model[LIGHTINGMODEL_OPTIONS]['NoDiffuse']):
-                end_colour = colour_add
-                (end_colour, colour_scale(diffuse_colour, mpfr(0.5)))
-            else:
                 end_colour = colour_add(
-                    end_colour, colour_mul(diff, diffuse_colour))
-
+                    end_colour, colour_scale(diffuse_colour, mpfr(0.5)))
+            else:
+                
+                end_colour = colour_add(
+                    end_colour, colour_mul(diffuse_colour, diff))
+                    
     return end_colour
 
 
@@ -124,5 +127,5 @@ def lightingmodel_basic_create(
 
     if ambient_light is None:
         ambient_light = colour_create(0, 0, 0)
-    return('lighting_model', 'basic', lightingmodel_basic_calculate,
-           ambient_light, max_reflect, lighting_model_options)
+    return['lighting_model', 'basic', lightingmodel_basic_calculate,
+           ambient_light, max_reflect, lighting_model_options]

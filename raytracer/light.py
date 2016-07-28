@@ -1,5 +1,8 @@
-import gmpy2
-from gmpy2 import *
+try:
+    from gmpy2 import *
+except ImportError:
+    from math import *
+    from mpfr_dummy import *
 from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.transformation import *

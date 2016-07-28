@@ -1,5 +1,8 @@
-import gmpy2
-from gmpy2 import *
+try:
+    from gmpy2 import *
+except ImportError:
+    from math import *
+    from mpfr_dummy import *
 
 """Functions for dealing with cartesian values and rays.
 A cartesian is stored as a tuple, with the first element being the

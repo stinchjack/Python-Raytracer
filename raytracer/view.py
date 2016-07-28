@@ -1,4 +1,8 @@
-from gmpy2 import *
+try:
+    from gmpy2 import *
+except ImportError:
+    from math import *
+    from mpfr_dummy import *
 from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.matrix import *
@@ -7,6 +11,7 @@ from raytracer.output import *
 from raytracer.shape import *
 from raytracer.scene import *
 from raytracer.lighting_model import *
+import multiprocessing as mp
 import random
 
 """Functions for dealing with views. A view is simply a perspective on a
@@ -76,10 +81,9 @@ VIEW_TRANSFORM = 6
 VIEW_EYEZ = 7
 VIEW_EYE = 8
 VIEW_ANTIALIAS_DATA = 9
-VIEW_VIEW_X = 10
-VIEW_VIEW_Y = 11
+VIEW_MULTIPROCESS_POOL = 10
+VIEW_MULTIPROCESS_OPTIONS = 11
 VIEW_SCENE = 12
-
 
 def view_create(
         scene, eye_z,  physical_rectangle,
@@ -103,8 +107,10 @@ def view_create(
             'top': the top edge
             'bottom': the bottom edge
 
-    :param transformation: A transformation to apply to the view(optional)
+    :param transformation: A transformation to apply to the view (optional)
 
+    :param output: A child class of Output
+    
     :return: A list of view parameters, or None on failure"""
     if not type(physical_rectangle) is dict:
         return None
@@ -114,14 +120,22 @@ def view_create(
     view_rectangle['left'] = mpfr(view_rectangle['left'])
     view_rectangle['bottom'] = mpfr(view_rectangle['bottom'])
     view_rectangle['right'] = mpfr(view_rectangle['right'])
-    view = ['view', lightingmodel_basic_create(), output,
-            physical_rectangle, view_rectangle, {},
-            transform, mpfr(eye_z),
+    view = ['view',
+            lightingmodel_basic_create(),
+            output,
+            physical_rectangle,
+            view_rectangle,
+            {},
+            transform,
+            mpfr(eye_z),
             cartesian_create((view_rectangle['left'] +
                               view_rectangle['right']) / mpfr(2.0),
                              (view_rectangle['top'] +
                               view_rectangle['bottom']) /
-                             mpfr(2.0), eye_z), {}, None, None,
+                             mpfr(2.0), eye_z),
+            {},
+            None,
+            {'DoMultiProcessing': True, 'MaxProcesses': 0},
             scene]
 
     view_set_antialias(view)
@@ -148,7 +162,13 @@ def view_set_output(view, output):
 
     view[VIEW_OUTPUT] = output
 
+def view_set_multiprocessing(
+        view, do_multiprocessing = True, max_processes = 0):
+        view[VIEW_MULTIPROCESS_OPTIONS] = \
+            {'DoMultiProcessing':  do_multiprocessing,
+            'MaxProcesses': max_processes}
 
+    
 def view_set_antialias(
         view, on=False, x=1, y=1, stochastic=False,
         edge_detect=False, ed_threshold=.3):
@@ -222,12 +242,12 @@ def view_set_lighting_model(view, lightingmodel, options=None):
      :param lightingmodel: Lighting model to use while rendering the scene
      :param options: optional lighting model  options dictionary
      """
-    view[VIEW_LIGHTINGMODEL] = lighting
+    view[VIEW_LIGHTINGMODEL] = lightingmodel
     if type(options) is dict:
         view[VIEW_LIGHTINGMODEL][LIGHTINGMODEL_OPTIONS] = options
 
 
-def view_render_pixel(view, physical_x, physical_y):
+def view_render_pixel(view, view_scan_x, view_scan_y):
     """Renders one pixel of a view
 
      :param view: The view to render
@@ -236,30 +256,19 @@ def view_render_pixel(view, physical_x, physical_y):
      """
 
     clr = view[VIEW_ANTIALIAS_DATA]['antialias_function'](
-        view)
+        view,view_scan_x, view_scan_y)
 
     if 'rerender_list' in view[VIEW_ANTIALIAS_DATA]:
-
-        tmp_x = view[VIEW_VIEW_X]
-        tmp_y = view[VIEW_VIEW_Y]
-
         while len(view[VIEW_ANTIALIAS_DATA]['rerender_list']) > 0:
             item = view[VIEW_ANTIALIAS_DATA]['rerender_list'].pop(0)
 
-            view[VIEW_VIEW_X] = item[1][0]
-            view[VIEW_VIEW_Y] = item[1][1]
+            view_render_pixel_antialias_edge_detect(view, 
+                item[1][0], item[1,1], True)
 
-            view_render_pixel_antialias_edge_detect(
-                item[2], True)
-
-        view[VIEW_VIEW_X] = tmp_x
-        view[VIEW_VIEW_Y] = tmp_y
-
-    view[VIEW_OUTPUT].set_pixel(physical_x, physical_y, clr)
     return clr
 
 
-def view_render_pixel_no_antialias(view):
+def view_render_pixel_no_antialias(view, view_scan_x, view_scan_y):
     """
     Performs the current pixel of a render without antialiasing.
 
@@ -270,8 +279,8 @@ def view_render_pixel_no_antialias(view):
     """
     ray = ray_create(view[VIEW_EYE],
                      cartesian_create(
-        view[VIEW_VIEW_X] - view[VIEW_EYE][1],
-        view[VIEW_VIEW_Y] - view[VIEW_EYE][2],
+        view_scan_x - view[VIEW_EYE][1],
+        view_scan_y - view[VIEW_EYE][2],
         mpfr(0) - view[VIEW_EYE][3]))
 
     result = view[VIEW_SCENE].test_intersect(ray)
@@ -285,59 +294,59 @@ def view_render_pixel_no_antialias(view):
     return ('colour', 0, 0, 0)
 
 
-def view_render_pixel_antialias_edge_detect_get_surrounding_eight(view):
+def view_render_pixel_antialias_edge_detect_get_surrounding_eight(
+        view, view_scan_x, view_scan_y):
     """Returns the eight surrounding view co-ordinates for the pixel
     currently being rendered
 
     :param view: the view
     :return: an array of tuples with view co-ordinates
     """
-    # view[VIEW_VIEWRECTANGLE]
-    # view[VIEW_VIEW_X]
+
     coordinates = []
 
-    if (view[VIEW_VIEW_Y] > view[VIEW_VIEWRECTANGLE]['top']):
+    if (view_scan_y > view[VIEW_VIEWRECTANGLE]['top']):
         coordinates.append(
-            (view[VIEW_VIEW_X],
-             view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS]['y_step']))
+            (view_scan_x,
+             view_scan_y - view[VIEW_ANTIALIAS]['y_step']))
 
-    if (view[VIEW_VIEW_Y] < view[VIEW_VIEWRECTANGLE]['bottom']):
+    if (view_scan_y < view[VIEW_VIEWRECTANGLE]['bottom']):
         coordinates.append(
-            (view[VIEW_VIEW_X],
-             view[VIEW_VIEW_Y] + view[VIEW_ANTIALIAS]['y_step']))
+            (view_scan_x,
+             view_scan_y + view[VIEW_ANTIALIAS]['y_step']))
 
-    if (view[VIEW_VIEW_X] > view[VIEW_VIEWRECTANGLE]['left']):
+    if (view_scan_x > view[VIEW_VIEWRECTANGLE]['left']):
         coordinates.append(
-            (view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS]['x_step'],
-             view[VIEW_VIEW_Y]))
-        if (view[VIEW_VIEW_Y] > view[VIEW_VIEWRECTANGLE]['top']):
+            (view_scan_x - view[VIEW_ANTIALIAS]['x_step'],
+             view_scan_y))
+        if (view_scan_y > view[VIEW_VIEWRECTANGLE]['top']):
             coordinates.append(
-                (view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS]['x_step'],
-                 view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS]['y_step']))
+                (view_scan_x - view[VIEW_ANTIALIAS]['x_step'],
+                 view_scan_y - view[VIEW_ANTIALIAS]['y_step']))
 
-        if (view[VIEW_VIEW_Y] < view[VIEW_VIEWRECTANGLE]['bottom']):
+        if (view_scan_y < view[VIEW_VIEWRECTANGLE]['bottom']):
             coordinates.append(
-                (view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS]['x_step'],
-                 view[VIEW_VIEW_Y] + view[VIEW_ANTIALIAS]['y_step']))
+                (view_scan_x - view[VIEW_ANTIALIAS]['x_step'],
+                 view_scan_y + view[VIEW_ANTIALIAS]['y_step']))
 
-    if (view[VIEW_VIEW_X] < view[VIEW_VIEWRECTANGLE]['right']):
+    if (view_scan_x < view[VIEW_VIEWRECTANGLE]['right']):
         coordinates.append(
-            (view[VIEW_VIEW_X] + view[VIEW_ANTIALIAS]['x_step'],
-             view[VIEW_VIEW_Y]))
-        if (view[VIEW_VIEW_Y] > view[VIEW_VIEWRECTANGLE]['top']):
+            (view_scan_x + view[VIEW_ANTIALIAS]['x_step'],
+             view_scan_y))
+        if (view_scan_y > view[VIEW_VIEWRECTANGLE]['top']):
             coordinates.append(
-                (view[VIEW_VIEW_X] + view[VIEW_ANTIALIAS]['x_step'],
-                 view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS]['y_step']))
+                (view_scan_x + view[VIEW_ANTIALIAS]['x_step'],
+                 view_scan_y - view[VIEW_ANTIALIAS]['y_step']))
 
-        if (view[VIEW_VIEW_Y] < view[VIEW_VIEWRECTANGLE]['bottom']):
+        if (view_scan_y < view[VIEW_VIEWRECTANGLE]['bottom']):
             coordinates.append(
-                (view[VIEW_VIEW_X] + view[VIEW_ANTIALIAS]['x_step'],
-                 view[VIEW_VIEW_Y] + view[VIEW_ANTIALIAS]['y_step']))
+                (view_scan_x + view[VIEW_ANTIALIAS]['x_step'],
+                 view_scan_y + view[VIEW_ANTIALIAS]['y_step']))
 
     return coordinates
 
 
-def view_render_pixel_antialias_edge_detect(view, force_antialias=False):
+def view_render_pixel_antialias_edge_detect(view, view_scan_x, view_scan_y, force_antialias=False):
     """
     Performs edge-detecting antialiasing for the current pixel of a render.
 
@@ -377,7 +386,6 @@ def view_render_pixel_antialias_edge_detect(view, force_antialias=False):
                             view[VIEW_ANTIALIAS]['edge_detect_threshold']):
                         do_antialias = True
 
-    # view[VIEW_ANTIALIAS_DATA]['edge_detection_map']
     if do_antialias:
         if view[VIEW_ANTIALIAS]['stochastic']:
             clr_aa = view_render_pixel_antialias_stochastic(
@@ -415,18 +423,18 @@ def view_render_pixel_antialias_edge_detect(view, force_antialias=False):
 
                         view[VIEW_ANTIALIAS_DATA]['rerender_list'].append(
                             (view_render_pixel_antialias_edge_detect,
-                             coordinate, view))
+                             coordinate))
 
-    if view[VIEW_VIEW_X] not in \
+    if view_scan_x not in \
             view[VIEW_ANTIALIAS_DATA]['edge_detection_map']:
-        view[VIEW_ANTIALIAS_DATA]['edge_detection_map'][view[VIEW_VIEW_X]] = {}
+        view[VIEW_ANTIALIAS_DATA]['edge_detection_map'][view_scan_x] = {}
 
     view[VIEW_ANTIALIAS_DATA]['edge_detection_map'][
-        view[VIEW_VIEW_X]][view[VIEW_VIEW_Y]] = (do_antialias, clr)
+        view_scan_x][view_scan_y] = (do_antialias, clr)
     return clr
 
 
-def view_render_pixel_antialias_stochastic(view):
+def view_render_pixel_antialias_stochastic(view, view_scan_x, view_scan_y):
     """
     Performs stochastic antialiasing for the current pixel of a render.
 
@@ -438,10 +446,10 @@ def view_render_pixel_antialias_stochastic(view):
     zero = mpfr(0)
     for i in range(int(view[VIEW_ANTIALIAS_DATA]['count'])):
         a_view_x = random.uniform(
-            view[VIEW_VIEW_X], view[VIEW_VIEW_X] +
+            view_scan_x, view_scan_x +
             view[VIEW_ANTIALIAS_DATA]['x_step'])
         a_view_y = random.uniform(
-            view[VIEW_VIEW_Y], view[VIEW_VIEW_Y] +
+            view_scan_y, view_scan_y +
             view[VIEW_ANTIALIAS_DATA]['y_step'])
         ray = ray_create(view[VIEW_EYE],
                          cartesian_create(
@@ -461,7 +469,7 @@ def view_render_pixel_antialias_stochastic(view):
     return clr
 
 
-def view_render_pixel_antialias_grid_pattern(view):
+def view_render_pixel_antialias_grid_pattern(view, view_scan_x, view_scan_y):
     """
     Performs non-stochastic antialiasing for the current pixel of a render.
 
@@ -471,16 +479,16 @@ def view_render_pixel_antialias_grid_pattern(view):
     """
     zero = mpfr(0)
     clr = colour_create(0, 0, 0)
-    a_view_x = view[VIEW_VIEW_X] - view[VIEW_ANTIALIAS_DATA]['x_step']
+    a_view_x = view_scan_x - view[VIEW_ANTIALIAS_DATA]['x_step']
 
     xc = 0
     yc = 0
-    # while a_view_x < view[VIEW_VIEW_X]:
+    # while a_view_x < view_scan_x:
     for i in range(0, int(view[VIEW_ANTIALIAS]['y'])):
-        a_view_y = view[VIEW_VIEW_Y] - view[VIEW_ANTIALIAS_DATA]['y_step']
+        a_view_y = view_scan_y - view[VIEW_ANTIALIAS_DATA]['y_step']
         xc = xc + 1
         a_view_x = a_view_x + view[VIEW_ANTIALIAS_DATA]['a_view_step_x']
-        # while a_view_y < view[VIEW_VIEW_Y]:
+        # while a_view_y < view_scan_y:
         for j in range(0, int(view[VIEW_ANTIALIAS]['y'])):
             yc = yc + 1
             a_view_y = a_view_y + \
@@ -508,14 +516,13 @@ def view_render(view):
     """Renders a view of a scene.
 
      :param view: The view to render
-     :param lightingmodel_flags: Flags that affect behaviour of the lighting
-                                 model"""
+    """
 
     view[VIEW_OUTPUT].set_rectangle(view[VIEW_PHYSICALRECTANGLE])
     if not isinstance(view[VIEW_SCENE], Scene):
         return None
-    view[VIEW_VIEW_Y] = view[VIEW_VIEWRECTANGLE]['top']
-    view[VIEW_VIEW_X] = view[VIEW_VIEWRECTANGLE]['left']
+    view_scan_y = view[VIEW_VIEWRECTANGLE]['top']
+    view_scan_x = view[VIEW_VIEWRECTANGLE]['left']
     x_step = (view[VIEW_VIEWRECTANGLE]['right'] -
               view[VIEW_VIEWRECTANGLE]['left']) / \
         (view[VIEW_PHYSICALRECTANGLE]['right'] -
@@ -536,15 +543,74 @@ def view_render(view):
 
     zero = mpfr(0)
 
+    if ('DoMultiProcessing' in view[VIEW_MULTIPROCESS_OPTIONS] and
+        view[VIEW_MULTIPROCESS_OPTIONS]['DoMultiProcessing']):
+        queue_func = view_process_queue_multiprocess
+        
+        if 'MaxProcesses' in view[VIEW_MULTIPROCESS_OPTIONS]:
+            max_processes = view[VIEW_MULTIPROCESS_OPTIONS]['MaxProcesses']
+        else:
+            max_processes = 0
+        
+        if max_processes <= 0:
+            view[VIEW_MULTIPROCESS_POOL]= mp.Pool(mp.cpu_count())
+        else:
+            view[VIEW_MULTIPROCESS_POOL]= mp.Pool(max_processes)
+    
+    else:
+        queue_func = view_process_queue
+    
+    queue = []
+    
     for physical_x in range(view[VIEW_PHYSICALRECTANGLE]['left'],
                             view[VIEW_PHYSICALRECTANGLE]['right']):
 
-        view[VIEW_VIEW_Y] = mpfr(view[VIEW_VIEWRECTANGLE]['top'])
+        view_scan_y = mpfr(view[VIEW_VIEWRECTANGLE]['top'])
         for physical_y in range(view[VIEW_PHYSICALRECTANGLE]['top'],
                                 view[VIEW_PHYSICALRECTANGLE]['bottom']):
+            
+            if type(queue) == list:
+                # print ((view_scan_x, view_scan_y))
+                queue.append([view, view_scan_x, view_scan_y,
+                    physical_x, physical_y, False])
+                
+            else:
+                clr = view_render_pixel(view, view_scan_x, view_scan_y) 
+                view[VIEW_OUTPUT].set_pixel(physical_x, physical_y, clr)
+                
+            view_scan_y = view_scan_y + y_step
 
-            clr = view_render_pixel(view, physical_x, physical_y)
+        view_scan_x = view_scan_x + x_step
 
-            view[VIEW_VIEW_Y] = view[VIEW_VIEW_Y] + y_step
+    queue_func(view, queue)
+        
+def view_process_queue(view, queue):
+    while len(queue)>0:
+        item = queue.pop(0)
+        clr = view_render_pixel(item[0], item[1], item[2])
+        #clr = view_pp_render_pixel (item)
+        view[VIEW_OUTPUT].set_pixel(item[3], item[4], clr)
 
-        view[VIEW_VIEW_X] = view[VIEW_VIEW_X] + x_step
+def view_process_queue_multiprocess(view, queue):
+
+    # Seems to unable to pass
+    output = view[VIEW_OUTPUT]
+    pool = view[VIEW_MULTIPROCESS_POOL]
+    view[VIEW_OUTPUT] = None
+    view[VIEW_MULTIPROCESS_POOL] = None
+    colours = pool.map(view_pp_render_pixel, queue)
+   
+    view[VIEW_OUTPUT] = output
+    view[VIEW_MULTIPROCESS_POOL] = pool
+    
+    for clr, queue_item in zip (colours, queue):
+        view[VIEW_OUTPUT].set_pixel(queue_item[3], queue_item[4], clr)
+    
+    del queue[:] #empty the list
+
+def view_pp_render_pixel(queue_item):
+    view, view_scan_x, view_scan_y, physical_x, physical_y, force_aa = queue_item
+    clr = view_render_pixel(view, view_scan_x, view_scan_y)
+
+    return clr
+    

@@ -1,5 +1,11 @@
 
-from PIL import Image
+
+try:
+    from PIL import Image
+    has_PIL = True
+except ImportError:
+    has_PIL = False
+
 from raytracer.colour import *
 
 """ Classes for managing output from the raytracer"""
@@ -42,40 +48,40 @@ class Output:
         :return: None"""
         return None
 
+if has_PIL:
+    class PIL_Output(Output):
+        __image__ = None
+        __pixels__ = None
 
-class PIL_Output(Output):
-    __image__ = None
-    __pixels__ = None
+        def set_rectangle(self, rectangle):
+            """Creates a new PIL Image based on the specified rectangle and
+            readies it for use.
 
-    def set_rectangle(self, rectangle):
-        """Creates a new PIL Image based on the specified rectangle and
-        readies it for use.
+            :param rectangle: a dictionary with 'top', 'left', 'bottom',
+                              and 'right' value"""
+            super().set_rectangle(rectangle)
+            self.__image__ = Image.new(
+                'RGB', (self.__rectangle__['right'], self.__rectangle__['bottom']))
+            self.__pixels__ = self.__image__.load()
 
-        :param rectangle: a dictionary with 'top', 'left', 'bottom',
-                          and 'right' value"""
-        super().set_rectangle(rectangle)
-        self.__image__ = Image.new(
-            'RGB', (self.__rectangle__['right'], self.__rectangle__['bottom']))
-        self.__pixels__ = self.__image__.load()
+        def set_pixel(self, x, y, colour):
+            """ Sets a colour at a specified co-ordinate
 
-    def set_pixel(self, x, y, colour):
-        """ Sets a colour at a specified co-ordinate
+                    :param x: the x co-ordinate of the colour to set.
+                    :param y: the y co-ordinate of the colour to set.
+                    :param colour: the colour to set"""
 
-                :param x: the x co-ordinate of the colour to set.
-                :param y: the y co-ordinate of the colour to set.
-                :param colour: the colour to set"""
+            colour = ['colour', colour[1], colour[2], colour[3]]
+            if colour[1] < 0:
+                colour[1] = 0
+            if colour[2] < 0:
+                colour[2] = 0
+            if colour[3] < 0:
+                colour[3] = 0
 
-        colour = ['colour', colour[1], colour[2], colour[3]]
-        if colour[1] < 0:
-            colour[1] = 0
-        if colour[2] < 0:
-            colour[2] = 0
-        if colour[3] < 0:
-            colour[3] = 0
+            self.__pixels__[x, y] = (
+                colour[1] * 255, colour[2] * 255, colour[3] * 255)
 
-        self.__pixels__[x, y] = (
-            colour[1] * 255, colour[2] * 255, colour[3] * 255)
-
-    def get_output(self):
-        """Returns the PIL image created"""
-        return self.__image__
+        def get_output(self):
+            """Returns the PIL image created"""
+            return self.__image__
