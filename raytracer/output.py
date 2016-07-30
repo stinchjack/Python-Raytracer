@@ -78,9 +78,12 @@ if has_PIL:
                 colour[2] = 0
             if colour[3] < 0:
                 colour[3] = 0
-
-            self.__pixels__[x, y] = (
-                colour[1] * 255, colour[2] * 255, colour[3] * 255)
+            	# import pdb; pdb.set_trace();
+            try:
+	            self.__pixels__[x, y] = (
+	                int(colour[1] * 255), int(colour[2] * 255), int(colour[3] * 255))
+            except:
+	            import pdb;pdb.set_trace();
 
         def get_output(self):
             """Returns the PIL image created"""
