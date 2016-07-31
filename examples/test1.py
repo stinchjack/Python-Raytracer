@@ -1,7 +1,5 @@
 import sys
 import os
-import gmpy2
-from gmpy2 import *
 import random
 from raytracer.cartesian import *
 from raytracer.colour import *
