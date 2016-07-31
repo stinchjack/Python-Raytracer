@@ -15,7 +15,7 @@ Supported Features:
 - Output in PIL format
 - Views support transformations
 
-installation:
+Installation:
 - standard setup.py included
     
 Required modules:
