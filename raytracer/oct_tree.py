@@ -24,7 +24,7 @@ def list_purge_duplicates(list):
     return unique_X
 
 class BoundingBox:
-    def __init__(min_x, max_x, min_y, max_y, min_z, max_z):
+    def __init__(self, min_x, max_x, min_y, max_y, min_z, max_z):
         self.min_x = min_x
         self.mid_x = (min_x + max_x) / 2.0
         self.max_x = max_x

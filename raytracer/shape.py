@@ -31,6 +31,10 @@ SHAPE_DIFFUSECOLOUR_FUNC = 6
 SHAPE_SPECULARCOLOUR_FUNC = 7
 SHAPE_TRANSFORM = 8
 SHAPE_DATA = 9
+SHAPE_BOUNDING_BOX_RAW = 10
+
+def shape_bounding_box(shape):
+    return None
 
 
 def shape_set_transform(shape, transform):

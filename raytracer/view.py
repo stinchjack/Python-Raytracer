@@ -3,7 +3,7 @@ try:
 except ImportError:
     from math import *
     from raytracer.mpfr_dummy import *
-*
+
 from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.matrix import *

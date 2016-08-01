@@ -102,28 +102,42 @@ class Scene(object):
             max_z = None
             
             for shape in self.__shapes__:
-                box = shape[SHAPE_BOUNDING_BOX](shape)
+                box = shape_bounding_box(shape)
                 
-                if min_x is None or box.min_x < min_x:
-                    min_x = box.min_x
-                if min_y is None or box.min_y < min_y:
-                    min_y = box.min_y
-                if min_z is None or box.min_z < min_z:
-                    min_z = box.min_z
-                
-                if max_x is None or box.max_x < max_x:
-                    max_x = box.max_x
-                if max_y is None or box.max_y < max_y:
-                    max_y = box.max_y
-                if max_z is None or box.max_z < max_z:
-                    max_z = box.max_z                
+                if box is not None:
+                    if min_x is None or box.min_x < min_x:
+                        min_x = box.min_x
+                    if min_y is None or box.min_y < min_y:
+                        min_y = box.min_y
+                    if min_z is None or box.min_z < min_z:
+                        min_z = box.min_z
                     
-            self.__octtree_top__ =  OctTreeLeaf(
-                None, self.__oct_tree_threshold__,
-                min_x, max_x, min_y, max_y, min_z, max_z)
-                
-            for shape in self.__shapes__:
-                self.__octtree_top__.add_shape(shape)
+                    if max_x is None or box.max_x < max_x:
+                        max_x = box.max_x
+                    if max_y is None or box.max_y < max_y:
+                        max_y = box.max_y
+                    if max_z is None or box.max_z < max_z:
+                        max_z = box.max_z                
+                    
+            if min_x is not None and \
+                min_y is not None and \
+                min_z is not None and \
+                max_x is not None and \
+                max_y is not None and \
+                max_z is not None:
+
+                self.__octtree_top__ =  OctTreeLeaf(
+                    None, self.__oct_tree_threshold__,
+                    min_x, max_x, min_y, max_y, min_z, max_z)
+
+                for shape in self.__shapes__:
+                    self.__octtree_top__.add_shape(shape)
+            
+            else: 
+                self.__octtree_top__ = None
+
+
+
                     
         raytracer.view.view_render(
             self.__views__[view_name])
@@ -134,7 +148,8 @@ class Scene(object):
                 
     def test_intersect(self, ray, exclude_shapes=[]):
         if self.__use_octtree__ and \
-            len (self.__shapes__)>=self.__oct_tree_threshold__:
+            len (self.__shapes__)>=self.__oct_tree_threshold__ and \
+            self.__octtree_top__ is not None:
             
             return self.test_intersect_octtree (ray, exclude_shapes)
         else:
