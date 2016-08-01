@@ -1,5 +1,9 @@
-import gmpy2
-from gmpy2 import mpfr
+try:
+    from gmpy2 import mpdf
+except ImportError:
+    from math import *
+    from raytracer.mpfr_dummy import *
+
 from raytracer.cartesian import *
 
 """Support for matrix maths"""

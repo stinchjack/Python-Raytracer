@@ -2,7 +2,8 @@ try:
     from gmpy2 import *
 except ImportError:
     from math import *
-    from mpfr_dummy import *
+    from raytracer.mpfr_dummy import *
+
 from raytracer.matrix import *
 from raytracer.cartesian import *
 from copy import *

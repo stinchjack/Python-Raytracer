@@ -2,7 +2,7 @@ import math
 try:
     from gmpy2 import *
 except ImportError:
-    from mpfr_dummy import *
+    from raytracer.mpfr_dummy import *
 from raytracer.cartesian import *
 from raytracer.colour import *
 from PIL import Image
