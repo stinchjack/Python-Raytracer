@@ -1,5 +1,6 @@
+import raytracer.shape
 from raytracer.cartesian import *
-from raytracer.shape import *
+
 
 OCT_BRANCH_MIN_X = 0
 OCT_BRANCH_MIN_Y = 0
@@ -29,7 +30,7 @@ class BoundingBox:
         self.mid_x = (min_x + max_x) / 2.0
         self.max_x = max_x
         self.min_y = min_y
-        self.mid_x = (min_y + max_y) / 2.0
+        self.mid_y = (min_y + max_y) / 2.0
         self.max_y = max_y
         self.min_z = min_z
         self.mid_z = (min_z + max_z) / 2.0
@@ -57,7 +58,12 @@ class BoundingBox:
             if self.is_inside(point):
                 return True
         return False
-        
+    
+    def __str__(self):
+        return ("min_x: %f, mid_x %f, max_x %f, min_y %f, mid_y %f " + 
+                "max_y: %f, min_z: %f, mid_z: %f, max_z: %f, co-ords: %s") % (
+                self.min_x, self.mid_x, self.max_x, self.min_y, self.mid_y,
+                self.max_y, self.min_z, self.mid_y, self.max_z, self.coordinates )
             
 class OctTreeNode(object):
     def __init__(
@@ -69,7 +75,8 @@ class OctTreeNode(object):
         self.bounding_box = BoundingBox(
             min_x, max_x, min_y, max_y, min_z, max_z)   
             
-class OctTreeLeaf(OctTreeNode): 
+class OctTreeLeaf(OctTreeNode):
+ 
     def add_shape(self, shape):
         self.shapes.append(shape)
         if len(self.shapes)>self.split_threshold:  
@@ -87,91 +94,103 @@ class OctTreeLeaf(OctTreeNode):
             if self.parent_branch is not None:
                 self.parent_branch.replace_node(self, new_branch)
 
+    def get_shape_dict_by_ray(self, ray):
+      return self.shapes
+          
+    def get_shapes_by_ray(self, ray):
+      return self.shapes
+
+    def get_nodes_by_ray(self, ray):
+      return None
+
             
 class OctTreeBranch(OctTreeNode):
     def __init__(
         self, parent_branch, split_threshold,
         min_x, max_x, min_y, max_y, min_z, max_z):
-        super.__init__(
+        super(OctTreeBranch, self).__init__(
             parent_branch, split_threshold,
             min_x, max_x, min_y, max_y, min_z, max_z)
-        self.chlidren = [
+        self.children = [
             [[None,None], [None, None]],
             [[None, None], [None, None]] ]
         
         self.children[OCT_BRANCH_MIN_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MIN_Z] = \
             OctTreeLeaf(
-                split_threshold, min_x, self.bounding_box.mid_x, 
+                self, split_threshold, min_x, self.bounding_box.mid_x, 
                 min_y, self.bounding_box.mid_y,
                 min_z, self.bounding_box.mid_z)
         
         self.children[OCT_BRANCH_MIN_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MAX_Z] = \
             OctTreeLeaf(
-                split_threshold, min_x, self.bounding_box.mid_x, 
+                self, split_threshold, min_x, self.bounding_box.mid_x, 
                 min_y, self.bounding_box.mid_y,
                 self.bounding_box.mid_z, max_z)
                 
-        self.children[OCT_BRANCH_MIN_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MIN_Z] = \
+        self.children[OCT_BRANCH_MIN_X][OCT_BRANCH_MAX_Y][OCT_BRANCH_MIN_Z] = \
             OctTreeLeaf(
-                split_threshold, min_x, self.bounding_box.mid_x, 
+                self, split_threshold, min_x, self.bounding_box.mid_x, 
                 min_y, self.bounding_box.mid_y,
                 min_z, self.bounding_box.mid_z)
         
         self.children[OCT_BRANCH_MIN_X][OCT_BRANCH_MAX_Y][OCT_BRANCH_MAX_Z] = \
             OctTreeLeaf(
-                split_threshold, min_x, self.bounding_box.mid_x, 
+                self, split_threshold, min_x, self.bounding_box.mid_x, 
                 self.bounding_box.mid_y, max_y,
                 self.bounding_box.mid_z, max_z)
 
         self.children[OCT_BRANCH_MAX_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MIN_Z] = \
             OctTreeLeaf(
-                split_threshold, min_x, self.bounding_box.mid_x, 
+                self, split_threshold, min_x, self.bounding_box.mid_x, 
                 min_y, self.bounding_box.mid_y,
                 min_z, self.bounding_box.mid_z)
         
         self.children[OCT_BRANCH_MAX_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MAX_Z] = \
             OctTreeLeaf(
-                split_threshold, self.bounding_box.mid_x, max_x, 
+                self, split_threshold, self.bounding_box.mid_x, max_x, 
                 min_y, self.bounding_box.mid_y,
                 self.bounding_box.mid_z, max_z)
                 
-        self.children[OCT_BRANCH_MAX_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MIN_Z] = \
+        self.children[OCT_BRANCH_MAX_X][OCT_BRANCH_MAX_Y][OCT_BRANCH_MIN_Z] = \
             OctTreeLeaf(
-                split_threshold, self.bounding_box.mid_x, max_x,
+                self, split_threshold, self.bounding_box.mid_x, max_x,
                 min_y, self.bounding_box.mid_y,
                 min_z, self.bounding_box.mid_z)
         
         self.children[OCT_BRANCH_MAX_X][OCT_BRANCH_MAX_Y][OCT_BRANCH_MAX_Z] = \
             OctTreeLeaf(
-                split_threshold, self.bounding_box.mid_x, max_x,
+                self, split_threshold, self.bounding_box.mid_x, max_x,
                 self.bounding_box.mid_y, max_y,
-                self.bounding_box.mid_z, max_z)                  
+                self.bounding_box.mid_z, max_z)  
     
     def add_shape (self, shape):
-        shape_box = shape[SHAPE_BOUNDING_BOX](shape)
+        shape_box = raytracer.shape.shape_bounding_box(shape)
+
         if shape_box is None:
             self.shapes.append(shape)
         
         else:
+            if not shape_box.box_overlaps(self.bounding_box):
+                return
             
             if shape_box.min_x <= self.bounding_box.mid_x: x_left = 0
             if shape_box.min_x >= self.bounding_box.mid_x: x_left = 1
             if shape_box.max_x <= self.bounding_box.mid_x: x_right = 0
             if shape_box.max_x >= self.bounding_box.mid_x: x_right = 1            
         
-            if shape_box.min_y <= self.bounding_boy.mid_y: y_top = 0
-            if shape_box.min_y >= self.bounding_boy.mid_y: y_top = 1
-            if shape_box.max_y <= self.bounding_boy.mid_y: y_bottom= 0
-            if shape_box.may_y >= self.bounding_boy.mid_y: y_bottom = 1
+            if shape_box.min_y <= self.bounding_box.mid_y: y_top = 0
+            if shape_box.min_y >= self.bounding_box.mid_y: y_top = 1
+            if shape_box.max_y <= self.bounding_box.mid_y: y_bottom= 0
+            if shape_box.max_y >= self.bounding_box.mid_y: y_bottom = 1
             
-            if shape_box.min_z <= self.bounding_boz.mid_z: z_front = 0
-            if shape_box.min_z >= self.bounding_boz.mid_z: z_front = 1
-            if shape_box.max_z <= self.bounding_boz.mid_z: z_back= 0
-            if shape_box.max_z >= self.bounding_boz.mid_z: z_back = 1 
+            if shape_box.min_z <= self.bounding_box.mid_z: z_front = 0
+            if shape_box.min_z >= self.bounding_box.mid_z: z_front = 1
+            if shape_box.max_z <= self.bounding_box.mid_z: z_back= 0
+            if shape_box.max_z >= self.bounding_box.mid_z: z_back = 1 
             
             for i in range(x_left, x_right + 1):
                 for j in range(y_top, y_bottom + 1):
-                    for k in range(z_front, z_bottom + 1):
+                    for k in range(z_front, z_back + 1):
                         self.children[i][j][k].add_shape(shape)
                 
             
@@ -187,7 +206,7 @@ class OctTreeBranch(OctTreeNode):
     
     
     def get_shape_dict_by_ray(self, ray):
-        shapes = get_shapes_by_ray(ray)
+        shapes = get_shapes_by_ray(ray) + self.shapes
         shape_dict = {}
         for shape in shapes:
             shape_box = shape[SHAPE_BOUNDING_BOX](shape)

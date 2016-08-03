@@ -101,7 +101,8 @@ class Scene(object):
             max_y = None
             max_z = None
             
-            for shape in self.__shapes__:
+            for shape_name in self.__shapes__:
+                shape = self.__shapes__[shape_name]
                 box = shape_bounding_box(shape)
                 
                 if box is not None:
@@ -112,11 +113,11 @@ class Scene(object):
                     if min_z is None or box.min_z < min_z:
                         min_z = box.min_z
                     
-                    if max_x is None or box.max_x < max_x:
+                    if max_x is None or box.max_x > max_x:
                         max_x = box.max_x
-                    if max_y is None or box.max_y < max_y:
+                    if max_y is None or box.max_y > max_y:
                         max_y = box.max_y
-                    if max_z is None or box.max_z < max_z:
+                    if max_z is None or box.max_z > max_z:
                         max_z = box.max_z                
                     
             if min_x is not None and \
@@ -130,7 +131,8 @@ class Scene(object):
                     None, self.__oct_tree_threshold__,
                     min_x, max_x, min_y, max_y, min_z, max_z)
 
-                for shape in self.__shapes__:
+                for shape_name in self.__shapes__:
+                    shape = self.__shapes__[shape_name]
                     self.__octtree_top__.add_shape(shape)
             
             else: 
@@ -162,11 +164,10 @@ class Scene(object):
         curr_t = None
         curr_intersect_result = None
         
-        for key in sorted(shapes):
-            shape = shapes[key]
+        for shape in shapes:
 
             if shape not in exclude_shapes:
-                sh = self.__shapes__[shape]
+                sh = shape
                 intersect_result = shape_test_intersect(sh, ray)
                 if (intersect_result is not False and
                         intersect_result is not None):

@@ -2,6 +2,7 @@ from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.matrix import *
 from raytracer.transformation import *
+from raytracer.oct_tree import *
 
 """Functions for dealing with shapes. A shape is a list with the following
 elements:
@@ -31,12 +32,44 @@ SHAPE_DIFFUSECOLOUR_FUNC = 6
 SHAPE_SPECULARCOLOUR_FUNC = 7
 SHAPE_TRANSFORM = 8
 SHAPE_DATA = 9
-SHAPE_BOUNDING_BOX_RAW = 10
+SHAPE_BOUNDING_BOX_SHAPESPACE = 10
+SHAPE_BOUNDING_BOX_WORLDSPACE = 11
 
 def shape_bounding_box(shape):
-    return None
-
-
+    if shape[SHAPE_BOUNDING_BOX_SHAPESPACE] is None:
+      return None
+  
+    if shape[SHAPE_TRANSFORM] is None:
+      return shape[SHAPE_BOUNDING_BOX_SHAPESPACE]
+  
+    if shape[SHAPE_BOUNDING_BOX_WORLDSPACE] is not None:
+      return shape[SHAPE_BOUNDING_BOX_WORLDSPACE]
+    
+    transformed_points = []
+    for point in shape[SHAPE_BOUNDING_BOX_SHAPESPACE].coordinates:
+      ws_point = shape[SHAPE_TRANSFORM].inverse_transform(point, True)
+      transformed_points.append(ws_point)
+    
+    min_x = 0
+    max_x = 0
+    min_y = 0
+    max_y = 0    
+    min_z = 0
+    max_z = 0
+    
+    for point in transformed_points:
+      if point[1] < min_x: min_x = point[1]
+      if point[1] > max_x: max_x = point[1]
+      if point[2] < min_y: min_y = point[2]
+      if point[2] > max_y: max_y = point[2]
+      if point[3] < min_z: min_z = point[3]
+      if point[3] > max_z: max_z = point[3]
+     
+    shape[SHAPE_BOUNDING_BOX_WORLDSPACE] = BoundingBox (
+        min_x, max_x, min_y, max_y, min_z, max_z)
+    
+    return shape[SHAPE_BOUNDING_BOX_WORLDSPACE]
+     
 def shape_set_transform(shape, transform):
     """Sets the transformation for a shape.
     :param shape: a shape
@@ -86,10 +119,10 @@ def shape_empty_shape():
     """"Returns a list with some starting elements necessary for a shape.
 
     :return: ['shape', None, None, None, None, None, shape_diffuse_colour,
-             shape_specular_colour, None, {}]"""
+             shape_specular_colour, None, {}, None, None]"""
 
     return ['shape', None, None, None, None, None, None,
-            None, None, {}]
+            None, None, {}, None, None]
 
 
 def shape_point_inside(shape, cartesian):
