@@ -148,7 +148,8 @@ class Scene(object):
                 [raytracer.view.VIEW_OUTPUT].get_output())
 
     def replace_node(self, old_node, new_node):
-         self.__octtree_top__ = new_node   
+         self.__octtree_top__ = new_node
+          
                 
     def test_intersect(self, ray, exclude_shapes=[]):
         if self.__use_octtree__ and \

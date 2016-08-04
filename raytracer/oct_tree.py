@@ -79,13 +79,15 @@ class OctTreeNode(object):
 class OctTreeLeaf(OctTreeNode):
  
     def add_shape(self, shape):
+        
         self.shapes.append(shape)
         if len(self.shapes)>self.split_threshold:
             new_branch = OctTreeBranch(
                 self.parent_branch, self.split_threshold,
                 self.bounding_box.min_x, self.bounding_box.max_x,
                 self.bounding_box.min_y, self.bounding_box.max_y,
-                self.bounding_box.min_z, self.bounding_box.max_z)   
+                self.bounding_box.min_z, self.bounding_box.max_z)
+                 
             for shape in self.shapes:
                 new_branch.add_shape(shape)
             
@@ -117,49 +119,57 @@ class OctTreeBranch(OctTreeNode):
         
         self.children[OCT_BRANCH_MIN_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MIN_Z] = \
             OctTreeLeaf(
-                self, split_threshold, min_x, self.bounding_box.mid_x, 
+                self, split_threshold,
+                min_x, self.bounding_box.mid_x, 
                 min_y, self.bounding_box.mid_y,
                 min_z, self.bounding_box.mid_z)
         
         self.children[OCT_BRANCH_MIN_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MAX_Z] = \
             OctTreeLeaf(
-                self, split_threshold, min_x, self.bounding_box.mid_x, 
+                self, split_threshold,
+                min_x, self.bounding_box.mid_x, 
                 min_y, self.bounding_box.mid_y,
                 self.bounding_box.mid_z, max_z)
                 
         self.children[OCT_BRANCH_MIN_X][OCT_BRANCH_MAX_Y][OCT_BRANCH_MIN_Z] = \
             OctTreeLeaf(
-                self, split_threshold, min_x, self.bounding_box.mid_x, 
-                min_y, self.bounding_box.mid_y,
+                self, split_threshold,
+                min_x, self.bounding_box.mid_x, 
+                self.bounding_box.mid_y, max_y,
                 min_z, self.bounding_box.mid_z)
         
         self.children[OCT_BRANCH_MIN_X][OCT_BRANCH_MAX_Y][OCT_BRANCH_MAX_Z] = \
             OctTreeLeaf(
-                self, split_threshold, min_x, self.bounding_box.mid_x, 
+                self, split_threshold,
+                min_x, self.bounding_box.mid_x, 
                 self.bounding_box.mid_y, max_y,
                 self.bounding_box.mid_z, max_z)
 
         self.children[OCT_BRANCH_MAX_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MIN_Z] = \
             OctTreeLeaf(
-                self, split_threshold, min_x, self.bounding_box.mid_x, 
+                self, split_threshold,
+                self.bounding_box.mid_x, max_x, 
                 min_y, self.bounding_box.mid_y,
                 min_z, self.bounding_box.mid_z)
         
         self.children[OCT_BRANCH_MAX_X][OCT_BRANCH_MIN_Y][OCT_BRANCH_MAX_Z] = \
             OctTreeLeaf(
-                self, split_threshold, self.bounding_box.mid_x, max_x, 
+                self, split_threshold,
+                self.bounding_box.mid_x, max_x, 
                 min_y, self.bounding_box.mid_y,
                 self.bounding_box.mid_z, max_z)
                 
         self.children[OCT_BRANCH_MAX_X][OCT_BRANCH_MAX_Y][OCT_BRANCH_MIN_Z] = \
             OctTreeLeaf(
-                self, split_threshold, self.bounding_box.mid_x, max_x,
-                min_y, self.bounding_box.mid_y,
+                self, split_threshold,
+                self.bounding_box.mid_x, max_x,
+                self.bounding_box.mid_y, max_y,
                 min_z, self.bounding_box.mid_z)
         
         self.children[OCT_BRANCH_MAX_X][OCT_BRANCH_MAX_Y][OCT_BRANCH_MAX_Z] = \
             OctTreeLeaf(
-                self, split_threshold, self.bounding_box.mid_x, max_x,
+                self, split_threshold,
+                self.bounding_box.mid_x, max_x,
                 self.bounding_box.mid_y, max_y,
                 self.bounding_box.mid_z, max_z)  
     

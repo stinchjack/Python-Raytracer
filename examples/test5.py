@@ -58,15 +58,22 @@ if __name__ == '__main__':
                     #             random.uniform(0, 1), random.uniform(0, 1), random.uniform(0, 1)),
                     #            'angle':random.uniform(0, 360) },
                     'translate': {'x': x*2, 'y': y*2, 'z': (z*2) + 2}
-                }))
-        
-                print ("x: %f y:%f z:%f"%(x,y,z))
-                bbox = shape_bounding_box(sphere)
-                print (bbox.__str__())
-                print ("-==-=-=-=-")                
+                }))              
         
                 scene.add_shape(sphere, 'sphere_%i'%i)
 
         
+    # print (scene.__octtree_top__) 
     image = scene.render('view')
-    image.show()
+    
+    for x in range(0,2):
+        for y in range(0,2):
+            for z in range(0,2):
+                
+                print ("x %d, y %d, z %d" % (x,y,z))
+                print (scene.__octtree_top__.children[x][y][z])
+                # print ("shape count: %d" % len(scene.__octtree_top__.children[x][y][z].shapes))
+                print ("shapes: %s" % (scene.__octtree_top__.children[x][y][z].shapes[0][SHAPE_TRANSFORM].__options__.__str__()))
+                print ()                
+                
+    # image.show()
