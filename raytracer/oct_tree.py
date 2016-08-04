@@ -78,9 +78,12 @@ class OctTreeNode(object):
             
 class OctTreeLeaf(OctTreeNode):
  
-    def add_shape(self, shape):
+    def add_shape(self, new_shape):
         
-        self.shapes.append(shape)
+        #if not raytracer.shape.shape_bounding_box(new_shape).box_overlaps(self.bounding_box):
+        #    return        
+        
+        self.shapes.append(new_shape)
         if len(self.shapes)>self.split_threshold:
             new_branch = OctTreeBranch(
                 self.parent_branch, self.split_threshold,
@@ -89,9 +92,9 @@ class OctTreeLeaf(OctTreeNode):
                 self.bounding_box.min_z, self.bounding_box.max_z)
                  
             for shape in self.shapes:
-                new_branch.add_shape(shape)
+                new_branch.add_shape(new_shape)
             
-            # del self.shapes[:]
+            del self.shapes[:]
             
             if self.parent_branch is not None:
                 self.parent_branch.replace_node(self, new_branch)
@@ -182,25 +185,32 @@ class OctTreeBranch(OctTreeNode):
         else:
             if not shape_box.box_overlaps(self.bounding_box):
                 return
+#            for i in range(0,2):
+#                for j in range(0,2):
+#                    for k in range(0,2):
+#                        self.children[i][j][k].add_shape(shape)
             
             if shape_box.min_x <= self.bounding_box.mid_x: x_left = 0
-            if shape_box.min_x >= self.bounding_box.mid_x: x_left = 1
+            else: x_left = 1
             if shape_box.max_x <= self.bounding_box.mid_x: x_right = 0
-            if shape_box.max_x >= self.bounding_box.mid_x: x_right = 1            
+            else: x_right = 1            
         
             if shape_box.min_y <= self.bounding_box.mid_y: y_top = 0
-            if shape_box.min_y >= self.bounding_box.mid_y: y_top = 1
+            else: y_top = 1
             if shape_box.max_y <= self.bounding_box.mid_y: y_bottom= 0
-            if shape_box.max_y >= self.bounding_box.mid_y: y_bottom = 1
+            else: y_bottom = 1
             
             if shape_box.min_z <= self.bounding_box.mid_z: z_front = 0
-            if shape_box.min_z >= self.bounding_box.mid_z: z_front = 1
+            else: z_front = 1
             if shape_box.max_z <= self.bounding_box.mid_z: z_back= 0
-            if shape_box.max_z >= self.bounding_box.mid_z: z_back = 1 
+            else:  z_back = 1 
             
+            print ("----")
+            print (shape)
             for i in range(x_left, x_right + 1):
                 for j in range(y_top, y_bottom + 1):
                     for k in range(z_front, z_back + 1):
+                        print ("adding to %d %d %d"%(i,j,k))
                         self.children[i][j][k].add_shape(shape)
                 
             
