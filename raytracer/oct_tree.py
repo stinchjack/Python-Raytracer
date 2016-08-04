@@ -20,7 +20,7 @@ def list_purge_duplicates(list):
     # http://stackoverflow.com/questions/6764909/python-how-to-remove-all-duplicate-items-from-a-list
     unique_X = []
     for i, row in enumerate(list):
-        if row not in X[i + 1:]:
+        if row not in list[i + 1:]:
             unique_X.append(row)
     return unique_X
 
@@ -64,6 +64,7 @@ class BoundingBox:
                 "max_y: %f, min_z: %f, mid_z: %f, max_z: %f, co-ords: %s") % (
                 self.min_x, self.mid_x, self.max_x, self.min_y, self.mid_y,
                 self.max_y, self.min_z, self.mid_y, self.max_z, self.coordinates )
+                
             
 class OctTreeNode(object):
     def __init__(
@@ -79,17 +80,16 @@ class OctTreeLeaf(OctTreeNode):
  
     def add_shape(self, shape):
         self.shapes.append(shape)
-        if len(self.shapes)>self.split_threshold:  
+        if len(self.shapes)>self.split_threshold:
             new_branch = OctTreeBranch(
                 self.parent_branch, self.split_threshold,
                 self.bounding_box.min_x, self.bounding_box.max_x,
                 self.bounding_box.min_y, self.bounding_box.max_y,
-                self.bounding_box.min_z, self.bounding_box.max_z)
-                
+                self.bounding_box.min_z, self.bounding_box.max_z)   
             for shape in self.shapes:
                 new_branch.add_shape(shape)
             
-            del self.shapes[:]
+            # del self.shapes[:]
             
             if self.parent_branch is not None:
                 self.parent_branch.replace_node(self, new_branch)
@@ -197,8 +197,8 @@ class OctTreeBranch(OctTreeNode):
     def replace_node(self, old_node, new_node):
         for i in range(0,2):
             for j in range(0,2):
-                for k in range(0,2):
-                    if self.children[i][j][k] == old_node:
+                for k in range(0,2):                    
+                    if self.children[i][j][k] == old_node:                        
                         self.children[i][j][k] = new_node
                         return True
         
@@ -206,7 +206,7 @@ class OctTreeBranch(OctTreeNode):
     
     
     def get_shape_dict_by_ray(self, ray):
-        shapes = get_shapes_by_ray(ray) + self.shapes
+        shapes = self.get_shapes_by_ray(ray) + self.shapes
         shape_dict = {}
         for shape in shapes:
             shape_box = shape[SHAPE_BOUNDING_BOX](shape)
@@ -219,17 +219,19 @@ class OctTreeBranch(OctTreeNode):
                 dist_sq = 0
                 
             shape_dict[dist_sq] = shape
+         
+        return shape_dict
             
         
     
     def get_shapes_by_ray(self, ray):
-        nodes = get_nodes_by_ray(ray)
+        nodes = self.get_nodes_by_ray(ray)
         shapes = []
         for node in nodes:
             shapes = shapes + node.shapes
         
         shapes = list_purge_duplicates(shapes)
-        
+        return shapes
     
     def get_nodes_by_ray(self, ray):
 
@@ -238,11 +240,11 @@ class OctTreeBranch(OctTreeNode):
         if ray[RAY_DIR][1] !=0:
         
             if ray[RAY_START][1] <= self.bounding_box.mid_x:
-                x_test_left = self.bounding_box.x_mid
-                x_test_right = self.bounding_box.x_max
+                x_test_left = self.bounding_box.mid_x
+                x_test_right = self.bounding_box.max_x
             else:
-                x_test_left = self.bounding_box.x_min
-                x_test_right = self.bounding_box.x_mid 
+                x_test_left = self.bounding_box.min_X
+                x_test_right = self.bounding_box.mid_x 
                 
             t_x_left = (x_test_left - ray[RAY_START][1]) / ray[RAY_DIR][1]
             t_x_right = (x_test_right - ray[RAY_START][1]) / ray[RAY_DIR][1]
@@ -252,11 +254,11 @@ class OctTreeBranch(OctTreeNode):
         
         if ray[RAY_DIR][2] !=0:
             if ray[RAY_START][2] <= self.bounding_box.mid_y:
-                y_test_top = self.bounding_box.y_mid
-                y_test_bottom = self.bounding_box.y_max
+                y_test_top = self.bounding_box.mid_y
+                y_test_bottom = self.bounding_box.max_y
             else:
-                y_test_top = self.bounding_box.y_min
-                y_test_bottom = self.bounding_box.y_mid
+                y_test_top = self.bounding_box.min_y
+                y_test_bottom = self.bounding_box.mid_y
                         
             t_y_top = (y_test_top - ray[RAY_START][2]) / ray[RAY_DIR][2]
             t_y_bottom = (y_test_bottom - ray[RAY_START][2]) / ray[RAY_DIR][2]
@@ -267,11 +269,11 @@ class OctTreeBranch(OctTreeNode):
         if ray[RAY_DIR][3] !=0:
             
             if ray[RAY_START][3] <= self.bounding_box.mid_z:
-                z_test_front = self.bounding_box.z_mid
-                z_test_back = self.bounding_box.z_max
+                z_test_front = self.bounding_box.mid_z
+                z_test_back = self.bounding_box.max_z
             else:
-                z_test_front = self.bounding_box.z_min
-                z_test_back = self.bounding_box.z_mid
+                z_test_front = self.bounding_box.min_z
+                z_test_back = self.bounding_box.mid_z
                 
             t_z_front = (z_test_front - ray[RAY_START][3]) / ray[RAY_DIR][3]
             t_z_back = (z_test_back - ray[RAY_START][3]) / ray[RAY_DIR][3]

@@ -159,6 +159,7 @@ def transform_matrix_mul_cartesian(matrix, cartesian):
 # ['ray',cartesian,cartesian,False]
 RAY_START = 1
 RAY_VECTOR = 2
+RAY_DIR = 2
 RAY_ISSHADOW = 3
 
 

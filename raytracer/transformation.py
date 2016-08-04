@@ -147,8 +147,7 @@ class Transform:
         :return: the ray, transformed
         """
 
-        if self.__no_transform__:
-            return ray
+
 
         ray_dir = ray[RAY_VECTOR]
         ray_point = ray[RAY_START]
@@ -164,7 +163,21 @@ class Transform:
                 ray_point, self.__options__['translate'])
 
         return ray_create(ray_point, ray_dir, ray[RAY_ISSHADOW])
+        
 
+    def transform_cartestian(self, cartesian):
+        if self.__no_transform__:
+            return cartesian        
+        
+        if isinstance(self.__matrix__, Matrix):
+            new_cartesian = transform_matrix_mul_cartesian(
+                self.__matrix__.matrix, cartesian)
+  
+        if 'translate' in self.__options__:
+            new_cartesian = cartesian_sub(
+                new_cartesian, self.__options__['translate']) 
+        return new_cartesian              
+                
     def transform_point(self, point, inverse=False):
         """Transforms a point. (A point can only be transformed by
         translation.)

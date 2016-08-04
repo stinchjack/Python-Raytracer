@@ -128,7 +128,7 @@ class Scene(object):
                 max_z is not None:
 
                 self.__octtree_top__ =  OctTreeLeaf(
-                    None, self.__oct_tree_threshold__,
+                    self, self.__oct_tree_threshold__,
                     min_x, max_x, min_y, max_y, min_z, max_z)
 
                 for shape_name in self.__shapes__:
@@ -147,6 +147,8 @@ class Scene(object):
         return (self.__views__[view_name]
                 [raytracer.view.VIEW_OUTPUT].get_output())
 
+    def replace_node(self, old_node, new_node):
+         self.__octtree_top__ = new_node   
                 
     def test_intersect(self, ray, exclude_shapes=[]):
         if self.__use_octtree__ and \
