@@ -91,7 +91,8 @@ class Scene(object):
         """
         
         if self.__use_octtree__ and \
-            len (self.__shapes__)>=self.__oct_tree_threshold__:
+            len (self.__shapes__) >= self.__oct_tree_threshold__:                  
+            
             # get bounding boxes for all shapes
             min_x = None
             min_y = None
@@ -131,10 +132,11 @@ class Scene(object):
                     self, self.__oct_tree_threshold__,
                     min_x, max_x, min_y, max_y, min_z, max_z)
 
+  
                 for shape_name in self.__shapes__:
                     shape = self.__shapes__[shape_name]
                     self.__octtree_top__.add_shape(shape)
-            
+
             else: 
                 self.__octtree_top__ = None
 

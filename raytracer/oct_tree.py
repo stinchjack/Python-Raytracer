@@ -63,7 +63,7 @@ class BoundingBox:
         return ("min_x: %f, mid_x %f, max_x %f, min_y %f, mid_y %f " + 
                 "max_y: %f, min_z: %f, mid_z: %f, max_z: %f, co-ords: %s") % (
                 self.min_x, self.mid_x, self.max_x, self.min_y, self.mid_y,
-                self.max_y, self.min_z, self.mid_y, self.max_z, self.coordinates )
+                self.max_y, self.min_z, self.mid_z, self.max_z, self.coordinates )
                 
             
 class OctTreeNode(object):
@@ -177,7 +177,22 @@ class OctTreeBranch(OctTreeNode):
                 self.bounding_box.mid_z, max_z)  
     
     def add_shape (self, shape):
+        
+        if hasattr(self, 'adshc'):
+            adshc = adshc + 1
+        else:
+            adshc = 1
+          
+                 
+        
+              
+        
         shape_box = raytracer.shape.shape_bounding_box(shape)
+        print ("---- %s" % shape_box.__str__()) 
+
+        print (self.bounding_box)
+
+
 
         if shape_box is None:
             self.shapes.append(shape)
@@ -185,10 +200,6 @@ class OctTreeBranch(OctTreeNode):
         else:
             if not shape_box.box_overlaps(self.bounding_box):
                 return
-#            for i in range(0,2):
-#                for j in range(0,2):
-#                    for k in range(0,2):
-#                        self.children[i][j][k].add_shape(shape)
             
             if shape_box.min_x <= self.bounding_box.mid_x: x_left = 0
             else: x_left = 1
@@ -205,14 +216,13 @@ class OctTreeBranch(OctTreeNode):
             if shape_box.max_z <= self.bounding_box.mid_z: z_back= 0
             else:  z_back = 1 
             
-            print ("----")
-            print (shape)
+
             for i in range(x_left, x_right + 1):
                 for j in range(y_top, y_bottom + 1):
                     for k in range(z_front, z_back + 1):
                         print ("adding to %d %d %d"%(i,j,k))
                         self.children[i][j][k].add_shape(shape)
-                
+            
             
     def replace_node(self, old_node, new_node):
         for i in range(0,2):

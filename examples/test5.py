@@ -25,7 +25,7 @@ if __name__ == '__main__':
                        # {'left':.1, 'right':.1, 'top':.1, 'bottom':.1}),
                        {'left': -5, 'right': 5, 'top': -5, 'bottom': 5})
 
-                       
+
     view_set_antialias (view, False, 5, 5, True) #, True, .4)
     view_set_output(view, PIL_Output())
     view_set_multiprocessing(view, False)
@@ -37,17 +37,17 @@ if __name__ == '__main__':
     i = 0
     for x in range(-1, 2):
         for y in range(-1, 2):
-            for z in range(-1, 2):
+            for z in range(1, 4):
                 i = i + 1
                 bands = []
-                count = int(round(random.random()*5,0))
+                count = int(5)
                 for j in range (0, count+2):
                     bands.append(('colour', random.uniform(.5,1), random.uniform(.5,1), random.uniform(.5,1)))
         
         
                 sphere = shape_sphere_create(
-                    ('colour_mapping', sphere_map_to_rect,
-                    BandedSprialTexture(bands)),
+                    # ('colour_mapping', sphere_map_to_rect, BandedSprialTexture(bands)),
+                    colour_create(1,0,0),
                     colour_create(0,0,0))
                 
                 
@@ -57,7 +57,7 @@ if __name__ == '__main__':
                     # 'rotate': {'vector': cartesian_create(
                     #             random.uniform(0, 1), random.uniform(0, 1), random.uniform(0, 1)),
                     #            'angle':random.uniform(0, 360) },
-                    'translate': {'x': x*2, 'y': y*2, 'z': (z*2) + 2}
+                    'translate': {'x': x*2, 'y': y*2, 'z': z}
                 }))              
         
                 scene.add_shape(sphere, 'sphere_%i'%i)
@@ -72,8 +72,9 @@ if __name__ == '__main__':
                 
                 print ("x %d, y %d, z %d" % (x,y,z))
                 print (scene.__octtree_top__.children[x][y][z])
-                # print ("shape count: %d" % len(scene.__octtree_top__.children[x][y][z].shapes))
-                print ("shapes: %s" % (scene.__octtree_top__.children[x][y][z].shapes[0][SHAPE_TRANSFORM].__options__.__str__()))
+                print ("shape count: %d" % len(scene.__octtree_top__.children[x][y][z].shapes))
+                # print ("child box: %s" % scene.__octtree_top__.children[x][y][z].bounding_box)
+                # print ("shapes: %s" % (scene.__octtree_top__.children[x][y][z].shapes[0][SHAPE_TRANSFORM].__options__.__str__()))
                 print ()                
                 
     # image.show()
