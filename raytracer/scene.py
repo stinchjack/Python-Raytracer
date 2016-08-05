@@ -82,13 +82,8 @@ class Scene(object):
 
         self.__views__[name] = view_obj
 
-    def render(self, view_name):
-        """
-        Renders the scene using the specified view. The output type must be
-        set prior to calling this method.
-        :param view_name: the handle of the view to use
-        :return: the rendered output
-        """
+
+    def setup_octtree(self):
         
         if self.__use_octtree__ and \
             len (self.__shapes__) >= self.__oct_tree_threshold__:                  
@@ -102,7 +97,7 @@ class Scene(object):
             max_y = None
             max_z = None
             
-            for shape_name in self.__shapes__:
+            for shape_name in sorted(self.__shapes__):
                 shape = self.__shapes__[shape_name]
                 box = shape_bounding_box(shape)
                 
@@ -133,14 +128,28 @@ class Scene(object):
                     min_x, max_x, min_y, max_y, min_z, max_z)
 
   
-                for shape_name in self.__shapes__:
+                for shape_name in sorted(self.__shapes__):
                     shape = self.__shapes__[shape_name]
                     self.__octtree_top__.add_shape(shape)
+                    
+                  
 
             else: 
                 self.__octtree_top__ = None
 
 
+
+    def render(self, view_name):
+        """
+        Renders the scene using the specified view. The output type must be
+        set prior to calling this method.
+        :param view_name: the handle of the view to use
+        :return: the rendered output
+        """
+        
+        if self.__use_octtree__ and \
+            len (self.__shapes__) >= self.__oct_tree_threshold__:  
+            self.setup_octtree()
 
                     
         raytracer.view.view_render(
@@ -164,12 +173,13 @@ class Scene(object):
             
     def test_intersect_octtree(self, ray, exclude_shapes=[]):
         shapes = self.__octtree_top__.get_shape_dict_by_ray(ray)
-        
+
         curr_sh = None
         curr_t = None
         curr_intersect_result = None
         
-        for shape in shapes:
+        for distance in list(shapes):
+            shape = shapes[distance]
 
             if shape not in exclude_shapes:
                 sh = shape
