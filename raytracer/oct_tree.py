@@ -290,21 +290,75 @@ class OctTreeBranch(OctTreeNode):
             [self.bounding_box.min_y, self.bounding_box.mid_y, self.bounding_box.max_y],
             [self.bounding_box.min_z, self.bounding_box.mid_z, self.bounding_box.max_z]]
         
-        # for dimension in range(0,4):
-        # 
-        # if ray[RAY_DIR][dimension + 1] !=0: # if not paralell to axis
+        for dimension in range(0,4):
         
-        #   if ray[RAY_START][dimension + 1] <= box_bounds[dimension][1]:
-                # incr = 1
-
-            # else:
-                # incr = 0
+            if ray[RAY_DIR][dimension + 1] !=0: # if not paralell to axis
             
-            # t_tests [dimension][0] = (box_bounds[dimension][0 + incr] - ray[RAY_START][dimension + 1]) / ray[RAY_DIR][dimension + 1]
-            # t_tests [dimension][1] = (box_bounds[dimension][1 + incr] - ray[RAY_START][dimension + 1]) / ray[RAY_DIR][dimension + 1]
-        # else:
-        #   t_tests [dimension][0] = -1
-        #   t_tests [dimension][1] = -1 
+                if ray[RAY_START][dimension + 1] <= box_bounds[dimension][1]:
+                    incr = 1
+                
+                else:
+                    incr = 0
+                
+                t_tests [dimension][0] = (box_bounds[dimension][0 + incr] - ray[RAY_START][dimension + 1]) / ray[RAY_DIR][dimension + 1]
+                t_tests [dimension][1] = (box_bounds[dimension][1 + incr] - ray[RAY_START][dimension + 1]) / ray[RAY_DIR][dimension + 1]
+            else:
+                t_tests [dimension][0] = -1
+                t_tests [dimension][1] = -1
+        
+        for dimension in range(0, 3):
+            test_dim_1 = 0                
+            test_dim_2 = 1
+            non_test_dim = 2
+            if dimension == 0:
+               test_dim_1 = 2
+               non_test_dim = 0
+            elif dimension == 1:
+               test_dim_2 = 2
+               non_test_dim = 1
+            
+            for aspect in range(0, 2):
+
+                if (t_tests[dimension][aspect] >= 0):
+                    point = ray_calc_pt(ray, t_tests[dimension][aspect])
+                    
+                    if (point[test_dim_1 + 1] <= box_bounds[test_dim_1][2] and
+                        point[test_dim_1 + 1] >= box_bounds[test_dim_1][0] and
+                        point[test_dim_2 + 1] >= box_bounds[test_dim_2][2] and
+                        point[test_dim_2 + 1] <= box_bounds[test_dim_2][0]:
+                         
+                        if point[test_dim_1 + 1] <= box_bounds[test_dim_1][1]:
+                            dim_1_idx = 0
+                        else:
+                            dim_1_idx = 1
+
+                        if point[test_dim_2 + 1] <= box_bounds[test_dim_2][1]:
+                            dim_2_idx = 0
+                        else:
+                            dim_2_idx = 1
+                            
+                        if non_test_dim == 0:
+                            set_x = aspect
+                        elif non_test_dim == 1:
+                            set_y = aspect
+                        elif non_test_dim == 2:
+                            set_z = aspect
+
+                        if test_dim_1 == 0:
+                            set_x =  dim_1_idx
+                        elif
+                            set_z =  dim_1_idx
+                            
+                        if test_dim_2 == 1:
+                            set_y =  dim_2_idx
+                        elif
+                            set_z =  dim_2_idx                            
+                            
+                        nodes.append (self.children[set_x][set_y][set_z])   
+                            
+
+
+"""                
         
         if ray[RAY_DIR][1] !=0: # if not paralell to X-axis
         
@@ -496,6 +550,7 @@ class OctTreeBranch(OctTreeNode):
                 elif (point[1] >= self.bounding_box.mid_x and
                     point[2] >= self.bounding_box.mid_y):
                     nodes.append (self.children[1][1][1])
+                    """
                     
         my_nodes = list_purge_duplicates(nodes)
         
