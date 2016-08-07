@@ -76,13 +76,22 @@ class OctTreeNode(object):
         self.shapes = []
         self.split_threshold =  split_threshold
         self.bounding_box = BoundingBox(
-            min_x, max_x, min_y, max_y, min_z, max_z)   
-            
+            min_x, max_x, min_y, max_y, min_z, max_z)
+        self.shape_count = 0
+          
+
+                 
+     
 class OctTreeLeaf(OctTreeNode):
  
-    def add_shape(self, new_shape):
-        
 
+ 
+    def add_shape(self, new_shape):
+            
+            
+        self.shape_count += 1
+                
+        
         self.shapes.append(new_shape)
         if len(self.shapes)>self.split_threshold:
             new_branch = OctTreeBranch(
@@ -98,6 +107,8 @@ class OctTreeLeaf(OctTreeNode):
             
             if self.parent_branch is not None:
                 self.parent_branch.replace_node(self, new_branch)
+
+            return True
 
     def get_shape_dict_by_ray(self, ray):
         
@@ -140,13 +151,31 @@ class OctTreeLeaf(OctTreeNode):
             
 class OctTreeBranch(OctTreeNode):
     
+    def __init__(
+        self, parent_branch, split_threshold,
+        min_x, max_x, min_y, max_y, min_z, max_z):
+        super(OctTreeBranch, self).__init__(
+            parent_branch, split_threshold,
+            min_x, max_x, min_y, max_y, min_z, max_z)
+        self.children = [
+            [[None,None], [None, None]],
+            [[None, None], [None, None]] ]
+            
+        x = [min_x, self.bounding_box.mid_x, max_x]
+        y = [min_y, self.bounding_box.mid_y, max_y]
+        z = [min_z, self.bounding_box.mid_z, max_z]
+        
+        for i in range(0,2):
+            for j in range(0,2):
+                for k in range(0,2):
+                    self.children[i][j][k] = \
+                        OctTreeLeaf(
+                            self, split_threshold,
+                            x[i], x[i + 1], 
+                            y[j], y[j + 1],
+                            z[k], z[k + 1])
+        self.shape_count = 0 
       
-    def str_break(self, str, width=40):
-        list = textwrap.wrap(str, width=width);
-        str = ""
-        list_p = []
-        for line in list:
-            list_p.append(line.ljust(width))
 
                        
     
@@ -166,42 +195,34 @@ class OctTreeBranch(OctTreeNode):
         str = "%s%s" % (str, "\n\n")
         return str  
     
-    def __init__(
-        self, parent_branch, split_threshold,
-        min_x, max_x, min_y, max_y, min_z, max_z):
-        super(OctTreeBranch, self).__init__(
-            parent_branch, split_threshold,
-            min_x, max_x, min_y, max_y, min_z, max_z)
-        self.children = [
-            [[None,None], [None, None]],
-            [[None, None], [None, None]] ]
-            
-        x = [min_x, self.bounding_box.mid_x, max_x]
-        y = [min_y, self.bounding_box.mid_y, max_y]
-        z = [min_z, self.bounding_box.mid_z, max_z]
+    def str_break(self, str, width=40):
+        list = textwrap.wrap(str, width=width);
+        str = ""
+        list_p = []
+        for line in list:
+            list_p.append(line.ljust(width))
+
+    def can_split (self):
         
-        for i in range(0,2):
-            for j in range(0,2):
-                for k in range(0,2):
-                self.children[i][j][k] = \
-                    OctTreeLeaf(
-                        self, split_threshold,
-                        x[i], x[i + 1], 
-                        y[j], y[j + 1],
-                        z[k], z[k + 1])
-    
+        #return True        
+        
+        if hasattr(self.parent_branch, "shape_count"):
+            if self.shape_count >= self.parent_branch.shape_count:
+                return False
+                
+        return True 
+            
     def add_shape (self, shape):       
+        self.shape_count += 1        
         
         shape_box = raytracer.shape.shape_bounding_box(shape)
         #print ("---- %s" % shape_box.__str__()) 
 
         #print (self.bounding_box)
 
-
-
-        if shape_box is None:
+        if shape_box is None or not self.can_split():
             self.shapes.append(shape)
-            print ("shape_box is None")
+
         else:
             # if not shape_box.box_overlaps(self.bounding_box):
             #    
@@ -227,7 +248,7 @@ class OctTreeBranch(OctTreeNode):
             for i in range(x_left, x_right + 1):
                 for j in range(y_top, y_bottom + 1):
                     for k in range(z_front, z_back + 1):
-                        #print ("adding to %d %d %d"%(i,j,k))
+                        # print ("adding to %d %d %d"%(i,j,k))
                         self.children[i][j][k].add_shape(shape)
             
             # import pdb; pdb.set_trace();
@@ -248,23 +269,35 @@ class OctTreeBranch(OctTreeNode):
     def get_shape_dict_by_ray(self, ray):
         shapes = self.get_shapes_by_ray(ray) + self.shapes
         shape_dict = {}
-        for shape in shapes:
-            shape_box = raytracer.shape.shape_bounding_box(shape)
-            
-            if shape_box is not None:
-                dist_sq = pow(ray[RAY_START][1]-shape_box.centre[1], 2) + \
-                    pow(ray[RAY_START][2]-shape_box.centre[2], 2) + \
-                    pow(ray[RAY_START][3]-shape_box.centre[3], 2)
-            else:
-                dist_sq = 0
-            
-            while dist_sq in shape_dict: #fixes keys being overwritten if distances are identical
-                dist_sq = dist_sq + .001 
+        
+        if ray[RAY_ISSHADOW]:
+            for shape in shapes:
+                shape_box = raytracer.shape.shape_bounding_box(shape)
                 
-            shape_dict[dist_sq] = shape
-         
-        return shape_dict
+                if shape_box is not None:
+                    dist_sq = pow(ray[RAY_START][1]-shape_box.centre[1], 2) + \
+                        pow(ray[RAY_START][2]-shape_box.centre[2], 2) + \
+                        pow(ray[RAY_START][3]-shape_box.centre[3], 2)
+                else:
+                    dist_sq = 0
+                
+                while dist_sq in shape_dict: #fixes keys being overwritten if distances are identical
+                    dist_sq = dist_sq + .001 
+                    
+                shape_dict[dist_sq] = shape
+             
+            return shape_dict
+        
+        else:
+            i = 0;
+            for shape in shapes:
+                i = i + 1
+                    
+                shape_dict[i] = shape
+             
+        return shape_dict            
             
+                    
         
     
     def get_shapes_by_ray(self, ray):
@@ -283,14 +316,14 @@ class OctTreeBranch(OctTreeNode):
 
         nodes = []
         
-        
+        """
         t_tests = [[None, None] , [None, None] , [None, None]]
         box_bounds = [
             [self.bounding_box.min_x, self.bounding_box.mid_x, self.bounding_box.max_x],
             [self.bounding_box.min_y, self.bounding_box.mid_y, self.bounding_box.max_y],
             [self.bounding_box.min_z, self.bounding_box.mid_z, self.bounding_box.max_z]]
         
-        for dimension in range(0,4):
+        for dimension in range(0,3):
         
             if ray[RAY_DIR][dimension + 1] !=0: # if not paralell to axis
             
@@ -305,6 +338,7 @@ class OctTreeBranch(OctTreeNode):
             else:
                 t_tests [dimension][0] = -1
                 t_tests [dimension][1] = -1
+      
         
         for dimension in range(0, 3):
             test_dim_1 = 0                
@@ -318,14 +352,19 @@ class OctTreeBranch(OctTreeNode):
                non_test_dim = 1
             
             for aspect in range(0, 2):
-
+                set_x = None
+                set_y = None
+                set_z = None
+                 
                 if (t_tests[dimension][aspect] >= 0):
                     point = ray_calc_pt(ray, t_tests[dimension][aspect])
                     
                     if (point[test_dim_1 + 1] <= box_bounds[test_dim_1][2] and
                         point[test_dim_1 + 1] >= box_bounds[test_dim_1][0] and
                         point[test_dim_2 + 1] >= box_bounds[test_dim_2][2] and
-                        point[test_dim_2 + 1] <= box_bounds[test_dim_2][0]:
+                        point[test_dim_2 + 1] <= box_bounds[test_dim_2][0]):
+                        
+                                               
                          
                         if point[test_dim_1 + 1] <= box_bounds[test_dim_1][1]:
                             dim_1_idx = 0
@@ -346,19 +385,20 @@ class OctTreeBranch(OctTreeNode):
 
                         if test_dim_1 == 0:
                             set_x =  dim_1_idx
-                        elif
+                        else:
                             set_z =  dim_1_idx
                             
                         if test_dim_2 == 1:
                             set_y =  dim_2_idx
-                        elif
+                        else:
                             set_z =  dim_2_idx                            
                             
+                        printf ("setx: %d, sety: %d, setz %d\n"% (set_x, set_y, set_z))                            
                         nodes.append (self.children[set_x][set_y][set_z])   
                             
 
 
-"""                
+        """                
         
         if ray[RAY_DIR][1] !=0: # if not paralell to X-axis
         
@@ -550,7 +590,6 @@ class OctTreeBranch(OctTreeNode):
                 elif (point[1] >= self.bounding_box.mid_x and
                     point[2] >= self.bounding_box.mid_y):
                     nodes.append (self.children[1][1][1])
-                    """
                     
         my_nodes = list_purge_duplicates(nodes)
         
@@ -563,4 +602,6 @@ class OctTreeBranch(OctTreeNode):
             else:
                 nodes.append(node)
         
-        return nodes
+        return nodes       
+                    
+                    

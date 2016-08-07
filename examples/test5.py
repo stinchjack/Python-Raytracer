@@ -35,6 +35,7 @@ if __name__ == '__main__':
         0, 0, -5.5), colour_create(1, 1, 1)), 'light1')
     
     i = 0
+    first = True
     for x in range(-1, 2):
         for y in range(-1, 2):
             for z in range(1, 4):
@@ -50,10 +51,15 @@ if __name__ == '__main__':
                     colour_create(1,0,0),
                     colour_create(0,0,0))
                 
-                
+
+                scale = 3               
+                if first:
+                    scale = 3
+                    
+                                
                     
                 shape_set_transform(sphere, Transform({
-                    'scale': {'x': 3, 'y': 3, 'z': 3},
+                    'scale': {'x': scale, 'y': scale, 'z': scale},
                     # 'rotate': {'vector': cartesian_create(
                     #             random.uniform(0, 1), random.uniform(0, 1), random.uniform(0, 1)),
                     #            'angle':random.uniform(0, 360) },
@@ -61,7 +67,8 @@ if __name__ == '__main__':
                 }))              
         
                 scene.add_shape(sphere, 'sphere_%i'%i)
-
+                
+                first = False
         
     
     image = scene.render('view')

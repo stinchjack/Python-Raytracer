@@ -36,11 +36,11 @@ class Scene(object):
         :param shape: the shape to add
         :param name: a text handle for the shape"""
 
-        self.shape_count = self.__shape_count__ + 1
+        self.__shape_count__ += 1
 
         while name in self.__shapes__ or name is None:
-            name = "Shape%d" % (self.shape_count)
-            self.shape_count = self.__shape_count__ + 1
+            name = "Shape%d" % (self.__shape_count__)
+
 
         self.__shapes__[name] = shape
 
