@@ -68,6 +68,44 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
 
     diffuse_colour = get_colour_from_mapping(diffuse, result)
 
+    doReflections = ('NoReflections' not in
+        lighting_model[LIGHTINGMODEL_OPTIONS] or
+        ('NoReflections' in lighting_model[LIGHTINGMODEL_OPTIONS] and
+        lighting_model[LIGHTINGMODEL_OPTIONS]['NoShadows'] is False))
+        
+           
+    if (doReflections):
+        if result['shape'][SHAPE_SPECULARCOLOUR_FUNC] is not None:
+            specular = result['shape'][
+                SHAPE_SPECULARCOLOUR_FUNC](result['shape'], result)
+        else:
+            specular = shape_specular_colour(result['shape'], result)
+    
+        specular_colour = get_colour_from_mapping(specular, result)
+    
+        if specular_colour[1] <= 0 and \
+            specular_colour[2] <= 0 and \
+            specular_colour[3] <= 0:
+                doReflections = False
+             
+    if (doReflections):
+        reflect_result =  scene_obj.test_intersect (ray, [])
+        
+        if reflect_result is False:
+            doReflections = False
+
+    if (doReflections):
+        if 'reflect_count' not in result:
+            reflect_result['reflect_count'] = scene_obj.get_max_reflections()
+        else:
+            reflect_result['reflect_count'] -= 1;
+        
+        if reflect_result['reflect_count'] <= 0:
+           doReflections = False    
+    
+    if (doReflections):    
+        reflect_colour = lightingmodel_basic_calculate(lighting_model, scene_obj, reflect_result)
+
     
     end_colour = lighting_model[LIGHTINGMODEL_AMBIENT]
 
@@ -108,7 +146,7 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
                 end_colour = colour_add(
                     end_colour, colour_scale(diffuse_colour, mpfr(0.5)))
             else:
-                
+              
                 end_colour = colour_add(
                     end_colour, colour_mul(diffuse_colour, diff))
                     

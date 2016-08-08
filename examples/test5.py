@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     view_set_antialias (view, False, 5, 5, True) #, True, .4)
     view_set_output(view, PIL_Output())
-    view_set_multiprocessing(view, True)
+    view_set_multiprocessing(view, False)
     view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL], {'NoShadows': True, 'NoDiffuse': False})
     scene.add_view(view, 'view')
     scene.add_light(light_point_light_create(cartesian_create(
@@ -49,10 +49,10 @@ if __name__ == '__main__':
                 sphere = shape_sphere_create(
                     # ('colour_mapping', sphere_map_to_rect, BandedSprialTexture(bands)),
                     colour_create(1,0,0),
-                    colour_create(0,0,0))
+                    colour_create(1,1,1))
                 
 
-                scale = 3               
+                scale = 1               
                 if first:
                     scale = 3
                     
@@ -70,14 +70,19 @@ if __name__ == '__main__':
                 
                 first = False
         
-    
-    image = scene.render('view')
-    try:
-        print (scene.__octtree_top__.__str__())
-    except Exception:
-        pass 
-    image.show()
-    import sys;sys.exit(-1)
+    for i in range (0, 2, 1):
+        trans = Transform({
+
+                'rotate': {'vector': cartesian_create(0,1,0),
+                        'angle': i },
+                'scale': {'x': 2, 'y': 1, 'z': 2}
+
+                })
+        view_set_transform(view, trans)
+        image = scene.render('view')
+
+        image.show()
+
            
                 
     

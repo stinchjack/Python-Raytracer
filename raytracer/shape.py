@@ -160,7 +160,9 @@ def shape_test_intersect(shape, ray):
             shape, shape[SHAPE_TRANSFORM].transform(ray))
     else:
         result = shape[SHAPE_INTERSECT_FUNC](shape, ray)
-
+    
+    if type(result) is list:     
+        result['ray'] = ray
     return result
 
 

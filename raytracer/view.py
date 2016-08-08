@@ -55,7 +55,7 @@ A view is stored as a list with the following elements:
     * The Cartesian co-ordinate of the eye, calculated from the Z-position of
         the eye point and rectangle of the logical view
 
-    * A dictionary of data intended for internal use with anitalising:
+    * A dictionary of data intended for internal use with anti-aliasing:
 
         'count': The total number of sub samples taken for each pixel, i.e.
             member 'x' times member 'y'
@@ -284,6 +284,9 @@ def view_render_pixel_no_antialias(view, view_scan_x, view_scan_y):
         view_scan_y - view[VIEW_EYE][2],
         mpfr(0) - view[VIEW_EYE][3]))
 
+    if view[VIEW_TRANSFORM] is not None:
+        ray = view[VIEW_TRANSFORM].transform(ray);
+    
     result = view[VIEW_SCENE].test_intersect(ray)
 
     if(result is not False):

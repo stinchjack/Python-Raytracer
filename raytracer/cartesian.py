@@ -215,6 +215,20 @@ def ray_calc_pt(ray, t):
             ray[1][3] + (ray[2][3] * t), None, None)
 
 
+def ray_reflection(incidient_ray, normal):
+    # Rr = Ri - 2 N (Ri . N) 
+    
+    ir = cartesian_normalise(incident_ray);
+    
+    if cartesian_dot(ir, normal) <0:
+        ir = cartesian_sub(('cartesian', 0,0,0), ir)
+    
+    ri_dot_n = cartesian_dot(ir, normal)
+    twoN_expr = cartesian_scale(normal, 2 * ri_dot_n)
+    reflected_ray = cartesian_sub(ir, twoN_expr )            
+    
+    return reflected_ray
+
 def lineseg2d_create(start, end):
     """Creates a lineseg2d tuple
     """

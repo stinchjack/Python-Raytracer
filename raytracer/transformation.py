@@ -104,6 +104,7 @@ class Transform:
                     mpfr(options['translate']['y']),
                     mpfr(options['translate']['z']))
 
+
         self.__options__ = options
 
         if ('scale' not in options and
@@ -147,10 +148,12 @@ class Transform:
         :return: the ray, transformed
         """
 
-
-
         ray_dir = ray[RAY_VECTOR]
         ray_point = ray[RAY_START]
+
+        if 'translate' in self.__options__:
+            ray_point = cartesian_sub(
+                ray_point, self.__options__['translate'])
 
         if isinstance(self.__matrix__, Matrix):
             ray_dir = transform_matrix_mul_cartesian(
@@ -158,9 +161,7 @@ class Transform:
             ray_point = transform_matrix_mul_cartesian(
                 self.__matrix__.matrix, ray_point)
 
-        if 'translate' in self.__options__:
-            ray_point = cartesian_sub(
-                ray_point, self.__options__['translate'])
+
 
         return ray_create(ray_point, ray_dir, ray[RAY_ISSHADOW])
         

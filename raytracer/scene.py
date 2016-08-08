@@ -27,9 +27,13 @@ class Scene(object):
         self.__shape_count__ = 0
         self.__light_count__ = 0
         self.__view_count__ = 0
+        self.__max_relfections__ = 5
         
         self.__use_octtree__ = use_octtree
         self.__oct_tree_threshold__ = oct_tree_threshold
+        
+    def get_max_reflections(self):
+        return self.__max_relfections__
 
     def add_shape(self, shape, name=None):
         """Add a shape to the scene
@@ -167,9 +171,11 @@ class Scene(object):
             len (self.__shapes__)>=self.__oct_tree_threshold__ and \
             self.__octtree_top__ is not None:
             
-            return self.test_intersect_octtree (ray, exclude_shapes)
+            result = self.test_intersect_octtree (ray, exclude_shapes)
         else:
-            return self.test_intersect_list (ray, exclude_shapes)
+            result = self.test_intersect_list (ray, exclude_shapes)
+        
+        return result
             
     def test_intersect_octtree(self, ray, exclude_shapes=[]):
         shapes = self.__octtree_top__.get_shape_dict_by_ray(ray)
