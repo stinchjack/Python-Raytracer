@@ -215,10 +215,10 @@ def ray_calc_pt(ray, t):
             ray[1][3] + (ray[2][3] * t), None, None)
 
 
-def ray_reflection(incidient_ray, normal):
+def ray_reflect_vector(incident_ray, normal):
     # Rr = Ri - 2 N (Ri . N) 
     
-    ir = cartesian_normalise(incident_ray);
+    ir = cartesian_normalise(incident_ray[RAY_DIR]);
     
     if cartesian_dot(ir, normal) <0:
         ir = cartesian_sub(('cartesian', 0,0,0), ir)

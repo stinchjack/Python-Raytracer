@@ -26,9 +26,9 @@ if __name__ == '__main__':
                        {'left': -5, 'right': 5, 'top': -5, 'bottom': 5})
 
                        
-    view_set_antialias (view, False, 5, 5, True) #, True, .4)
+    view_set_antialias (view, True, 5, 5, True) #, True, .4)
     view_set_output(view, PIL_Output())
-    view_set_multiprocessing(view, False, 2)
+    view_set_multiprocessing(view, True) #, 2)
     #view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL], {'NoShadows': True, 'NoDiffuse': True})
     scene.add_view(view, 'view')
 
@@ -69,4 +69,7 @@ if __name__ == '__main__':
     #map_test()    
     image = scene.render('view')
     image.show()
+<<<<<<< HEAD
 
+=======
+>>>>>>> b9ff31fdf813ae4eb810023c3c92912338353168

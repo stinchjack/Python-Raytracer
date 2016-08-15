@@ -28,8 +28,8 @@ if __name__ == '__main__':
 
     view_set_antialias (view, False, 5, 5, True) #, True, .4)
     view_set_output(view, PIL_Output())
-    view_set_multiprocessing(view, False)
-    view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL], {'NoShadows': True, 'NoDiffuse': False})
+    view_set_multiprocessing(view, True)
+    view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL], {'NoShadows': True, 'NoDiffuse': False, 'NoReflections': False})
     scene.add_view(view, 'view')
     scene.add_light(light_point_light_create(cartesian_create(
         0, 0, -5.5), colour_create(1, 1, 1)), 'light1')
@@ -70,7 +70,7 @@ if __name__ == '__main__':
                 
                 first = False
         
-    for i in range (0, 2, 1):
+    for i in range (0, 1, 1):
         trans = Transform({
 
                 'rotate': {'vector': cartesian_create(0,1,0),
