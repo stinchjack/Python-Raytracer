@@ -29,7 +29,7 @@ if __name__ == '__main__':
     view_set_antialias (view, False, 5, 5, True) #, True, .4)
     view_set_output(view, PIL_Output())
     view_set_multiprocessing(view, True)
-    view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL], {'NoShadows': True, 'NoDiffuse': False, 'NoReflections': False})
+    view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL], {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': False})
     scene.add_view(view, 'view')
     scene.add_light(light_point_light_create(cartesian_create(
         0, 0, -5.5), colour_create(1, 1, 1)), 'light1')
@@ -43,20 +43,22 @@ if __name__ == '__main__':
                 bands = []
                 count = int(5)
                 for j in range (0, count +2):
-                    bands.append(('colour', random.uniform(.5,1), random.uniform(.5,1), random.uniform(.5,1)))
+                    bands.append(('colour', random.uniform(0,.5), random.uniform(0,.5), random.uniform(0,.5)))
         
-        
-                sphere = shape_sphere_create(
-                    # ('colour_mapping', sphere_map_to_rect, BandedSprialTexture(bands)),
-                    colour_create(1,0,0),
-                    colour_create(1,1,1))
-                
+                if i % 2:
+                    sphere = shape_sphere_create(
+                        ('colour_mapping', sphere_map_to_rect, BandedSprialTexture(bands)),
+                        # colour_create(1,0,0),
+                        colour_create(1,1,1))
+                else:
+                    sphere = shape_sphere_create(
+                        colour_create(.5,0,0),
+                        colour_create(1,1,1))                    
 
                 scale = 1               
                 if first:
                     scale = 3
-                    
-                                
+
                     
                 shape_set_transform(sphere, Transform({
                     'scale': {'x': scale, 'y': scale, 'z': scale},
@@ -75,7 +77,7 @@ if __name__ == '__main__':
 
                 'rotate': {'vector': cartesian_create(0,1,0),
                         'angle': i },
-                'scale': {'x': 2, 'y': 1, 'z': 2}
+                'scale': {'x': 1.5, 'y': 1.5, 'z': 1.5}
 
                 })
         view_set_transform(view, trans)

@@ -218,15 +218,17 @@ def ray_calc_pt(ray, t):
 def ray_reflect_vector(incident_ray, normal):
     # Rr = Ri - 2 N (Ri . N) 
     
-    ir = cartesian_normalise(incident_ray[RAY_DIR]);
+    
+        
+    ir = incident_ray[RAY_DIR] # cartesian_normalise(incident_ray[RAY_DIR]);
     
     if cartesian_dot(ir, normal) <0:
         ir = cartesian_sub(('cartesian', 0,0,0), ir)
     
     ri_dot_n = cartesian_dot(ir, normal)
     twoN_expr = cartesian_scale(normal, 2 * ri_dot_n)
-    reflected_ray = cartesian_sub(ir, twoN_expr )            
-    
+    reflected_ray = cartesian_sub(twoN_expr, ir )            
+
     return reflected_ray
 
 def lineseg2d_create(start, end):

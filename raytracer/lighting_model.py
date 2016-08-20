@@ -53,6 +53,8 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
     if not isinstance(scene_obj, scene.Scene):
         return None
 
+    end_colour = lighting_model[LIGHTINGMODEL_AMBIENT]
+
     result = shape_reverse_transform(result)
 
     if 'point' not in result:
@@ -72,9 +74,18 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
         ('NoReflections' in lighting_model[LIGHTINGMODEL_OPTIONS] and
         lighting_model[LIGHTINGMODEL_OPTIONS]['NoReflections'] is False))
         
+    if (doReflections):
+        
+        if 'reflect_count' not in result:
+            result['reflect_count'] = scene_obj.get_max_reflections()
+        else:
+            result['reflect_count'] = result['reflect_count'] - 1;
+
+        
+        if result['reflect_count'] <= 0:
+           doReflections = False  
            
     if (doReflections):
-        # print ("11111111111")
         if result['shape'][SHAPE_SPECULARCOLOUR_FUNC] is not None:
             specular = result['shape'][
                 SHAPE_SPECULARCOLOUR_FUNC](result['shape'], result)
@@ -87,49 +98,46 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
             specular_colour[2] <= 0 and \
             specular_colour[3] <= 0:
                 doReflections = False   
+
+    rs = cartesian_add(
+        result['point'], cartesian_scale(result['normal'], mpfr(".0001")))
              
     if (doReflections):
- 
         reflected_dir = ray_reflect_vector(result['ray'], result['normal'])
-        reflected_ray = ('ray', result['point'], reflected_dir, False)     
+        reflected_ray = ('ray', rs, reflected_dir, False)     
         reflect_result = scene_obj.test_intersect (reflected_ray, [])
+           
         
         if reflect_result is False:
             doReflections = False
 
-    if (doReflections):
-        # print ("333333")
-        if 'reflect_count' not in result:
-            reflect_result['reflect_count'] = scene_obj.get_max_reflections()
-        else:
-            reflect_result['reflect_count'] = result['reflect_count'] - 1;
-        
-        if reflect_result['reflect_count'] <= 0:
-           doReflections = False    
+  
     
     if (doReflections):
-        # print ("444444")
-        reflect_result['ray'] = reflected_ray;
+        reflect_result['ray'] = reflected_ray
+        reflect_result['reflect_count'] = result['reflect_count']
         reflect_colour = lightingmodel_basic_calculate(
            lighting_model, scene_obj, reflect_result)
 
-    
-    end_colour = lighting_model[LIGHTINGMODEL_AMBIENT]
+        end_colour = colour_add(end_colour,
+                                colour_mul(reflect_colour, specular_colour))
+
+
+
+    if(cartesian_dot(result['normal'], result['ray'][RAY_VECTOR]) < 0):
+        norml = result['normal']
+    else:
+        norml = cartesian_create(0 - result['normal'][VECTOR_X],
+                                 0 - result['normal'][VECTOR_Y],
+                                 0 - result['normal'][VECTOR_Z])
+
+        rs = cartesian_add(
+        result['point'], cartesian_scale(norml, mpfr(".0001")))
 
     lights = scene_obj.get_lights()
 
     for l in lights:
         light = lights[l]
-
-        if(cartesian_dot(result['normal'], result['ray'][RAY_VECTOR]) < 0):
-            norml = result['normal']
-        else:
-            norml = cartesian_create(0 - result['normal'][VECTOR_X],
-                                     0 - result['normal'][VECTOR_Y],
-                                     0 - result['normal'][VECTOR_Z])
-
-        rs = cartesian_add(
-            result['point'], cartesian_scale(norml, mpfr(".0001")))
 
 
 
@@ -160,6 +168,18 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
                 
                 end_colour = colour_add(
                     end_colour, colour_mul(diffuse_colour, diff))
+
+    if end_colour[1] < 0 or end_colour[2] or end_colour[3] < 0:
+        
+        ec = [None, None, None, None]        
+        for i in range (1,4):
+            if end_colour[i] < 0:
+                ec[i] = 0
+            else:
+                ec[i] = end_colour[i]
+
+        end_colour = ('colour', ec[1], ec[2], ec[3]); 
+                        
                     
     return end_colour
 
