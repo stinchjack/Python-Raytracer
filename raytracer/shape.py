@@ -80,9 +80,6 @@ def shape_bounding_box(shape):
     shape[SHAPE_BOUNDING_BOX_WORLDSPACE] = BoundingBox (
         min_x, max_x, min_y, max_y, min_z, max_z)
     
-    # print (shape[SHAPE_BOUNDING_BOX_WORLDSPACE])    
-    # import pdb; pdb.set_trace()
-    
     return shape[SHAPE_BOUNDING_BOX_WORLDSPACE]
      
 def shape_set_transform(shape, transform):

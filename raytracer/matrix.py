@@ -159,12 +159,56 @@ class TranslationMatrix(Matrix):
         else:
             self.__init__(x.x, x.y, x.z)
 
+class RotationXMatrix(Matrix):
+    """A matrix for rotation about the X axis"""
+
+    def __init__(self, angle):
+        """Class constructor for RotationXMatrix.
+        :param angle: the amount of rotation, in degrees"""
+
+        rad = radians(angle)
+        costh = cos(rad)
+        sinth = sin(rad)
+        self.matrix = [[mpfr(1), mpfr(0), mpfr(0), mpfr(0)],
+                       [mpfr(0), costh, mpfr(0) - sinth, mpfr(0)],
+                       [mpfr(0), sinth, costh, mpfr(0)],
+                       [mpfr(0), mpfr(0), mpfr(0), mpfr(1)]]
+
+        costh = cos(-rad)
+        sinth = sin(-rad)
+        self.inverse = [[mpfr(1), mpfr(0), mpfr(0), mpfr(0)],
+                       [mpfr(0), costh, mpfr(0) - sinth, mpfr(0)],
+                       [mpfr(0), sinth, costh, mpfr(0)],
+                       [mpfr(0), mpfr(0), mpfr(0), mpfr(1)]]
+
+
+class RotationYMatrix(Matrix):
+    """A matrix for rotation about the Y axis"""
+
+    def __init__(self, angle):
+        """Class constructor for RotationYMatrix.
+        :param angle: the amount of rotation, in degrees"""
+
+        rad = radians(angle)
+        costh = cos(rad)
+        sinth = sin(rad)
+        self.matrix = [[costh,              mpfr(0), sinth, mpfr(0)],
+                       [mpfr(0),            mpfr(1), mpfr(0), mpfr(0)],
+                       [mpfr(0) - sinth,    mpfr(0), costh, mpfr(0)],
+                       [mpfr(0), mpfr(0),   mpfr(0), mpfr(1)]]
+
+        costh = cos(-rad)
+        sinth = sin(-rad)
+        self.inverse = [[costh,              mpfr(0), sinth, mpfr(0)],
+                       [mpfr(0),            mpfr(1), mpfr(0), mpfr(0)],
+                       [mpfr(0) - sinth,    mpfr(0), costh, mpfr(0)],
+                       [mpfr(0), mpfr(0),   mpfr(0), mpfr(1)]]
 
 class RotationZMatrix(Matrix):
     """A matrix for rotation about the Z axis"""
 
     def __init__(self, angle):
-        """Class constructor for RotationMatrix.
+        """Class constructor for RotationZMatrix.
         :param angle: the amount of rotation, in degrees"""
 
         rad = radians(angle)

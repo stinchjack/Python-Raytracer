@@ -168,49 +168,16 @@ class Scene(object):
                 
     def test_intersect(self, ray, exclude_shapes=[]):
         if self.__use_octtree__ and \
-            len (self.__shapes__)>=self.__oct_tree_threshold__ and \
+            len (self.__shapes__) >= self.__oct_tree_threshold__ and \
             self.__octtree_top__ is not None:
-            
-            result = self.test_intersect_octtree (ray, exclude_shapes)
+            shapes = self.__octtree_top__.get_shapes_by_ray(ray)
         else:
-            result = self.test_intersect_list (ray, exclude_shapes)
-        
-        return result
+            shapes = self.__shapes__
             
-    def test_intersect_octtree(self, ray, exclude_shapes=[]):
-        shapes = self.__octtree_top__.get_shape_dict_by_ray(ray)
-
-        curr_sh = None
-        curr_t = None
-        curr_intersect_result = None
-        
-        for distance in list(shapes):
-            shape = shapes[distance]
-
-            if shape not in exclude_shapes:
-                sh = shape
-                intersect_result = shape_test_intersect(sh, ray)
-                if (intersect_result is not False and
-                        intersect_result is not None):
-                    intersect_result['shape'] = sh
-
-                    t = intersect_result['t']
-                    if t > 0 and(curr_t is None or t < curr_t):
-
-                        curr_sh = sh
-                        curr_t = t
-                        curr_intersect_result = intersect_result
-                        curr_intersect_result['shape'] = sh
-
-                        if ray[RAY_ISSHADOW]:
-                            return curr_intersect_result
-
-        if curr_intersect_result is None:
-            return False
-        return curr_intersect_result
+        return self.test_intersect_list (ray, shapes, exclude_shapes)
         
         
-    def test_intersect_list(self, ray, exclude_shapes=[]):
+    def test_intersect_list(self, ray, list, exclude_shapes=[]):
         """Tests intersection of a ray with all the shapes in the scene.
         :param ray: the ray to test against the shapes
         :param exclude_shapes: a list of shapes to exclude from the
@@ -229,7 +196,7 @@ class Scene(object):
                     intersect_result['shape'] = sh
 
                     t = intersect_result['t']
-                    if t > 0 and(curr_t is None or t < curr_t):
+                    if t > 0 and (curr_t is None or t < curr_t):
 
                         curr_sh = sh
                         curr_t = t

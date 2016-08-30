@@ -12,24 +12,32 @@ from raytracer.scene import *
 from raytracer.quadraticshapes import *
 from raytracer.planarshapes import *
 from raytracer.lighting_model import *
-from raytracer.mapping import *
 
 if __name__ == '__main__':
     get_context().precision = 32
 
     scene = Scene(True, 8)
-    view = view_create(scene, -150, {'left': 0,
-                             'right': 300,
-                             'top': 0,
-                             'bottom': 300},
-                       # {'left':.1, 'right':.1, 'top':.1, 'bottom':.1}),
-                       {'left': -5, 'right': 5, 'top': -5, 'bottom': 5})
+    #import pdb; pdb.set_trace();
+    view = view_create_look_at(scene,
+                            
+                            {'left': 0,
+                                'right': 300,
+                                'top': 0,
+                                'bottom': 300},
+                            10,
+                            20,
+                            ('cartesian', 0, 0, 20), ## eye point,
+                            ('cartesian', 0, 0, 2), ## look at
+                            1.5,
+                            120)
 
 
-    view_set_antialias (view, True, 3, 3, False) # True, .4)
+                       
+    view_set_antialias (view, False, 3, 3, False) # True, .4)
     view_set_output(view, PIL_Output())
     view_set_multiprocessing(view, True)
-    view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL], {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': False})
+    view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL],
+        {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': True})
     scene.add_view(view, 'view')
     scene.add_light(light_point_light_create(cartesian_create(
         0, 0, -5.5), colour_create(1, 1, 1)), 'light1')
@@ -38,16 +46,16 @@ if __name__ == '__main__':
         -10, 0, 0), colour_create(1, 1, 1)), 'light2')
     
     scene.add_light(light_point_light_create(cartesian_create(
-        -10, 0, 0), colour_create(1, 1, 1)), 'light3')
+        0, 0, 0), colour_create(1, 1, 1)), 'light3')
         
     scene.add_light(light_point_light_create(cartesian_create(
-        0, 00, 20), colour_create(1, 1, 1)), 'light4')        
+        0, 00, 20), colour_create(1, 1, 1)), 'light4')   
     
     i = 0
     first = True
     for x in range(-1, 2):
         for y in range(-1, 2):
-            for z in range(1, 4):
+            for z in range(2, 7):
                 i = i + 1
                 bands = []
                 count = int(5)
@@ -74,25 +82,16 @@ if __name__ == '__main__':
                     # 'rotate': {'vector': cartesian_create(
                     #             random.uniform(0, 1), random.uniform(0, 1), random.uniform(0, 1)),
                     #            'angle':random.uniform(0, 360) },
-                    'translate': {'x': x*2+((z-1)*.75), 'y': y*2+((z-1)*.75), 'z': z}
+                    'translate': {'x': (x*2+((z-1)*.75)), 'y': (y*2+((z-1)*.75)), 'z': z}
                 }))              
         
                 scene.add_shape(sphere, 'sphere_%i'%i)
                 
                 first = False
         
-    for i in range (0, 1, 1):
-        trans = Transform({
+    image = scene.render('view')
 
-                'rotate': {'vector': cartesian_create(0,1,0),
-                        'angle': i },
-                'scale': {'x': 1.5, 'y': 1.5, 'z': 1.5}
-
-                })
-        view_set_transform(view, trans)
-        image = scene.render('view')
-
-        image.show()
+    image.show()
 
            
                 

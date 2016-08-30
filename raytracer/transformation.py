@@ -72,7 +72,12 @@ class Transform:
         :return: dictionary
         """
         return self.__options__
-
+    
+    def set_matrix (self, matrix):
+        
+        self.__matrix__ = matrix
+        self.__inverse_matrix__ = matrix.inverse
+        
     def set_options(self, options):
         """Sets transformation options.
 
@@ -159,14 +164,14 @@ class Transform:
             ray_dir = transform_matrix_mul_cartesian(
                 self.__matrix__.matrix, ray_dir)
             ray_point = transform_matrix_mul_cartesian(
-                self.__matrix__.matrix, ray_point)
+               self.__matrix__.matrix, ray_point)
 
 
 
         return ray_create(ray_point, ray_dir, ray[RAY_ISSHADOW])
         
 
-    def transform_cartestian(self, cartesian):
+    def transform_cartesian(self, cartesian, no_translate = False):
         if self.__no_transform__:
             return cartesian        
         
@@ -174,9 +179,10 @@ class Transform:
             new_cartesian = transform_matrix_mul_cartesian(
                 self.__matrix__.matrix, cartesian)
   
-        if 'translate' in self.__options__:
-            new_cartesian = cartesian_sub(
-                new_cartesian, self.__options__['translate']) 
+        if not no_translate:
+            if 'translate' in self.__options__:
+                new_cartesian = cartesian_sub(
+                    new_cartesian, self.__options__['translate']) 
         return new_cartesian              
                 
     def transform_point(self, point, inverse=False):
