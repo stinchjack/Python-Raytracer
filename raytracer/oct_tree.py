@@ -78,6 +78,7 @@ class OctTreeNode(object):
         self.bounding_box = BoundingBox(
             min_x, max_x, min_y, max_y, min_z, max_z)
         self.shape_count = 0
+        self.__added_shapes__ = {}
           
     def can_split (self):   
         
@@ -86,15 +87,28 @@ class OctTreeNode(object):
                 return False
                 
         return True 
-                 
-     
+ 
+    def __str__(self):
+        str = "Count: %d\n", self.shape_count
+        for shape in self.__added_shapes__:
+            
+                for tuple in self.__added_shapes__[shape]:
+                    str = "%s id: %d child: (%d, %d, %d) \n" % (      
+                        str, shape,
+                            tuple[1],
+                            tuple[2],
+                            tuple[3])
+
+        return str
+            
 class OctTreeLeaf(OctTreeNode):
  
 
  
     def add_shape(self, new_shape):
             
-            
+        self.__added_shapes__[id(new_shape)] = None
+        
         self.shape_count += 1
                 
         
@@ -147,7 +161,7 @@ class OctTreeLeaf(OctTreeNode):
         str = str + ",   Shapes: "
         if len(self.shapes)>0:
             for s in self.shapes:
-                str = "%s%d, " % (str, id(s) )
+                str = "%s%d \n" % (str, id(s) )
         else:
             str = str + "None! "
         
@@ -181,26 +195,28 @@ class OctTreeBranch(OctTreeNode):
                             y[j], y[j + 1],
                             z[k], z[k + 1])
         self.shape_count = 0 
-      
 
-                       
     
-    def __str__(self):
+    def ___str__(self):
         str = "-----------------------------------------------------------------------------------\n"
         for j in range(0,2):
             left = self.str_break(self.children[0][j][0].__str__())
-            str = "%s| %s | %s |\n" % (str, self.str_break(self.children[0][j][0].__str__()), self.str_break(self.children[1][j][0].__str__() ))
-            str = "%s%s" % (str, "-----------------------------------------------------------------------------------\n")
+            str = "%s| %s | %s |\n" % (str, self.str_break(self.children[0][j][0].__str__()),
+                    self.str_break(self.children[1][j][0].__str__() ))
+            str = "%s%s" % \
+                (str, "-----------------------------------------------------------------------------------\n")
             
         str = "%s%s" % (str, "\n\n")
 
         for j in range(0,2):
             str = "%s| %s | %s |\n" % (str, self.str_break(self.children[0][j][1].__str__()), self.str_break(self.children[1][j][1].__str__() ))
             str = "%s%s" % (str, "-----------------------------------------------------------------------------------\n")
+        
+        str = "%sShapes added: %d %s" % (str, self.shape_count, "\n\n")    
             
         str = "%s%s" % (str, "\n\n")
         return str  
-    
+
     def str_break(self, str, width=40):
         list = textwrap.wrap(str, width=width);
         str = ""
@@ -209,15 +225,17 @@ class OctTreeBranch(OctTreeNode):
             list_p.append(line.ljust(width))
             
     def add_shape (self, shape):
-        
+          
+        self.__added_shapes__[id(shape)] = []  
+          
         stop = False
-        if shape[raytracer.shape.SHAPE_TRANSFORM] is not None:
-            trans_opt = shape[raytracer.shape.SHAPE_TRANSFORM].__options__
-            if 'scale' in trans_opt and \
-                trans_opt['scale']['x'] > trans_opt['scale']['y'] and \
-                type(self.parent_branch) is not raytracer.scene.Scene:
-                stop = True
-                import pdb; pdb.set_trace()        
+        # if shape[raytracer.shape.SHAPE_TRANSFORM] is not None:
+        #    trans_opt = shape[raytracer.shape.SHAPE_TRANSFORM].__options__
+        #    if 'scale' in trans_opt and \
+        #        trans_opt['scale']['x'] > trans_opt['scale']['y'] and \
+        #        type(self.parent_branch) is not raytracer.scene.Scene:
+        #        stop = True
+        #        import pdb; pdb.set_trace()        
                 
         
         stop = False
@@ -231,7 +249,7 @@ class OctTreeBranch(OctTreeNode):
 
         if shape_box is None or not self.can_split():
             self.shapes.append(shape)
-            if stop: import pdb; pdb.set_trace()
+            # if stop: import pdb; pdb.set_trace()
 
         else:
             # if not shape_box.box_overlaps(self.bounding_box):
@@ -270,11 +288,12 @@ class OctTreeBranch(OctTreeNode):
             for i in range(x_left, x_right + 1):
                 for j in range(y_top, y_bottom + 1):
                     for k in range(z_front, z_back + 1):
+                        
+                        self.__added_shapes__[id(shape)].append (
+                            (self.children[i][j][k], i, j, k))
+                        
                         self.children[i][j][k].add_shape(shape)
-            
-            if stop: import pdb; pdb.set_trace()
-            
-            #if self.shape_count == 3:  import pdb; pdb.set_trace()      
+                 
             return True
                  
             
@@ -326,304 +345,88 @@ class OctTreeBranch(OctTreeNode):
 
         shapes = []
         for node in nodes:
-            shapes = shapes + node.shapes
+            shapes += node.shapes
 
         shapes += self.shapes
         
         shapes = list_purge_duplicates(shapes)
-        
                     
         return shapes
-    
+
     def get_nodes_by_ray(self, ray):
-
+        
+        if ((ray[RAY_START][1]<self.bounding_box.min_x and ray[RAY_DIR][1]<0)
+            or (ray[RAY_START][2]<self.bounding_box.min_y and ray[RAY_DIR][2]<0)
+            or (ray[RAY_START][3]<self.bounding_box.min_z and ray[RAY_DIR][3]<0)            
+            or (ray[RAY_START][1]>self.bounding_box.max_x and ray[RAY_DIR][1]>0)
+            or (ray[RAY_START][2]>self.bounding_box.max_y and ray[RAY_DIR][2]>0)
+            or (ray[RAY_START][3]>self.bounding_box.max_z and ray[RAY_DIR][3]>0)):
+            
+            return []
+        
+        t=[{}, {}, {}, {}]
         nodes = []
-        
-        """
-        t_tests = [[None, None] , [None, None] , [None, None]]
-        box_bounds = [
-            [self.bounding_box.min_x, self.bounding_box.mid_x, self.bounding_box.max_x],
-            [self.bounding_box.min_y, self.bounding_box.mid_y, self.bounding_box.max_y],
-            [self.bounding_box.min_z, self.bounding_box.mid_z, self.bounding_box.max_z]]
-        
-        for dimension in range(0,3):
-        
-            if ray[RAY_DIR][dimension + 1] !=0: # if not paralell to axis
-            
-                if ray[RAY_START][dimension + 1] <= box_bounds[dimension][1]:
-                    incr = 1
-                
-                else:
-                    incr = 0
-                
-                t_tests [dimension][0] = (box_bounds[dimension][0 + incr] - ray[RAY_START][dimension + 1]) / ray[RAY_DIR][dimension + 1]
-                t_tests [dimension][1] = (box_bounds[dimension][1 + incr] - ray[RAY_START][dimension + 1]) / ray[RAY_DIR][dimension + 1]
-            else:
-                t_tests [dimension][0] = -1
-                t_tests [dimension][1] = -1
-      
-        
-        for dimension in range(0, 3):
-            test_dim_1 = 0                
-            test_dim_2 = 1
-            non_test_dim = 2
-            if dimension == 0:
-               test_dim_1 = 2
-               non_test_dim = 0
-            elif dimension == 1:
-               test_dim_2 = 2
-               non_test_dim = 1
-            
-            for aspect in range(0, 2):
-                set_x = None
-                set_y = None
-                set_z = None
-                 
-                if (t_tests[dimension][aspect] >= 0):
-                    point = ray_calc_pt(ray, t_tests[dimension][aspect])
-                    
-                    if (point[test_dim_1 + 1] <= box_bounds[test_dim_1][2] and
-                        point[test_dim_1 + 1] >= box_bounds[test_dim_1][0] and
-                        point[test_dim_2 + 1] >= box_bounds[test_dim_2][2] and
-                        point[test_dim_2 + 1] <= box_bounds[test_dim_2][0]):
-                        
-                                               
-                         
-                        if point[test_dim_1 + 1] <= box_bounds[test_dim_1][1]:
-                            dim_1_idx = 0
-                        else:
-                            dim_1_idx = 1
-
-                        if point[test_dim_2 + 1] <= box_bounds[test_dim_2][1]:
-                            dim_2_idx = 0
-                        else:
-                            dim_2_idx = 1
-                            
-                        if non_test_dim == 0:
-                            set_x = aspect
-                        elif non_test_dim == 1:
-                            set_y = aspect
-                        elif non_test_dim == 2:
-                            set_z = aspect
-
-                        if test_dim_1 == 0:
-                            set_x =  dim_1_idx
-                        else:
-                            set_z =  dim_1_idx
-                            
-                        if test_dim_2 == 1:
-                            set_y =  dim_2_idx
-                        else:
-                            set_z =  dim_2_idx                            
-                            
-                        printf ("setx: %d, sety: %d, setz %d\n"% (set_x, set_y, set_z))                            
-                        nodes.append (self.children[set_x][set_y][set_z])   
-                            
-
-
-        """                
-        
         if ray[RAY_DIR][1] !=0: # if not paralell to X-axis
-        
-            if ray[RAY_START][1] <= self.bounding_box.mid_x:
-                x_test_left = self.bounding_box.mid_x
-                x_test_right = self.bounding_box.max_x
-            else:
-                x_test_left = self.bounding_box.min_x
-                x_test_right = self.bounding_box.mid_x 
-                
-            t_x_left = (x_test_left - ray[RAY_START][1]) / ray[RAY_DIR][1]
-            t_x_right = (x_test_right - ray[RAY_START][1]) / ray[RAY_DIR][1]
-        else:
-            t_x_left = -1
-            t_x_right = -1
-        
-        if ray[RAY_DIR][2] !=0:
-            if ray[RAY_START][2] <= self.bounding_box.mid_y:
-                y_test_top = self.bounding_box.mid_y
-                y_test_bottom = self.bounding_box.max_y
-            else:
-                y_test_top = self.bounding_box.min_y
-                y_test_bottom = self.bounding_box.mid_y
-                        
-            t_y_top = (y_test_top - ray[RAY_START][2]) / ray[RAY_DIR][2]
-            t_y_bottom = (y_test_bottom - ray[RAY_START][2]) / ray[RAY_DIR][2]
-        else:
-            t_y_top = -1
-            t_y_bottom = -1
-            
-        if ray[RAY_DIR][3] !=0:
-            
-            if ray[RAY_START][3] <= self.bounding_box.mid_z:
-                z_test_front = self.bounding_box.mid_z
-                z_test_back = self.bounding_box.max_z
-            else:
-                z_test_front = self.bounding_box.min_z
-                z_test_back = self.bounding_box.mid_z
-                
-            t_z_front = (z_test_front - ray[RAY_START][3]) / ray[RAY_DIR][3]
-            t_z_back = (z_test_back - ray[RAY_START][3]) / ray[RAY_DIR][3]
-        
-        else:
-            t_z_front = -1
-            t_z_back = -1
-        
-        if (t_x_left >= 0):
-            point = ray_calc_pt(ray, t_x_left)
-            
-            if (point[2] <= self.bounding_box.max_y and
-                point[2] >= self.bounding_box.min_y and
-                point[3] >= self.bounding_box.min_z and
-                point[3] <= self.bounding_box.max_z):
-                
-                if (point[2] <= self.bounding_box.mid_y and
-                    point[3] <= self.bounding_box.mid_z):
-                    nodes.append (self.children[0][0][0])
-                    
-                elif (point[2] <= self.bounding_box.mid_y and
-                    point[3] >= self.bounding_box.mid_z):
-                    nodes.append (self.children[0][0][1])
-                    
-                elif (point[2] >= self.bounding_box.mid_y and
-                    point[3] <= self.bounding_box.mid_z):
-                    nodes.append (self.children[0][1][0])
-                    
-                elif (point[2] >= self.bounding_box.mid_y and
-                    point[3] >= self.bounding_box.mid_z):
-                    nodes.append (self.children[0][1][1]) 
-                    
-        if (t_x_right >= 0):
-            point = ray_calc_pt(ray, t_x_right)
-            
-            if (point[2] <= self.bounding_box.max_y and
-                point[2] >= self.bounding_box.min_y and
-                point[3] >= self.bounding_box.min_z and
-                point[3] <= self.bounding_box.max_z):
-                
-                if (point[2] <= self.bounding_box.mid_y and
-                    point[3] <= self.bounding_box.mid_z):
-                    nodes.append (self.children[1][0][0])
-                    
-                elif (point[2] <= self.bounding_box.mid_y and
-                    point[3] >= self.bounding_box.mid_z):
-                    nodes.append (self.children[1][0][1])
-                    
-                elif (point[2] >= self.bounding_box.mid_y and
-                    point[3] <= self.bounding_box.mid_z):
-                    nodes.append (self.children[1][1][0])
-                    
-                elif (point[2] >= self.bounding_box.mid_y and
-                    point[3] >= self.bounding_box.mid_z):
-                    nodes.append (self.children[1][1][1])
-                    
+            t[1]['min'] = (self.bounding_box.min_x - ray[RAY_START][1]) / ray[RAY_DIR][1]
+            t[1]['mid'] = (self.bounding_box.mid_x - ray[RAY_START][1]) / ray[RAY_DIR][1]
+            t[1]['max'] = (self.bounding_box.max_x - ray[RAY_START][1]) / ray[RAY_DIR][1]
 
-        if (t_y_top >= 0):
-            point = ray_calc_pt(ray, t_y_top)
-            
-            if (point[1] <= self.bounding_box.max_x and
-                point[1] >= self.bounding_box.min_x and
-                point[3] >= self.bounding_box.min_z and
-                point[3] <= self.bounding_box.max_z):
-                
-                if (point[1] <= self.bounding_box.mid_x and
-                    point[3] <= self.bounding_box.mid_z):
-                    nodes.append (self.children[0][0][0])
-                    
-                elif (point[1] <= self.bounding_box.mid_x and
-                    point[3] >= self.bounding_box.mid_z):
-                    nodes.append (self.children[0][0][1])
-                    
-                elif (point[1] >= self.bounding_box.mid_x and
-                    point[3] <= self.bounding_box.mid_z):
-                    nodes.append (self.children[1][0][0])
-                    
-                elif (point[1] >= self.bounding_box.mid_x and
-                    point[3] >= self.bounding_box.mid_z):
-                    nodes.append (self.children[1][0][1])
-                    
-        if (t_y_bottom >= 0):
-            point = ray_calc_pt(ray, t_y_bottom)
-            
-            if (point[1] <= self.bounding_box.max_x and
-                point[1] >= self.bounding_box.min_x and
-                point[3] >= self.bounding_box.min_z and
-                point[3] <= self.bounding_box.max_z):
-                
-                if (point[1] <= self.bounding_box.mid_x and
-                    point[3] <= self.bounding_box.mid_z):
-                    nodes.append (self.children[0][1][0])
-                    
-                elif (point[1] <= self.bounding_box.mid_x and
-                    point[3] >= self.bounding_box.mid_z):
-                    nodes.append (self.children[0][1][1])
-                    
-                elif (point[1] >= self.bounding_box.mid_x and
-                    point[3] <= self.bounding_box.mid_z):
-                    nodes.append (self.children[1][1][0])
-                    
-                elif (point[1] >= self.bounding_box.mid_x and
-                    point[3] >= self.bounding_box.mid_z):
-                    nodes.append (self.children[1][1][1])
+        if ray[RAY_DIR][2] !=0: # if not paralell to Y-axis
 
-                    
-        if (t_z_front >= 0):
-            point = ray_calc_pt(ray, t_z_front)
-            if (point[1] <= self.bounding_box.max_x and
-                point[1] >= self.bounding_box.min_x and
-                point[2] >= self.bounding_box.min_y and
-                point[2] <= self.bounding_box.max_y):
-                
-                if (point[1] <= self.bounding_box.mid_x and
-                    point[2] <= self.bounding_box.mid_y):
-                    nodes.append (self.children[0][0][0])
-                    
-                elif (point[1] <= self.bounding_box.mid_x and
-                    point[2] >= self.bounding_box.mid_y):
-                    nodes.append (self.children[0][1][0])
-                    
-                elif (point[1] >= self.bounding_box.mid_x and
-                    point[2] <= self.bounding_box.mid_y):
-                    nodes.append (self.children[1][0][0])
-                    
-                elif (point[1] >= self.bounding_box.mid_x and
-                    point[2] >= self.bounding_box.mid_y):
-                    nodes.append (self.children[1][1][0])
+            t[2]['min'] = (self.bounding_box.min_y - ray[RAY_START][2]) / ray[RAY_DIR][2]
+            t[2]['mid'] = (self.bounding_box.mid_y - ray[RAY_START][2]) / ray[RAY_DIR][2]
+            t[2]['max'] = (self.bounding_box.max_y - ray[RAY_START][2]) / ray[RAY_DIR][2]
 
-        if (t_z_back >= 0):
-            point = ray_calc_pt(ray, t_z_back)
-            
-            if (point[1] <= self.bounding_box.max_x and
-                point[1] >= self.bounding_box.min_x and
-                point[2] >= self.bounding_box.min_y and
-                point[2] <= self.bounding_box.max_y):
+        if ray[RAY_DIR][3] !=0: # if not paralell to Z-axis
+            t[3]['min'] = (self.bounding_box.min_z - ray[RAY_START][3]) / ray[RAY_DIR][3]
+            t[3]['mid'] = (self.bounding_box.mid_z - ray[RAY_START][3]) / ray[RAY_DIR][3]
+            t[3]['max'] = (self.bounding_box.max_z - ray[RAY_START][3]) / ray[RAY_DIR][3]
+        
+        for dim in range (1,4):
                 
-                if (point[1] <= self.bounding_box.mid_x and
-                    point[2] <= self.bounding_box.mid_y):
-                    nodes.append (self.children[0][0][1])
+            for aspect in t[dim]:
+                point = ray_calc_pt(ray, t[dim][aspect])
+                if (point[1] > self.bounding_box.max_x or
+                    point[1] < self.bounding_box.min_x or
+                    point[2] > self.bounding_box.max_y or
+                    point[2] < self.bounding_box.min_y or
+                    point[3] > self.bounding_box.max_z or
+                    point[3] < self.bounding_box.min_z or
+                    t<0):
+                    continue
+                
+                
+                
+                if point[1]<=self.bounding_box.mid_x:
+                    x = 0
+                else:
+                    x = 1
                     
-                elif (point[1] <= self.bounding_box.mid_x and
-                    point[2] >= self.bounding_box.mid_y):
-                    nodes.append (self.children[0][1][1])
-                    
-                elif (point[1] >= self.bounding_box.mid_x and
-                    point[2] <= self.bounding_box.mid_y):
-                    nodes.append (self.children[1][0][1])
-                    
-                elif (point[1] >= self.bounding_box.mid_x and
-                    point[2] >= self.bounding_box.mid_y):
-                    nodes.append (self.children[1][1][1])
-                    
-        my_nodes = list_purge_duplicates(nodes)
+                if point[2]<=self.bounding_box.mid_y:
+                    y = 0
+                else:
+                    y = 1                    
+
+                if point[3]<=self.bounding_box.mid_z:
+                    z = 0
+                else:
+                    z = 1  
+
+                node = self.children[x][y][z]
+                
+                if not node in nodes:
+                    nodes.append(node)
+    
+        if len(nodes) == 0:
+            return []
         
-        # if len(nodes)>0: import pdb;pdb.set_trace();
-        nodes = []
+        leaves = []
         
-        for node in my_nodes:
+        for node in nodes:
             if isinstance(node, OctTreeBranch):
-                nodes = nodes + node.get_nodes_by_ray(ray)
+                leaves += (node.get_nodes_by_ray(ray))
             else:
-                nodes.append(node)
+                leaves.append(node)
         
-        return nodes       
-                    
-                    
+        return leaves
+    

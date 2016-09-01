@@ -154,7 +154,6 @@ class Scene(object):
         if self.__use_octtree__ and \
             len (self.__shapes__) >= self.__oct_tree_threshold__:  
             self.setup_octtree()
-
                     
         raytracer.view.view_render(
             self.__views__[view_name])
@@ -167,13 +166,15 @@ class Scene(object):
           
                 
     def test_intersect(self, ray, exclude_shapes=[]):
+        
         if self.__use_octtree__ and \
             len (self.__shapes__) >= self.__oct_tree_threshold__ and \
             self.__octtree_top__ is not None:
             shapes = self.__octtree_top__.get_shapes_by_ray(ray)
-        else:
-            shapes = self.__shapes__
             
+        else:
+            shapes =  list(self.__shapes__.values())
+        
         return self.test_intersect_list (ray, shapes, exclude_shapes)
         
         
@@ -186,18 +187,13 @@ class Scene(object):
         curr_sh = None
         curr_t = None
         curr_intersect_result = None
-        for shape in self.__shapes__:
+        for sh in list:
 
-            if shape not in exclude_shapes:
-                sh = self.__shapes__[shape]
+            if sh not in exclude_shapes:
                 intersect_result = shape_test_intersect(sh, ray)
-                if (intersect_result is not False and
-                        intersect_result is not None):
-                    intersect_result['shape'] = sh
-
+                if type(intersect_result) is dict:
                     t = intersect_result['t']
                     if t > 0 and (curr_t is None or t < curr_t):
-
                         curr_sh = sh
                         curr_t = t
                         curr_intersect_result = intersect_result

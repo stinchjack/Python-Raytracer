@@ -16,7 +16,7 @@ from raytracer.lighting_model import *
 if __name__ == '__main__':
     get_context().precision = 32
 
-    scene = Scene(True, 8)
+    scene = Scene(False, 8)
     #import pdb; pdb.set_trace();
     view = view_create_look_at(scene,
                             
@@ -26,10 +26,10 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, 0, 20), ## eye point,
-                            ('cartesian', 0, 0, 2), ## look at
-                            1.5,
-                            120)
+                            ('cartesian', 0, 0, -20), ## eye point,
+                            ('cartesian', 0, 0, 3), ## look at
+                            1,
+                            0)
 
 
                        
@@ -37,19 +37,25 @@ if __name__ == '__main__':
     view_set_output(view, PIL_Output())
     view_set_multiprocessing(view, True)
     view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL],
-        {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': True})
+        {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': False})
     scene.add_view(view, 'view')
-    scene.add_light(light_point_light_create(cartesian_create(
-        0, 0, -5.5), colour_create(1, 1, 1)), 'light1')
+    """scene.add_light(light_point_light_create(cartesian_create(
+        0, 0, -20), colour_create(1, 1, 1)), 'light1')
         
     scene.add_light(light_point_light_create(cartesian_create(
-        -10, 0, 0), colour_create(1, 1, 1)), 'light2')
+        0, 0, 30), colour_create(1, 1, 1)), 'light2')"""
     
     scene.add_light(light_point_light_create(cartesian_create(
-        0, 0, 0), colour_create(1, 1, 1)), 'light3')
+        0, -20, 00), colour_create(1, 1, 1)), 'light3')
         
+    
     scene.add_light(light_point_light_create(cartesian_create(
-        0, 00, 20), colour_create(1, 1, 1)), 'light4')   
+     20, 20, 20), colour_create(1, 1, 1)), 'light4')   
+        
+    """ scene.add_light(light_point_light_create(cartesian_create(
+        20, 00, 00), colour_create(1, 1, 1)), 'light5')     
+    scene.add_light(light_point_light_create(cartesian_create(
+        -20, 00, 00), colour_create(1, 1, 1)), 'light6')           """
     
     i = 0
     first = True

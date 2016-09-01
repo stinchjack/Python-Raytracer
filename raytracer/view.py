@@ -650,7 +650,7 @@ def view_create_look_at (
     """
     :param view_width: the width od the view at the scree point, in scene-space
     :eye_distance_to_screen: the distance from the eye to the screen
-    :eye_point: cartesian for the peye location
+    :eye_point: cartesian for the eye location
     :param physical_rectangle: The rectangle of the physical output to draw
         onto. This is value is a dictionary:
         'left': the left-hand edge of the physical output to draw onto
@@ -691,8 +691,6 @@ def view_create_look_at (
     else:
         rotation_axis= cartesian_normalise(cartesian_cross(
             view_axis_normalised, ('cartesian', 0, 0, 1)))
-
-        
 
     
     rotation_angle = math.degrees(

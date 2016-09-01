@@ -81,7 +81,6 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
         else:
             result['reflect_count'] = result['reflect_count'] - 1;
 
-        
         if result['reflect_count'] <= 0:
            doReflections = False  
            
@@ -122,55 +121,43 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
         end_colour = colour_add(end_colour,
                                 colour_mul(reflect_colour, specular_colour))
 
-
-
-    if(cartesian_dot(result['normal'], result['ray'][RAY_VECTOR]) < 0):
-        norml = result['normal']
-    else:
-        norml = cartesian_create(0 - result['normal'][VECTOR_X],
-                                 0 - result['normal'][VECTOR_Y],
-                                 0 - result['normal'][VECTOR_Z])
-
-        rs = cartesian_add(
-        result['point'], cartesian_scale(norml, mpfr(".0001")))
-
     lights = scene_obj.get_lights()
 
     for l in lights:
         light = lights[l]
 
-
-
         if ('NoShadows' in lighting_model[LIGHTINGMODEL_OPTIONS] and
                 lighting_model[LIGHTINGMODEL_OPTIONS]['NoShadows'] is True):
             r = False
         else:
+            #import pdb; pdb.set_trace();
             shadow_ray = ray_create(rs, cartesian_sub(
-                light[LIGHT_POINT_POINT], result['point']), True)            
-            r = scene_obj.test_intersect(shadow_ray, result['shape'])
+                light[LIGHT_POINT_POINT], rs), True)            
+            r = scene_obj.test_intersect(shadow_ray)
 
         in_shadow = (type(r) is dict and 't' in r and r['t'] <= 1)
               
 
         if not in_shadow:
 
-            light_ray = cartesian_normalise(cartesian_sub(
-                light[LIGHT_POINT_POINT], result['point']))
-
-            diff = colour_scale(
-                light[LIGHT_POINT_COLOUR], cartesian_dot(light_ray, norml))
+            #import pdb; pdb.set_trace()
 
             if ('NoDiffuse' in lighting_model[LIGHTINGMODEL_OPTIONS] and
                     lighting_model[LIGHTINGMODEL_OPTIONS]['NoDiffuse']):
                 end_colour = colour_add(
                     end_colour, colour_scale(diffuse_colour, mpfr(0.5)))
             else:
-                
-                end_colour = colour_add(
-                    end_colour, colour_mul(diffuse_colour, diff))
+                light_ray = cartesian_normalise(cartesian_sub(
+                    light[LIGHT_POINT_POINT], result['point']))
 
-    if end_colour[1] < 0 or end_colour[2] or end_colour[3] < 0:
-        
+                diff = colour_scale(
+                    light[LIGHT_POINT_COLOUR], abs(cartesian_dot(light_ray, result['normal'])))
+                    
+                end_colour = colour_add(
+                        end_colour, colour_mul(diffuse_colour, diff))
+
+    if end_colour[1] < 0 or end_colour[2] <0  or end_colour[3] < 0:
+
         ec = [None, None, None, None]        
         for i in range (1,4):
             if end_colour[i] < 0:
