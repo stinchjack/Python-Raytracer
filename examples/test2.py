@@ -17,7 +17,7 @@ from raytracer.mapping import *
 if __name__ == '__main__':
     get_context().precision = 32
 
-    scene = Scene()
+    scene = Scene(False)
     view = view_create(scene, -150, {'left': 0,
                              'right': 300,
                              'top': 0,
@@ -69,3 +69,7 @@ if __name__ == '__main__':
     #map_test()    
     image = scene.render('view')
     image.show()
+<<<<<<< HEAD
+
+=======
+>>>>>>> b9ff31fdf813ae4eb810023c3c92912338353168

@@ -1,8 +1,10 @@
 try:
     from gmpy2 import *
+    from math import degrees
 except ImportError:
     from math import *
-    from mpfr_dummy import *
+    from raytracer.mpfr_dummy import *
+
 from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.matrix import *
@@ -54,7 +56,7 @@ A view is stored as a list with the following elements:
     * The Cartesian co-ordinate of the eye, calculated from the Z-position of
         the eye point and rectangle of the logical view
 
-    * A dictionary of data intended for internal use with anitalising:
+    * A dictionary of data intended for internal use with anti-aliasing:
 
         'count': The total number of sub samples taken for each pixel, i.e.
             member 'x' times member 'y'
@@ -68,9 +70,9 @@ A view is stored as a list with the following elements:
         'a_view_step_y': The vertical step distance to use for sub sampling
 
 
-    * The current X-position during rendering(intended for internal use)
+    * The current X-position during rendering (intended for internal use)
 
-    * The current Y-position during rendering(intended for internal use)"""
+    * The current Y-position during rendering (intended for internal use)"""
 
 VIEW_LIGHTINGMODEL = 1
 VIEW_OUTPUT = 2
@@ -111,7 +113,7 @@ def view_create(
 
     :param output: A child class of Output
     
-    :return: A list of view parameters, or None on failure"""
+    :return: A list of view parameters, or None on failure"""   
     if not type(physical_rectangle) is dict:
         return None
     if not type(view_rectangle) is dict:
@@ -247,6 +249,18 @@ def view_set_lighting_model(view, lightingmodel, options=None):
         view[VIEW_LIGHTINGMODEL][LIGHTINGMODEL_OPTIONS] = options
 
 
+def view_transform_ray (view, ray):
+    if view[VIEW_TRANSFORM] is not None:
+
+        # import pdb; pdb.set_trace();
+
+        ray_dir = view[VIEW_TRANSFORM].transform_cartesian (ray[RAY_DIR], True)
+        ray_start =  view[VIEW_TRANSFORM].transform_point (ray[RAY_START])
+
+        ray = ray_create(ray_start, ray_dir)
+        
+    return ray
+
 def view_render_pixel(view, view_scan_x, view_scan_y):
     """Renders one pixel of a view
 
@@ -283,6 +297,8 @@ def view_render_pixel_no_antialias(view, view_scan_x, view_scan_y):
         view_scan_y - view[VIEW_EYE][2],
         mpfr(0) - view[VIEW_EYE][3]))
 
+    ray = view_transform_ray (view, ray)
+    
     result = view[VIEW_SCENE].test_intersect(ray)
 
     if(result is not False):
@@ -346,7 +362,8 @@ def view_render_pixel_antialias_edge_detect_get_surrounding_eight(
     return coordinates
 
 
-def view_render_pixel_antialias_edge_detect(view, view_scan_x, view_scan_y, force_antialias=False):
+def view_render_pixel_antialias_edge_detect(view, view_scan_x, view_scan_y,
+    force_antialias=False):
     """
     Performs edge-detecting antialiasing for the current pixel of a render.
 
@@ -456,6 +473,9 @@ def view_render_pixel_antialias_stochastic(view, view_scan_x, view_scan_y):
             a_view_x - view[VIEW_EYE][1],
             a_view_y - view[VIEW_EYE][2],
             zero - view[VIEW_EYE][3]))
+            
+        ray = view_transform_ray (view, ray)
+        
         result = view[VIEW_SCENE].test_intersect(ray)
         if(result is not False):
             result['ray'] = ray
@@ -499,6 +519,7 @@ def view_render_pixel_antialias_grid_pattern(view, view_scan_x, view_scan_y):
                 a_view_x - view[VIEW_EYE][1],
                 a_view_y - view[VIEW_EYE][2],
                 zero - view[VIEW_EYE][3]))
+            ray = view_transform_ray (view, ray)
             result = view[VIEW_SCENE].test_intersect(ray)
             if(result is not False):
                 result['ray'] = ray
@@ -609,8 +630,100 @@ def view_process_queue_multiprocess(view, queue):
     del queue[:] #empty the list
 
 def view_pp_render_pixel(queue_item):
-    view, view_scan_x, view_scan_y, physical_x, physical_y, force_aa = queue_item
+    view, view_scan_x, view_scan_y, physical_x, physical_y, force_aa = \
+        queue_item
     clr = view_render_pixel(view, view_scan_x, view_scan_y)
 
     return clr
+
+
+def view_create_look_at (
+        scene, physical_rectangle,
+        view_width,
+        eye_distance_to_screen,
+        eye_point,
+        look_at,
+        scale = 1,
+        z_rotation = 0,
+        output = None):
+
+    """
+    :param view_width: the width od the view at the scree point, in scene-space
+    :eye_distance_to_screen: the distance from the eye to the screen
+    :eye_point: cartesian for the eye location
+    :param physical_rectangle: The rectangle of the physical output to draw
+        onto. This is value is a dictionary:
+        'left': the left-hand edge of the physical output to draw onto
+        'right': the right-hand edge of the physical output to draw onto
+        'top': the top edge of the physical output to draw onto
+        'bottom': the bottom edge of the physical output to draw onto
+    :look_at: cartesian point to look at
+    :scale: scale/zoom factor
+    :z_rotation: the amount of rotation about the line of sight
+    :output: an instance of class Output
+    """        
+    if (eye_point[1] == look_at[1] and 
+        eye_point[2] == look_at[2] and 
+        eye_point[3] == look_at[3]):        
+        raise Exception('eye_point and look_at are the same')
     
+    physical_width = physical_rectangle['right'] - physical_rectangle['left']
+    physical_height = physical_rectangle['bottom'] - physical_rectangle['top']
+    aspect_ratio = physical_width/physical_height
+    
+    view_height = mpfr(view_width/aspect_ratio)
+    
+    # cartesian_sub(look_at, eye_point)
+    view_axis = cartesian_sub(look_at, eye_point)
+    view_axis_normalised = cartesian_normalise(view_axis)        
+    
+    eye_translate = {'x': 0 - eye_point[1],
+        'y': 0 - eye_point[2],
+        'z': 0 - (eye_point[3] + eye_distance_to_screen )}
+
+    transform = Transform ({'translate':eye_translate })
+
+    if view_axis[1] == 0 and view_axis[2] == 0:
+
+        rotation_axis= cartesian_cross(
+            view_axis_normalised, ('cartesian', 1, 0, 0))
+
+    else:
+        rotation_axis= cartesian_normalise(cartesian_cross(
+            view_axis_normalised, ('cartesian', 0, 0, 1)))
+
+    
+    rotation_angle = math.degrees(
+                        acos(
+                            cartesian_dot(
+                                view_axis_normalised, ('cartesian', 0, 0, 1))))
+ 
+    effective_screen_z = eye_point[3] + eye_distance_to_screen
+
+        
+    eye_z = 0 - eye_distance_to_screen
+
+    
+    rotation_z_matrix = RotationZMatrix (0 - z_rotation)
+    look_at_matrix = RotationMatrix(rotation_axis,  0 - rotation_angle)
+    scale_matrix = ScaleMatrix (1, 1, scale)
+    matrix = rotation_z_matrix * look_at_matrix * scale_matrix 
+    transform.set_matrix(matrix)
+
+    view_rectangle = {
+        'left': 0 - (view_width / 2.0),
+        'right': (view_width / 2.0) ,
+        'top': 0 - (view_height / 2.0),
+        'bottom':  (view_height / 2.0)       
+    }
+    view = view_create (
+            scene,
+            eye_z,
+            physical_rectangle,
+            view_rectangle,
+
+            transform,
+            output
+            )
+
+    return view

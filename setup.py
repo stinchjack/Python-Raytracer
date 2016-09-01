@@ -6,4 +6,5 @@ setup(name='Distutils',
       author='Jack Stinchcombe',
       author_email='stinchjack@gmail.com',
       packages=['raytracer', 'raytracer.devutil', 'raytracer.unit_tests'],
+      license='LGPL'
      )

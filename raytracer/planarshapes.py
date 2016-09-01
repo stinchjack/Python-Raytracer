@@ -74,7 +74,7 @@ def shape_rectangle_intersect(shape, ray):
         return False
     return {'t': t,
             'raw_point': point,
-            'raw_normal': ('cartesian', zero(), zero(), mpfr(-1))
+            'raw_normal': ('cartesian', 0, 0, mpfr(-1))
             }
 
 
@@ -94,7 +94,7 @@ def shape_rectangle_create(colour, specular, bounds, transform=None):
 
         :returns: a tuple containg data to render a rectangle
         """
-    shape = shape_emptyShape()
+    shape = shape_empty_shape()
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_INTERSECT_FUNC] = shape_rectangle_intersect

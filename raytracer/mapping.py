@@ -2,7 +2,7 @@ import math
 try:
     from gmpy2 import *
 except ImportError:
-    from mpfr_dummy import *
+    from raytracer.mpfr_dummy import *
 from raytracer.cartesian import *
 from raytracer.colour import *
 from PIL import Image
@@ -223,7 +223,11 @@ def sphere_map_to_rect(intersect_result):
         a1 = 180 + (180 - a1)
 
     u = a1 / mpfr(360.0)
-    a2 = math.degrees(asin(p[2]))
+    if p[2] > 1: a2 = 90
+    elif p[2] < -1: a2 =-90
+    else:  
+        a2 = math.degrees(asin(p[2]))
+        
     a2 = a2 + 90
 
     v = a2 / mpfr(180.0)

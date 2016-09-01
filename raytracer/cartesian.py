@@ -2,7 +2,7 @@ try:
     from gmpy2 import *
 except ImportError:
     from math import *
-    from mpfr_dummy import *
+    from raytracer.mpfr_dummy import *
 
 """Functions for dealing with cartesian values and rays.
 A cartesian is stored as a tuple, with the first element being the
@@ -134,9 +134,10 @@ def cartesian_cross(c1, c2):
         :return: cross-product of c1 and c2
 
     """
-    return ('cartesian', (c1[2] * c2[3]) - (c1[3] * c2[2]),
+    return ('cartesian',
+            (c1[2] * c2[3]) - (c1[3] * c2[2]),
             (c1[3] * c2[1]) - (c1[1] * c2[3]),
-            (c1[1] * c2[2]) - (c1[2] * c2[1]), None, None)
+            (c1[1] * c2[2]) - (c1[2] * c2[1]))
 
 
 def transform_matrix_mul_cartesian(matrix, cartesian):
@@ -159,6 +160,7 @@ def transform_matrix_mul_cartesian(matrix, cartesian):
 # ['ray',cartesian,cartesian,False]
 RAY_START = 1
 RAY_VECTOR = 2
+RAY_DIR = 2
 RAY_ISSHADOW = 3
 
 
@@ -213,6 +215,22 @@ def ray_calc_pt(ray, t):
             ray[1][2] + (ray[2][2] * t),
             ray[1][3] + (ray[2][3] * t), None, None)
 
+
+def ray_reflect_vector(incident_ray, normal):
+    # Rr = Ri - 2 N (Ri . N) 
+    
+    
+        
+    ir = incident_ray[RAY_DIR] # cartesian_normalise(incident_ray[RAY_DIR]);
+    
+    if cartesian_dot(ir, normal) <0:
+        ir = cartesian_sub(('cartesian', 0,0,0), ir)
+    
+    ri_dot_n = cartesian_dot(ir, normal)
+    twoN_expr = cartesian_scale(normal, 2 * ri_dot_n)
+    reflected_ray = cartesian_sub(twoN_expr, ir )            
+
+    return reflected_ray
 
 def lineseg2d_create(start, end):
     """Creates a lineseg2d tuple

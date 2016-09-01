@@ -2,7 +2,8 @@ try:
     from gmpy2 import *
 except ImportError:
     from math import *
-    from mpfr_dummy import *
+    from raytracer.mpfr_dummy import *
+
 from raytracer.matrix import *
 from raytracer.cartesian import *
 from copy import *
@@ -71,7 +72,12 @@ class Transform:
         :return: dictionary
         """
         return self.__options__
-
+    
+    def set_matrix (self, matrix):
+        
+        self.__matrix__ = matrix
+        self.__inverse_matrix__ = matrix.inverse
+        
     def set_options(self, options):
         """Sets transformation options.
 
@@ -102,6 +108,7 @@ class Transform:
                     mpfr(options['translate']['x']),
                     mpfr(options['translate']['y']),
                     mpfr(options['translate']['z']))
+
 
         self.__options__ = options
 
@@ -146,24 +153,38 @@ class Transform:
         :return: the ray, transformed
         """
 
-        if self.__no_transform__:
-            return ray
-
         ray_dir = ray[RAY_VECTOR]
         ray_point = ray[RAY_START]
-
-        if isinstance(self.__matrix__, Matrix):
-            ray_dir = transform_matrix_mul_cartesian(
-                self.__matrix__.matrix, ray_dir)
-            ray_point = transform_matrix_mul_cartesian(
-                self.__matrix__.matrix, ray_point)
 
         if 'translate' in self.__options__:
             ray_point = cartesian_sub(
                 ray_point, self.__options__['translate'])
 
-        return ray_create(ray_point, ray_dir, ray[RAY_ISSHADOW])
+        if isinstance(self.__matrix__, Matrix):
+            ray_dir = transform_matrix_mul_cartesian(
+                self.__matrix__.matrix, ray_dir)
+            ray_point = transform_matrix_mul_cartesian(
+               self.__matrix__.matrix, ray_point)
 
+
+
+        return ray_create(ray_point, ray_dir, ray[RAY_ISSHADOW])
+        
+
+    def transform_cartesian(self, cartesian, no_translate = False):
+        if self.__no_transform__:
+            return cartesian        
+        
+        if isinstance(self.__matrix__, Matrix):
+            new_cartesian = transform_matrix_mul_cartesian(
+                self.__matrix__.matrix, cartesian)
+  
+        if not no_translate:
+            if 'translate' in self.__options__:
+                new_cartesian = cartesian_sub(
+                    new_cartesian, self.__options__['translate']) 
+        return new_cartesian              
+                
     def transform_point(self, point, inverse=False):
         """Transforms a point. (A point can only be transformed by
         translation.)

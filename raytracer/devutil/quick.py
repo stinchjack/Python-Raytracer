@@ -21,8 +21,8 @@ def get_filepaths():
 def setup():
     filepaths = get_filepaths()
 
-    os.system("%s setup.py clean" % (filepaths[0]))
-    os.system("%s setup.py install" % (filepaths[0]))
+    os.system("%s setup.py clean --user" % (filepaths[0]))
+    os.system("%s setup.py install --user" % (filepaths[0]))
 
 
 def run(py_file, dir=None):

@@ -4,6 +4,7 @@ from raytracer.colour import *
 from raytracer.matrix import *
 from raytracer.transformation import *
 from raytracer.shape import *
+from raytracer.oct_tree import *
 
 """Functions for quadratic shapes: spheres, cylinders, cones, capped cylinders,
 capped cone
@@ -69,6 +70,10 @@ def shape_sphere_create(colour, specular, transform=None):
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_INTERSECT_FUNC] = shape_sphere_intersect
     shape_set_transform(shape, transform)
+    
+    shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
+        -1.0, 1.0, -1.0, 1.0,-1.0, 1.0)
+    
     return shape
 
 
@@ -152,6 +157,8 @@ def shape_cylinder_create(colour, specular, transform=None):
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_INTERSECT_FUNC] = shape_cylinder_intersect
     shape_set_transform(shape, transform)
+    shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
+        -1.0, 1.0, -1.0, 1.0,-1.0, 1.0)
     return shape
 
 
@@ -308,6 +315,8 @@ def shape_capped_cylinder_create(colour, specular, topcap={}, bottomcap={},
     shape[SHAPE_DIFFUSECOLOUR_FUNC] = shape_capped_cylinder_diffuse_colour
     shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_capped_cylinder_specular_colour
     shape_set_transform(shape, transform)
+    shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
+        -1.0, 1.0, -1.0, 1.0,-1.0, 1.0)
     return shape
 
 
@@ -455,6 +464,8 @@ def shape_cone_create(colour, specular, y_top=None, y_bottom=None,
         shape[SHAPE_DATA]['y_top'] = j
     shape[SHAPE_INTERSECT_FUNC] = shape_cone_intersect
     shape_set_transform(shape, transform)
+    shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
+        -1.0, 1.0, -1.0, 1.0,-1.0, 1.0)
     return shape
 
 
@@ -640,4 +651,7 @@ def shape_capped_cone_create(colour, specular, topcap={},
         shape[SHAPE_DATA]['bottomcap'] = bottomcap
 
     shape[SHAPE_INTERSECT_FUNC] = shape_capped_cone_intersect
+    
+    shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
+        -1.0, 1.0, -1.0, 1.0,-1.0, 1.0)
     return shape
