@@ -375,17 +375,19 @@ class OctTreeBranch(OctTreeNode):
             for aspect in t[dim]:
                 if (t[dim][aspect] < 0):
                     continue
-                    
-                point = ray_calc_pt(ray, t[dim][aspect])
-                if (point[1] > self.bounding_box.max_x or
-                    point[1] < self.bounding_box.min_x or
-                    point[2] > self.bounding_box.max_y or
-                    point[2] < self.bounding_box.min_y or
-                    point[3] > self.bounding_box.max_z or
-                    point[3] < self.bounding_box.min_z):
-                    continue
                 
                 margin = mpfr (0.0001)
+                    
+                point = ray_calc_pt(ray, t[dim][aspect])
+                
+                if (point[1] - margin > self.bounding_box.max_x or
+                    point[1] + margin < self.bounding_box.min_x or
+                    point[2] - margin > self.bounding_box.max_y or
+                    point[2] + margin < self.bounding_box.min_y or
+                    point[3] - margin > self.bounding_box.max_z or
+                    point[3] + margin < self.bounding_box.min_z):
+                    continue
+                
                 
                 if abs (point[1] - self.bounding_box.mid_x) < margin:
                     x = [0, 1]
