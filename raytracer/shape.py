@@ -140,6 +140,8 @@ def shape_empty_shape():
 def shape_point_inside(shape, cartesian):
     if shape[SHAPE_INSIDE_FUNC] is not None:
         return shape[SHAPE_INSIDE_FUNC](cartesian)
+    else:
+        return False
 
 
 def shape_test_intersect(shape, ray):

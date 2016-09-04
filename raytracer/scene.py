@@ -184,7 +184,6 @@ class Scene(object):
         :param exclude_shapes: a list of shapes to exclude from the
         intersection test
         """
-        curr_sh = None
         curr_t = None
         curr_intersect_result = None
         for sh in list:
@@ -194,12 +193,12 @@ class Scene(object):
                 if type(intersect_result) is dict:
                     t = intersect_result['t']
                     if t > 0 and (curr_t is None or t < curr_t):
-                        curr_sh = sh
+        
                         curr_t = t
                         curr_intersect_result = intersect_result
                         curr_intersect_result['shape'] = sh
 
-                        if ray[RAY_ISSHADOW]:
+                        if ray[RAY_ISSHADOW] and t <= 1:
                             return curr_intersect_result
 
         if curr_intersect_result is None:

@@ -35,6 +35,9 @@ LIGHTINGMODEL_OPTIONS = 5
 
 
 def lightingmodel_set_options(lighting_model, options={}):
+    if 'NormalOffset' not in options:
+        options['NormalOffset'] = mpfr(".0001")
+    
     lighting_model[LIGHTINGMODEL_OPTIONS] = options
 
 
@@ -96,10 +99,19 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
         if specular_colour[1] <= 0 and \
             specular_colour[2] <= 0 and \
             specular_colour[3] <= 0:
-                doReflections = False   
+            doReflections = False   
 
+    #import pdb; pdb.set_trace();
+
+    if cartesian_dot (result['ray'][RAY_DIR], result['normal']) < 0:
+        shift = lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
+    else:
+        shift = mpfr(0) - lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
+
+    shift = lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
+        
     rs = cartesian_add(
-        result['point'], cartesian_scale(result['normal'], mpfr(".0001")))
+        result['point'], cartesian_scale(result['normal'], shift))
              
     if (doReflections):
         reflected_dir = ray_reflect_vector(result['ray'], result['normal'])
@@ -140,8 +152,6 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
 
         if not in_shadow:
 
-            #import pdb; pdb.set_trace()
-
             if ('NoDiffuse' in lighting_model[LIGHTINGMODEL_OPTIONS] and
                     lighting_model[LIGHTINGMODEL_OPTIONS]['NoDiffuse']):
                 end_colour = colour_add(
@@ -151,8 +161,9 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
                     light[LIGHT_POINT_POINT], result['point']))
 
                 diff = colour_scale(
-                    light[LIGHT_POINT_COLOUR], abs(cartesian_dot(light_ray, result['normal'])))
-                    
+                    light[LIGHT_POINT_COLOUR],
+                    abs(cartesian_dot(light_ray, result['normal'])))
+
                 end_colour = colour_add(
                         end_colour, colour_mul(diffuse_colour, diff))
 
@@ -181,7 +192,16 @@ def lightingmodel_basic_create(
 
     Returns: a lighting model tuple"""
 
+
     if ambient_light is None:
         ambient_light = colour_create(0, 0, 0)
-    return['lighting_model', 'basic', lightingmodel_basic_calculate,
-           ambient_light, max_reflect, lighting_model_options]
+        
+        
+    model = ['lighting_model', 'basic', lightingmodel_basic_calculate,
+           ambient_light, max_reflect, None]
+ 
+    lightingmodel_set_options(model, lighting_model_options)
+    
+    
+    
+    return model

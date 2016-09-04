@@ -16,8 +16,8 @@ from raytracer.lighting_model import *
 if __name__ == '__main__':
     get_context().precision = 32
 
-    scene = Scene(False, 8)
-    #import pdb; pdb.set_trace();
+    scene = Scene(True, 30)
+    
     view = view_create_look_at(scene,
                             
                             {'left': 0,
@@ -26,8 +26,8 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, 0, -20), ## eye point,
-                            ('cartesian', 0, 0, 3), ## look at
+                            ('cartesian', -2, 2, -20), ## eye point,
+                            ('cartesian', -3, 2, 3), ## look at
                             1,
                             0)
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     view_set_output(view, PIL_Output())
     view_set_multiprocessing(view, True)
     view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL],
-        {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': False})
+        {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': True})
     scene.add_view(view, 'view')
     """scene.add_light(light_point_light_create(cartesian_create(
         0, 0, -20), colour_create(1, 1, 1)), 'light1')
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         
     
     scene.add_light(light_point_light_create(cartesian_create(
-     20, 20, 20), colour_create(1, 1, 1)), 'light4')   
+     20, 0, 00), colour_create(1, 1, 1)), 'light4')   
         
     """ scene.add_light(light_point_light_create(cartesian_create(
         20, 00, 00), colour_create(1, 1, 1)), 'light5')     
@@ -70,8 +70,8 @@ if __name__ == '__main__':
         
                 if i % 2:
                     sphere = shape_sphere_create(
-                        ('colour_mapping', sphere_map_to_rect, BandedSprialTexture(bands)),
-                        # colour_create(1,0,0),
+                        # ('colour_mapping', sphere_map_to_rect, BandedSprialTexture(bands)),
+                        colour_create(.5, 0, .5),
                         colour_create(1,1,1))
                 else:
                     sphere = shape_sphere_create(
@@ -94,9 +94,21 @@ if __name__ == '__main__':
                 scene.add_shape(sphere, 'sphere_%i'%i)
                 
                 first = False
-        
-    image = scene.render('view')
 
+    sphere = shape_sphere_create(
+                        colour_create(0,0,.3),
+                        colour_create(1,1,1))   
+
+    scale = 50
+    i += 1
+    shape_set_transform(sphere, Transform({
+        'scale': {'x': scale, 'y': scale/2, 'z': scale*1.5},
+        'translate': {'x': -10, 'y': 10, 'z': 10}
+    }))              
+
+    # scene.add_shape(sphere, 'sphere_%i'%i)        
+    
+    image = scene.render('view')
     image.show()
 
            

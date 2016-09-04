@@ -47,9 +47,9 @@ def shape_sphere_intersect(shape, ray):
         else:
             t = t2
 
-    result = {'t': t}
+    result = {'t': t,
+        'raw_point': ray_calc_pt(ray, t)}
 
-    result['raw_point'] = ray_calc_pt(ray, t)
     result['raw_normal'] = result['raw_point']
     return result
 
@@ -128,18 +128,18 @@ def shape_cylinder_intersect(shape, ray):
         else:
             t = t2
 
-    result = {'t': t}
-
-    result['raw_point'] = ray_calc_pt(ray, t)
-
-    result['raw_normal'] = cartesian_create(
-        result['raw_point'][1], 0, result['raw_point'][3])
+    result = {'t': t, 
+        'raw_point': ray_calc_pt(ray, t) }
 
     if(result is not False):
 
         if(result['raw_point'][2] > mpfr(0.5) or
            result['raw_point'][2] < mpfr(-0.5)):
             result = False
+
+    result['raw_normal'] = cartesian_create(
+        result['raw_point'][1], 0, result['raw_point'][3])
+    
     return result
 
 
@@ -198,8 +198,6 @@ def shape_capped_cylinder_specular_colour(shape, intersect_result):
     :return: a colour tuple
     """
 
-    # print("intersectResult %s"%intersectResult)
-    default = False
     if 'shape_part' not in intersect_result:
         return shape[SHAPE_SPECULARCOLOUR]
     if(intersect_result['shape_part'] == 'topcap_result' and
@@ -497,8 +495,6 @@ def shape_capped_cone_diffuse_colour(shape, intersect_result):
 
     :return: the diffuse colour for the specified intersection
     """
-
-    default = False
     if 'shape_part' not in intersect_result:
         return shape[SHAPE_DIFFUSECOLOUR]
     if intersect_result['shape_part'] == 'topcap_result':
@@ -524,7 +520,6 @@ def shape_capped_cone_specular_colour(shape, intersect_result):
     :return: a colour
     """
 
-    default = False
     if 'shape_part' not in intersect_result:
         return shape[SHAPE_SPECULARCOLOUR]
     if intersect_result['shape_part'] == 'topcap_result':
