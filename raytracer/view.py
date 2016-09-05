@@ -695,9 +695,10 @@ def view_create_look_at (
 
     
     rotation_z_matrix = RotationZMatrix (0 - z_rotation)
+    # rotation_z_matrix = RotationMatrix(view_axis, z_rotation)
     look_at_matrix = RotationMatrix(rotation_axis,  0 - rotation_angle)
     scale_matrix = ScaleMatrix (1, 1, scale)
-    matrix = rotation_z_matrix * look_at_matrix * scale_matrix 
+    matrix =    look_at_matrix  * scale_matrix * rotation_z_matrix
     transform.set_matrix(matrix)
 
     view_rectangle = {

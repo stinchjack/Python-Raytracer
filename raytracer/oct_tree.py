@@ -72,6 +72,7 @@ class OctTreeNode(object):
     def __init__(
             self, parent_branch, split_threshold,
             min_x, max_x, min_y, max_y, min_z, max_z):
+        self.margin = mpfr (".0001")
         self.parent_branch = parent_branch
         self.shapes = []
         self.split_threshold =  split_threshold
@@ -106,10 +107,11 @@ class OctTreeNode(object):
 
     def get_leaves_by_ray(self, ray):
       return None            
-            
-class OctTreeLeaf(OctTreeNode):
- 
 
+    def set_margin(self, margin):
+        self.margin = mpfr (margin)
+
+class OctTreeLeaf(OctTreeNode):
  
     def add_shape(self, new_shape):
             
@@ -125,6 +127,8 @@ class OctTreeLeaf(OctTreeNode):
                 self.bounding_box.min_x, self.bounding_box.max_x,
                 self.bounding_box.min_y, self.bounding_box.max_y,
                 self.bounding_box.min_z, self.bounding_box.max_z)   
+            
+            new_branch.set_margin(self.margin)
                       
             for shape in self.shapes:
                 new_branch.add_shape(shape)
@@ -222,6 +226,13 @@ class OctTreeBranch(OctTreeNode):
         list_p = []
         for line in list:
             list_p.append(line.ljust(width))
+
+    def set_margin (self, margin):
+        self.margin = mpfr(margin)
+        for i in range(0,2):
+            for j in range(0,2):
+                for k in range(0,2):
+                    self.children[i][j][k].set_margin(margin)        
             
     def add_shape (self, shape):
           
@@ -231,9 +242,6 @@ class OctTreeBranch(OctTreeNode):
         self.shape_count += 1        
         
         shape_box = raytracer.shape.shape_bounding_box(shape)
-        #print ("---- %s" % shape_box.__str__()) 
-
-        #print (self.bounding_box)
 
         if shape_box is None or not self.can_split():
             self.shapes.append(shape)
@@ -376,7 +384,7 @@ class OctTreeBranch(OctTreeNode):
                 if (t[dim][aspect] < 0):
                     continue
                 
-                margin = mpfr (0.0001)
+                margin = self.margin
                     
                 point = ray_calc_pt(ray, t[dim][aspect])
                 

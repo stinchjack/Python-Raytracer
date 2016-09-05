@@ -17,6 +17,22 @@ Todo:
     * Add more documentation
 """
 
+def get_colour_from_mapping(colour_mapping, intersect_result):
+    """
+        Returns a colour from a Texture object. If a colour_mapping is a
+        colour tuple, then the colour tuple will be returned
+
+            :param colour_mapping: a colour mapping tuple or colour tuple
+            :param intersect_result: an intersection result dictionary
+    """
+    if 'colour' in colour_mapping:
+        return colour_mapping
+
+    if 'colour_mapping' not in colour_mapping:
+        return None
+
+    uv_pair = colour_mapping[1](intersect_result)
+    return colour_mapping[2].colour(uv_pair)
 
 class Texture:
     """ Base class for all textures"""
@@ -234,20 +250,28 @@ def sphere_map_to_rect(intersect_result):
 
     return (u, v)
 
-
-def get_colour_from_mapping(colour_mapping, intersect_result):
+def disc_map_to_rect (intersect_result, cookie_cutter = True):
     """
-        Returns a colour from a Texture object. If a colour_mapping is a
-        colour tuple, then the colour tuple will be returned
+    Maps an intersection result for a disc to a UV pair.
 
-            :param colour_mapping: a colour mapping tuple or colour tuple
-            :param intersect_result: an intersection result dictionary
+            :return: tuple (u, v)
+            :param intersect_result: the intersection result dictionary
     """
-    if 'colour' in colour_mapping:
-        return colour_mapping
 
-    if 'colour_mapping' not in colour_mapping:
-        return None
-
-    uv_pair = colour_mapping[1](intersect_result)
-    return colour_mapping[2].colour(uv_pair)
+    p = intersect_result['raw_point']
+    
+    if cookie_cutter:
+        return (
+            (p[1] + 1.0) / 2.0,
+            (p[2] + 1.0) / 2.0)
+            
+    else:
+        radius = sqrt((p[1] * p[1]) + (p[2] * p[2]))
+        
+        angle = math.degrees(acos(p[1]))
+        if p[2] < 1.0:
+            angle = 180 + math.degrees(0 - acos(p[1]))
+        else:
+            math.degrees(acos(p[1]))
+            
+        return (radius, angle / 360.0)
