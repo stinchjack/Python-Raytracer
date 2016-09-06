@@ -280,6 +280,40 @@ def shape_polygon_create(data={}):
 
     shape[SHAPE_DATA]['outside_point'] = (min_u - 1.0, min_v - 1.0)
 
+    shape[SHAPE_DATA]['points2d'] = \
+        {'left': None,
+        'right': None,
+        'top': None,
+        'bottom': None,
+        'width': None,
+        'height': None}
+
+    for p2d in shape[SHAPE_DATA]['points2d']:
+        if (shape[SHAPE_DATA]['points2d']['left'] is None or
+            shape[SHAPE_DATA]['points2d']['left'] > p2d[0]):
+            shape[SHAPE_DATA]['points2d']['left'] = p2d[0]
+        
+        if (shape[SHAPE_DATA]['points2d']['right'] is None or
+            shape[SHAPE_DATA]['points2d']['right'] < p2d[0]):
+            shape[SHAPE_DATA]['points2d']['right'] = p2d[0]
+
+        if (shape[SHAPE_DATA]['points2d']['top'] is None or
+            shape[SHAPE_DATA]['points2d']['top'] > p2d[1]):
+            shape[SHAPE_DATA]['points2d']['top'] = p2d[1]
+        
+        if (shape[SHAPE_DATA]['points2d']['bottom'] is None or
+            shape[SHAPE_DATA]['points2d']['bottom'] < p2d[1]):
+            shape[SHAPE_DATA]['points2d']['bottom'] = p2d[1]
+            
+    shape[SHAPE_DATA]['points2d']['width'] =  \
+        shape[SHAPE_DATA]['points2d']['right'] - \
+        shape[SHAPE_DATA]['points2d']['left']
+        
+    shape[SHAPE_DATA]['points2d']['height'] =  \
+        shape[SHAPE_DATA]['points2d']['bottom'] - \
+        shape[SHAPE_DATA]['points2d']['height']
+
+
     return shape
 
 

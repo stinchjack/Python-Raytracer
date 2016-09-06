@@ -250,7 +250,7 @@ def sphere_map_to_rect(intersect_result):
 
     return (u, v)
 
-def disc_map_to_rect (intersect_result, cookie_cutter = True):
+def disc_map_to_rect_cookie (intersect_result):
     """
     Maps an intersection result for a disc to a UV pair.
 
@@ -259,19 +259,42 @@ def disc_map_to_rect (intersect_result, cookie_cutter = True):
     """
 
     p = intersect_result['raw_point']
-    
-    if cookie_cutter:
-        return (
-            (p[1] + 1.0) / 2.0,
-            (p[2] + 1.0) / 2.0)
-            
+
+    return (
+        (p[1] + 1.0) / 2.0,
+        (p[2] + 1.0) / 2.0)
+
+def disc_map_to_rect (intersect_result):
+    """
+    Maps an intersection result for a disc to a UV pair.
+
+            :return: tuple (u, v)
+            :param intersect_result: the intersection result dictionary
+    """
+    p = intersect_result['raw_point']
+    radius = sqrt((p[1] * p[1]) + (p[2] * p[2]))
+
+    angle = math.degrees(acos(p[1]))
+    if p[2] < 1.0:
+        angle = 180 + math.degrees(0 - acos(p[1]))
     else:
-        radius = sqrt((p[1] * p[1]) + (p[2] * p[2]))
-        
-        angle = math.degrees(acos(p[1]))
-        if p[2] < 1.0:
-            angle = 180 + math.degrees(0 - acos(p[1]))
-        else:
-            math.degrees(acos(p[1]))
-            
-        return (radius, angle / 360.0)
+        math.degrees(acos(p[1]))
+
+    return (radius, angle / 360.0)
+
+def rectangle_map_to_rect (intersect_result):
+    rect = intersect_result['shape'][SHAPE_DATA]
+    width = rect['right'] - rect['left']
+    height  = rect['top'] = rect['bottom']
+    p = intersect_result['raw_point']
+    u = (p[1] - rect['left']) / width
+    v = (p[2] - rect['top']) / height
+    return (u, v)
+
+def polygon_map_to_rect (intersect_result):
+    p2d = shape_polygon_convert2d(
+        intersect_result['shape'], intersect_result['raw_point'])
+    
+    u = (p2d[0] - rect['left']) / rect['width']
+    v = (p2d[1] - rect['top']) / rect['height']
+    return (u, v)    

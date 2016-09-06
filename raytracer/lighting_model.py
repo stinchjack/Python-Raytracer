@@ -48,8 +48,8 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
     :param scene_obj: the Scene object
     :param result: the intersection test results
     :return: a tuple of colour information
-
-    To do: Implement reflections. """
+     """
+    # import pdb; pdb.set_trace();
     
     if not type(result) is dict:
         return None
@@ -61,9 +61,7 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
     result = shape_reverse_transform(result)
 
     if 'point' not in result:
-        ray = result['ray']
-
-        result['point'] = ray_calc_pt(ray, result['t'])
+        result['point'] = ray_calc_pt(result['ray'] , result['t'])
 
     if result['shape'][SHAPE_DIFFUSECOLOUR_FUNC] is not None:
         diffuse = result['shape'][
@@ -107,8 +105,6 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
         shift = lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
     else:
         shift = mpfr(0) - lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
-
-    shift = lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
         
     rs = cartesian_add(
         result['point'], cartesian_scale(result['normal'], shift))

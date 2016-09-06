@@ -274,7 +274,7 @@ def view_render_pixel(view, view_scan_x, view_scan_y):
             item = view[VIEW_ANTIALIAS_DATA]['rerender_list'].pop(0)
 
             view_render_pixel_antialias_edge_detect(view, 
-                item[1][0], item[1,1], True) # ???
+                item[1][0], item[1][1], True) # ???
 
     return clr
 
@@ -371,10 +371,11 @@ def view_render_pixel_antialias_edge_detect(view, view_scan_x, view_scan_y,
     """
 
     if not force_antialias:
-        clr = view_render_pixel_no_antialias(view)
+        clr = view_render_pixel_no_antialias(view, view_scan_x, view_scan_y)
 
     surrounding_coordinates = \
-        view_render_pixel_antialias_edge_detect_get_surrounding_eight(view)
+        view_render_pixel_antialias_edge_detect_get_surrounding_eight(
+            view, view_scan_x, view_scan_y)
 
     if force_antialias:
         do_antialias = True
@@ -403,10 +404,10 @@ def view_render_pixel_antialias_edge_detect(view, view_scan_x, view_scan_y,
     if do_antialias:
         if view[VIEW_ANTIALIAS]['stochastic']:
             clr_aa = view_render_pixel_antialias_stochastic(
-                view)
+                view, view_scan_x, view_scan_y)
         else:
             clr_aa = view_render_pixel_antialias_grid_pattern(
-                view)
+                view, view_scan_x, view_scan_y)
 
         if force_antialias:
             clr = clr_aa

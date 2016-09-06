@@ -16,7 +16,7 @@ from raytracer.lighting_model import *
 if __name__ == '__main__':
     get_context().precision = 32
 
-    scene = Scene(True, 4)
+    scene = Scene(True, 8)
     
     view = view_create_look_at(scene,
                             
@@ -26,26 +26,26 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, 0, 22.5), ## eye point,
+                            ('cartesian', 0, 0, -22.5), ## eye point,
                             ('cartesian', 0,0,-4 ), ## look at
                             .6,
-                           147)
+                           0)
 
 
                        
-    view_set_antialias (view, False, 3, 3, False) # True, .4)
+    view_set_antialias (view, True, 2, 2,  False, False)
     view_set_output(view, PIL_Output())
-    view_set_multiprocessing(view, True)
+    view_set_multiprocessing(view, False)
     view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL],
         {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': False})
     scene.add_view(view, 'view')
     scene.add_light(light_point_light_create(cartesian_create(
-        0, 0, -20), colour_create(1, 1, 1)), 'light1')
+        -20, 0, -5), colour_create(.3, .3, 0 )), 'light1')
         
-    scene.add_light(light_point_light_create(cartesian_create(
+    """scene.add_light(light_point_light_create(cartesian_create(
         0, 0, 30), colour_create(1, 1, 1)), 'light2')
     
-    """scene.add_light(light_point_light_create(cartesian_create(
+    scene.add_light(light_point_light_create(cartesian_create(
         0, -20, 00), colour_create(1, 1, 1)), 'light3')
         
     
@@ -55,8 +55,8 @@ if __name__ == '__main__':
     scene.add_light(light_point_light_create(cartesian_create(
         20, 00, 00), colour_create(1, 1, 1)), 'light5')"""    
     scene.add_light(light_point_light_create(cartesian_create(
-        -20, 00, 00), colour_create(1, 1, 1)), 'light6')          
-    
+        20, 00, 00), colour_create(1.2, 1.2, .8)), 'light6')  
+   
     i = 0
     first = True
     for x in range(0, 2):
@@ -70,12 +70,12 @@ if __name__ == '__main__':
         
                 if i % 2:
                     sphere = shape_sphere_create(
-                        ('colour_mapping', sphere_map_to_rect, BandedSprialTexture(bands)),
-                        #colour_create(.5, 0, .5),
-                        colour_create(1,1,1))
+                        #('colour_mapping', sphere_map_to_rect, BandedSprialTexture(bands)),
+                        colour_create(.5, 0, .5),
+                        colour_create(0,0,0))
                 else:
                     sphere = shape_sphere_create(
-                        colour_create(.5,0,0),
+                        colour_create(0,0,0),
                         colour_create(1,1,1))                    
 
                 scale = 1               
@@ -96,17 +96,17 @@ if __name__ == '__main__':
                 first = False
 
     sphere = shape_sphere_create(
-                        colour_create(1,1,1),
-                        colour_create(1,1,1))   
+                        ('colour_mapping', sphere_map_to_rect, PILImageTexture("ocean-sunrise.jpg")),
+                        colour_create(0,0,0))   
 
     scale = 50
     i += 1
     shape_set_transform(sphere, Transform({
         'scale': {'x': scale, 'y': scale, 'z': scale},
-        'translate': {'x': 0, 'y':0, 'z': 0}
+        'translate': {'x': 5, 'y':10, 'z': 5}
     }))              
 
-    # scene.add_shape(sphere, 'sphere_%i'%i)        
+    scene.add_shape(sphere, 'sphere_%i'%i)        
     
     image = scene.render('view')
     image.show()
