@@ -21,9 +21,9 @@ if __name__ == '__main__':
     view = view_create_look_at(scene,
                             
                             {'left': 0,
-                                'right': 300,
+                                'right': 1024,
                                 'top': 0,
-                                'bottom': 300},
+                                'bottom': 720},
                             10,
                             20,
                             ('cartesian', 0, 0, -22.5), ## eye point,
@@ -33,9 +33,9 @@ if __name__ == '__main__':
 
 
                        
-    view_set_antialias (view, True, 2, 2,  False, False)
+    view_set_antialias (view, True, 3, 3,  False, False)
     view_set_output(view, PIL_Output())
-    view_set_multiprocessing(view, False)
+    view_set_multiprocessing(view, True)
     view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL],
         {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': False})
     scene.add_view(view, 'view')
@@ -96,7 +96,7 @@ if __name__ == '__main__':
                 first = False
 
     sphere = shape_sphere_create(
-                        ('colour_mapping', sphere_map_to_rect, PILImageTexture("ocean-sunrise.jpg")),
+                        ('colour_mapping', sphere_map_to_rect, PILImageTexture("examples/ocean-sunrise.jpg")),
                         colour_create(0,0,0))   
 
     scale = 50

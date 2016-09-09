@@ -144,8 +144,6 @@ class PILImageTexture(Texture):
     """
     Class for holding a PIL image as a texture
     """
-    __image__ = None
-    __pixels__ = None
 
     def __init__(self, filename):
         """
@@ -155,7 +153,7 @@ class PILImageTexture(Texture):
         """
 
         self.__image__ = Image.open(filename)
-        self.__pixels__ = self.__image__.load()
+        self.__pixels__ = None;
 
     def colour(self, uv_tuple):
 
@@ -179,6 +177,8 @@ class PILImageTexture(Texture):
         if y < 0:
             y = 0
 
+        if self.__pixels__ == None:
+            self.__pixels__ = self.__image__.load()
         clr = self.__pixels__[x, y]
 
         return ('colour', clr[0] / 255.0, clr[1] / 255.0, clr[2] / 255.0)
@@ -285,7 +285,7 @@ def disc_map_to_rect (intersect_result):
 def rectangle_map_to_rect (intersect_result):
     rect = intersect_result['shape'][SHAPE_DATA]
     width = rect['right'] - rect['left']
-    height  = rect['top'] = rect['bottom']
+    height  = rect['top'] - rect['bottom']
     p = intersect_result['raw_point']
     u = (p[1] - rect['left']) / width
     v = (p[2] - rect['top']) / height
@@ -298,3 +298,15 @@ def polygon_map_to_rect (intersect_result):
     u = (p2d[0] - rect['left']) / rect['width']
     v = (p2d[1] - rect['top']) / rect['height']
     return (u, v)    
+
+def triangle_map_to_rect_cookie (intersect_result):
+    p2d = shape_triangle_convert2d(
+        intersect_result['shape'], intersect_result['raw_point'])
+    
+    u = (p2d[0]- shape[SHAPE_DATA]['p2_bounds'][0]['min']) / \
+        shape[SHAPE_DATA]['p2_bounds'][0]['size']
+        
+    v = (p2d[1]- shape[SHAPE_DATA]['p2_bounds'][1]['min']) / \
+        shape[SHAPE_DATA]['p2_bounds'][1]['size']
+    
+    return (u,v)

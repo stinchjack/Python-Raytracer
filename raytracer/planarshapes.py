@@ -490,6 +490,52 @@ def shape_triangle_create(points, colours, reflections=None):
     shape[SHAPE_DATA]['e2'] = cartesian_sub(points[2], points[0])
     return shape
 
+def shape_triangle_bounding_box(shape):
+    
+    kept_axes = {'x':1, 'y':2, 'z':3}
+    
+    discard_axis = 'x'
+    if shape[SHAPE_DATA]['normal'][1] == 0 and \
+        shape[SHAPE_DATA]['normal'][2] == 0:
+        discard_axis = 'z'
+    elif shape[SHAPE_DATA]['normal'][1] == 0 and \
+        shape[SHAPE_DATA]['normal'][3] == 0:
+        discard_axis = 'y'
+    
+    del kept_axes[discard_axis]
+    
+    
+    points3d = [shape[SHAPE_DATA]['p0'],
+        shape[SHAPE_DATA]['p1'],
+        shape[SHAPE_DATA]['p2']];
+        
+    p2d = []
+    for p3d in points3d:
+        p2 = []
+        for (name, index) in kept_axes:
+           p2.append(p3[index])
+        p2d.append(p2)
+        
+    p2_bounds = [{'max': None, 'min': None}, {'max': None, 'min': None}]
+    
+    for p2 in p2d:
+        for i in range(0, 2):
+            if p2[i] < p2_bounds[i]['min'] or p2_bounds[i]['min'] == None:
+                p2_bounds[i]['min'] = p2[i]
+        
+            if p2[i] > p2_bounds[i]['max'] or p2_bounds[i]['max'] == None:
+                p2_bounds[i]['min'] = p2[i]        
+                
+    shape[SHAPE_DATA]['p2_bounds'] = p2_bounds 
+    shape[SHAPE_DATA]['kept_axes'] = kept_axes
+
+    
+def shape_triangle_convert2d(shape, point3d):
+    p2 = []
+    for (name, index) in shape[SHAPE_DATA]['kept_axes']:
+        p2.append(p3[index])
+    return p2
+    
 
 def shape_polymesh_diffuse_colour(shape, intersect_result):
     """Returns the diffuse colour for an intersection resilt with a
