@@ -488,6 +488,9 @@ def shape_triangle_create(points, colours, reflections=None):
 
     shape[SHAPE_DATA]['e1'] = cartesian_sub(points[1], points[0])
     shape[SHAPE_DATA]['e2'] = cartesian_sub(points[2], points[0])
+    
+    shape_triangle_bounding_box (shape):
+        
     return shape
 
 def shape_triangle_bounding_box(shape):
@@ -525,7 +528,10 @@ def shape_triangle_bounding_box(shape):
         
             if p2[i] > p2_bounds[i]['max'] or p2_bounds[i]['max'] == None:
                 p2_bounds[i]['min'] = p2[i]        
-                
+    
+    for i in range(0, 2):
+        p2_bounds[i]['size'] = p2_bounds[i]['max'] - p2_bounds[i]['min']
+    
     shape[SHAPE_DATA]['p2_bounds'] = p2_bounds 
     shape[SHAPE_DATA]['kept_axes'] = kept_axes
 
@@ -535,7 +541,47 @@ def shape_triangle_convert2d(shape, point3d):
     for (name, index) in shape[SHAPE_DATA]['kept_axes']:
         p2.append(p3[index])
     return p2
+
+def shape_triangle_barycentric(shape, point):
     
+    points3d = [shape[SHAPE_DATA]['p0'],
+        shape[SHAPE_DATA]['p1'],
+        shape[SHAPE_DATA]['p2']]
+    
+    tgl = []    
+    tgl.append ((point, points3d[0], points3d[1]))
+    tgl.append ((point, points3d[1], points3d[2]))
+    tgl.append ((point, points3d[0], points3d[2]))
+    
+    area = []
+    for i in range (0, 4):
+        area.append('bla')
+    # area or triangle = (height  * base) / 2
+    # 
+    # alpha = A1 / (a1 + A2 + A3)
+    # beta  = A2 / (a1 + A2 + A3)    
+    # gamma = A3 / (a1 + A2 + A3)    
+
+    pass
+            
+    def heron(a,b,c):  
+        s = (a + b + c) / 2   
+        area = (s*(s-a) * (s-b)*(s-c)) ** 0.5        
+        return area
+
+    def distance3d(x1,y1,z1,x2,y2,z2):    
+        a=(x1-x2)**2+(y1-y2)**2 + (z1-z2)**2
+        d= a ** 0.5  
+        return d  
+
+    def areatriangle3d(x1,y1,z1,x2,y2,z2,x3,y3,z3):  
+        a=distance3d(x1,y1,z1,x2,y2,z2)  
+        b=distance3d(x2,y2,z2,x3,y3,z3)  
+        c=distance3d(x3,y3,z3,x1,y1,z1)  
+        A = heron(a,b,c) 
+        return A
+        print("area of triangle is %r " %A)
+
 
 def shape_polymesh_diffuse_colour(shape, intersect_result):
     """Returns the diffuse colour for an intersection resilt with a
