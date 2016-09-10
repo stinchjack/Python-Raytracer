@@ -6,6 +6,8 @@ except ImportError:
 from raytracer.cartesian import *
 from raytracer.colour import *
 from PIL import Image
+from raytracer.planarshapes import shape_triangle_barycentric_coords
+
 
 """
 Basic classes and functions for texture mapping.
@@ -25,6 +27,9 @@ def get_colour_from_mapping(colour_mapping, intersect_result):
             :param colour_mapping: a colour mapping tuple or colour tuple
             :param intersect_result: an intersection result dictionary
     """
+    if colour_mapping is None:
+        return ('colour', 0, 0, 0)
+
     if 'colour' in colour_mapping:
         return colour_mapping
 
@@ -310,3 +315,15 @@ def triangle_map_to_rect_cookie (intersect_result):
         shape[SHAPE_DATA]['p2_bounds'][1]['size']
     
     return (u,v)
+
+def triangle_map_to_rect (intersect_result):
+    
+    if not 'raw_point' in intersect_result:
+        intersect_result['raw_point'] = \
+            ray_calc_pt (intersect_result['ray'] , intersect_result['t'])
+    
+    coords = shape_triangle_barycentric_coords(
+        intersect_result['shape'],
+        intersect_result['raw_point'])
+    
+    return (coords[0], coords[1])

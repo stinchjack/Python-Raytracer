@@ -20,7 +20,7 @@ against each shape in the scene
 
 
 class Scene(object):
-    def __init__(self, use_octtree = True, oct_tree_threshold = 20):
+    def __init__(self, use_octtree = True, oct_tree_threshold = 10):
         self.__lights__ = {}
         self.__shapes__ = {}
         self.__views__ = {}

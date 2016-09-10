@@ -3,6 +3,7 @@ from raytracer.colour import *
 from raytracer.matrix import *
 from raytracer.transformation import *
 from raytracer.shape import *
+
 """Functions for planar shapes: discs, rectangles, polygons, triangles,
 and polygon meshes.
 
@@ -349,7 +350,7 @@ def shape_triangle_diffuse_colour(shape, intersect_result):
     return colour_add(colour_add(cp0, cp1), cp2)
 
 
-def shape_triangle_specular_colour(self, intersect_result):
+def shape_triangle_specular_colour(shape, intersect_result):
     """Calculate the specular colour of a point on a triangle, where
     different colours have been specified for each vertex (colour
     shading). If no colour shading is used, the function returns
@@ -398,7 +399,7 @@ def shape_triangle_intersect(shape, ray):
     det = cartesian_dot(shape[SHAPE_DATA]['e1'], p)
 
     # ray and triangle are parallel if det is close to 0
-    if det == zero():
+    if det == 0:
         return False
     # if(det > mpfr("-0.000001") and det < mpfr("0.000001")):
     # return False
@@ -449,9 +450,11 @@ def shape_triangle_create(points, colours, reflections=None):
     shape[SHAPE_DIFFUSECOLOUR_FUNC] = shape_triangle_diffuse_colour
     shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_triangle_specular_colour
 
-    shape[SHAPE_DATA]['colorShade'] = 'colour' not in colours
+    shape[SHAPE_DATA]['colorShade'] = 'colour' not in colours and \
+        'colour_mapping' not in colours
     shape[SHAPE_DATA]['reflectShade'] = (reflections is not None and
-                                         'colour' not in reflections)
+                                         'colour' not in reflections and
+                                         'colour_mapping' not in colours)
 
     shape[SHAPE_DIFFUSECOLOUR] = colours
     shape[SHAPE_SPECULARCOLOUR] = reflections
@@ -470,17 +473,15 @@ def shape_triangle_create(points, colours, reflections=None):
         shape[SHAPE_DATA]['r1'] = reflections[1]
         shape[SHAPE_DATA]['r2'] = reflections[2]
 
-    if shape[SHAPE_DATA]['reflectShade']:
+    l0 = cartesian_len(cartesian_sub(points[1], points[0]))
+    l1 = cartesian_len(cartesian_sub(points[2], points[1]))
+    l2 = cartesian_len(cartesian_sub(points[0], points[2]))
 
-        l0 = cartesian_len(cartesian_subs(points[1] - points[0]))
-        l1 = cartesian_len(cartesian_subs(points[2] - points[1]))
-        l2 = cartesian_len(cartesian_subs(points[0] - points[2]))
-
-        shape[SHAPE_DATA]['max_l'] = l0
-        if l1 > shape[SHAPE_DATA]['max_l']:
-            shape[SHAPE_DATA]['max_l'] = l1
-        if l2 > shape[SHAPE_DATA]['max_l']:
-            shape[SHAPE_DATA]['max_l'] = l2
+    shape[SHAPE_DATA]['max_l'] = l0
+    if l1 > shape[SHAPE_DATA]['max_l']:
+        shape[SHAPE_DATA]['max_l'] = l1
+    if l2 > shape[SHAPE_DATA]['max_l']:
+        shape[SHAPE_DATA]['max_l'] = l2
 
     shape[SHAPE_DATA]['normal'] = cartesian_normalise(cartesian_cross(
         cartesian_sub(points[1], points[0]), cartesian_sub(
@@ -489,8 +490,8 @@ def shape_triangle_create(points, colours, reflections=None):
     shape[SHAPE_DATA]['e1'] = cartesian_sub(points[1], points[0])
     shape[SHAPE_DATA]['e2'] = cartesian_sub(points[2], points[0])
     
-    shape_triangle_bounding_box (shape):
-        
+    shape_triangle_bounding_box (shape)
+    shape[SHAPE_DATA]['octtree'] = None    
     return shape
 
 def shape_triangle_bounding_box(shape):
@@ -515,19 +516,22 @@ def shape_triangle_bounding_box(shape):
     p2d = []
     for p3d in points3d:
         p2 = []
-        for (name, index) in kept_axes:
-           p2.append(p3[index])
+        for name in kept_axes:
+            index = kept_axes[name]
+            p2.append(p3d[index])
         p2d.append(p2)
         
     p2_bounds = [{'max': None, 'min': None}, {'max': None, 'min': None}]
     
     for p2 in p2d:
         for i in range(0, 2):
-            if p2[i] < p2_bounds[i]['min'] or p2_bounds[i]['min'] == None:
+            if p2_bounds[i]['min'] == None or p2[i] < p2_bounds[i]['min']:
                 p2_bounds[i]['min'] = p2[i]
         
-            if p2[i] > p2_bounds[i]['max'] or p2_bounds[i]['max'] == None:
-                p2_bounds[i]['min'] = p2[i]        
+            if p2_bounds[i]['max'] == None or p2[i] > p2_bounds[i]['max']:
+                p2_bounds[i]['max'] = p2[i]        
+    
+    # import pdb; pdb.set_trace();
     
     for i in range(0, 2):
         p2_bounds[i]['size'] = p2_bounds[i]['max'] - p2_bounds[i]['min']
@@ -542,45 +546,63 @@ def shape_triangle_convert2d(shape, point3d):
         p2.append(p3[index])
     return p2
 
-def shape_triangle_barycentric(shape, point):
+def shape_triangle_barycentric_coords(shape, point):
     
-    points3d = [shape[SHAPE_DATA]['p0'],
+    p3d = [shape[SHAPE_DATA]['p0'],
         shape[SHAPE_DATA]['p1'],
         shape[SHAPE_DATA]['p2']]
+        
+    sub_tgls = (
+        (p3d[0], p3d[1], point),
+        (p3d[2], p3d[1], point),
+        (p3d[2], p3d[0], point))
+
+    areas = []
+    total_area = 0
     
-    tgl = []    
-    tgl.append ((point, points3d[0], points3d[1]))
-    tgl.append ((point, points3d[1], points3d[2]))
-    tgl.append ((point, points3d[0], points3d[2]))
+    for tgl in sub_tgls:
+        tgl_area = shape_traingle_area (tgl)
+        total_area += tgl_area
+        areas.append(tgl_area)
+
+    barycentric =  []
     
-    area = []
-    for i in range (0, 4):
-        area.append('bla')
-    # area or triangle = (height  * base) / 2
-    # 
-    # alpha = A1 / (a1 + A2 + A3)
-    # beta  = A2 / (a1 + A2 + A3)    
-    # gamma = A3 / (a1 + A2 + A3)    
+    for area in areas:
+        barycentric.append(area / total_area)
+    
+    return barycentric
 
-    pass
-            
-    def heron(a,b,c):  
-        s = (a + b + c) / 2   
-        area = (s*(s-a) * (s-b)*(s-c)) ** 0.5        
-        return area
 
-    def distance3d(x1,y1,z1,x2,y2,z2):    
-        a=(x1-x2)**2+(y1-y2)**2 + (z1-z2)**2
-        d= a ** 0.5  
-        return d  
+def shape_traingle_area(points):
+    # see https://en.wikipedia.org/wiki/Heron%27s_formula
+    
+    
+    #import pdb;pdb.set_trace();
+    
+    length_a = sqrt(
+        (points[0][1] - points[1][1]) ** 2 +
+        (points[0][2] - points[1][2]) ** 2 +
+        (points[0][3] - points[1][3]) ** 2)
 
-    def areatriangle3d(x1,y1,z1,x2,y2,z2,x3,y3,z3):  
-        a=distance3d(x1,y1,z1,x2,y2,z2)  
-        b=distance3d(x2,y2,z2,x3,y3,z3)  
-        c=distance3d(x3,y3,z3,x1,y1,z1)  
-        A = heron(a,b,c) 
-        return A
-        print("area of triangle is %r " %A)
+    length_b = sqrt(
+        (points[0][1] - points[2][1]) ** 2 +
+        (points[0][2] - points[2][2]) ** 2 +
+        (points[0][3] - points[2][3]) ** 2)
+
+    length_c = sqrt(
+        (points[1][1] - points[2][1]) ** 2 +
+        (points[1][2] - points[2][2]) ** 2 +
+        (points[1][3] - points[2][3]) ** 2)
+
+    semiperimeter = (length_a + length_b + length_c) / 2.0
+    
+    area = sqrt(abs(
+        semiperimeter *    
+        (semiperimeter - length_a) *
+        (semiperimeter - length_b) *
+        (semiperimeter - length_c)))
+    
+    return area
 
 
 def shape_polymesh_diffuse_colour(shape, intersect_result):
@@ -608,9 +630,22 @@ def shape_polymesh_specular_colour(shape, intersect_result):
     return intersect_result['hit_polygon'][SHAPE_SPECULARCOLOUR_FUNC](
         intersect_result['hit_polygon'], intersect_result)
 
+def shape_polymesh_octtree_setup(shape, split_threshold = 500):
+    # shape[SHAPE_BOUNDING_BOX_SHAPESPACE]
+    shape[SHAPE_DATA]['octtree'] = \
+            OctTreeLeaf (shape, split_threshold,
+            shape[SHAPE_BOUNDING_BOX_SHAPESPACE].min_x,
+            shape[SHAPE_BOUNDING_BOX_SHAPESPACE].max_x,
+            shape[SHAPE_BOUNDING_BOX_SHAPESPACE].min_y,
+            shape[SHAPE_BOUNDING_BOX_SHAPESPACE].max_y,
+            shape[SHAPE_BOUNDING_BOX_SHAPESPACE].min_z,
+            shape[SHAPE_BOUNDING_BOX_SHAPESPACE].max_z)
 
-def shape_polymesh_intersect(shape, ray):
-    """Intersection test function for a polygon mesg.
+    for sh in shape[SHAPE_DATA]['polygons']:
+        shape[SHAPE_DATA]['octtree'].add_shape(sh)
+
+def shape_polymesh_intersect(shape, ray, use_octtree = True):
+    """Intersection test function for a polygon mesh.
 
     :param shape: the shape tuple for the polygon mesh
     :param ray: the ray to perform the intersection test with
@@ -618,10 +653,20 @@ def shape_polymesh_intersect(shape, ray):
     :return: False if no intersection, or a dictionary of results when
             there is an intersection
     """
-
+    if use_octtree and \
+        ('octree' not in shape[SHAPE_DATA] or
+        shape[SHAPE_DATA]['octtree'] is None):
+        shape_polymesh_octtree_setup(shape)
+        
+    
+    if use_octtree:
+        shapes =  shape[SHAPE_DATA]['octtree'].get_shapes_by_ray(ray)  
+    else:
+        shapes = shape[SHAPE_DATA]['polygons']
+    
     final_result = False
 
-    for t in shape[SHAPE_DATA]['polygons']:
+    for t in shapes:
         result = t[SHAPE_INTERSECT_FUNC](t, ray)
         if result is not False:
             if final_result is False or result['t'] < final_result['t']:
@@ -631,9 +676,13 @@ def shape_polymesh_intersect(shape, ray):
 
     return final_result
 
+def shape_polymesh_replace_octtree_node(shape, octree_node):        
+        shape[SHAPE_DATA]['octtree']  = octree_node
 
 def shape_polymesh_create(data):
     shape = shape_empty_shape()
+    shape[SHAPE_SHAPE] = 'polymesh'
+    
     shape[SHAPE_INTERSECT_FUNC] = shape_polymesh_intersect
     shape[SHAPE_DIFFUSECOLOUR_FUNC] = shape_polymesh_diffuse_colour
     shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_polymesh_specular_colour
@@ -669,12 +718,36 @@ def shape_polymesh_create(data):
     if not do_refl:
         tri_refl = None
     face = -1
+    
+    min_x = None
+    max_x = None
+    min_y = None
+    max_y = None
+    min_z = None
+    max_z = None
+    
     for polygon_points in polygon_point_indices:
         face = face + 1
 
         tri_points = []
         for polygon_point in polygon_points:
             tri_points.append(points[polygon_point])
+            
+            if min_x is None or points[polygon_point][1] < min_x:
+                min_x = points[polygon_point][1]
+            if min_y is None or points[polygon_point][2] < min_y:
+                min_y = points[polygon_point][2]
+            if min_z is None or points[polygon_point][3] < min_z:
+                min_z = points[polygon_point][3]              
+
+            if max_x is None or points[polygon_point][1] > max_x:
+                max_x = points[polygon_point][1]
+            if max_y is None or points[polygon_point][2] > max_y:
+                max_y = points[polygon_point][2]
+            if max_z is None or points[polygon_point][3] > max_z:
+                max_z = points[polygon_point][3]  
+
+        
 
         tri_colours = None
         if('face_diffuse_colours' in data and
@@ -696,6 +769,10 @@ def shape_polymesh_create(data):
         elif len(tri_points) > 3:
             polygons.append(shape_polygon_create(
                 {'points': tri_points, 'colour': tri_colours}))
+                
+    shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
+        min_x, max_x, min_y, max_y, min_z, max_z)
+        
     shape[SHAPE_DATA]['polygons'] = polygons
     return shape
 

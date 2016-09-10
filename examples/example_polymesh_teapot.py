@@ -36,6 +36,8 @@ if __name__ == '__main__':
                         'top': -5,
                         'bottom': 5})
     view_set_output(view, PIL_Output())
+    view_set_multiprocessing(view, True)
+    
     # Add the view to the scene
     scene.add_view(view, 'view')
 
@@ -5778,9 +5780,7 @@ if __name__ == '__main__':
 
     shape_set_transform(teapot_shape,
                         Transform({
-                            'scale': {'x': 2.0, 'y': 2.0, 'z': 1.0},
-                            'rotate': {'vector': cartesian_create(1, 1, 0),
-                                       'angle': 0},
+                            'scale': {'x': 1.0, 'y': 1.0, 'z': 1.0},
                             'translate': {'x': 0, 'y': 0, 'z': 0}
                                 }))
 
@@ -5791,11 +5791,12 @@ if __name__ == '__main__':
     # Add a point light to the scene
     scene.add_light(
         light_point_light_create(
-            cartesian_create(0, 0, -1.5),
+            cartesian_create(0, 0, -10),
             colour_create(1, 1, 1)),
             'light1')
 
-            
+    view_set_multiprocessing(view, True)
+    
     # Render the scene. The returned image is in PIL format.
     image = scene.render('view')
 

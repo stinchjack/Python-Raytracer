@@ -136,7 +136,12 @@ class OctTreeLeaf(OctTreeNode):
             self.shapes = []
             
             if self.parent_branch is not None:
-                self.parent_branch.replace_node(self, new_branch)
+                if hasattr (self.parent_branch, 'replace_node'):
+                    self.parent_branch.replace_node(self, new_branch)
+                elif type(self.parent_branch) is dict and 'poymesh' in shape:
+
+                    shape_polymesh_replace_octtree_node(
+                        self.parent_branch, new_branch)
 
             return True
 
