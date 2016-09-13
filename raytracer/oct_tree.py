@@ -1,5 +1,6 @@
 import raytracer.shape
 from raytracer.cartesian import *
+
 import textwrap
 # import raytracer.scene as scene
 
@@ -122,6 +123,7 @@ class OctTreeLeaf(OctTreeNode):
         
         self.shapes.append(new_shape)
         if len(self.shapes) > self.split_threshold and self.can_split():
+            
             new_branch = OctTreeBranch(
                 self.parent_branch, self.split_threshold,
                 self.bounding_box.min_x, self.bounding_box.max_x,
@@ -138,10 +140,11 @@ class OctTreeLeaf(OctTreeNode):
             if self.parent_branch is not None:
                 if hasattr (self.parent_branch, 'replace_node'):
                     self.parent_branch.replace_node(self, new_branch)
-                elif type(self.parent_branch) is dict and 'poymesh' in shape:
-
-                    shape_polymesh_replace_octtree_node(
-                        self.parent_branch, new_branch)
+                elif (type(self.parent_branch) is dict or
+                    type(self.parent_branch) is list) and \
+                    'polymesh' in self.parent_branch:
+                    
+                    self.parent_branch[9]['octtree'] = new_branch;
 
             return True
 

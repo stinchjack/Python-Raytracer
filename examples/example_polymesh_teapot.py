@@ -20,26 +20,12 @@ if __name__ == '__main__':
     get_context().precision = 32
 
     # Create a Scene object to contain lights, views, and shapes
-    scene = Scene()
+    scene = Scene(True)
 
     # Create a view. The rendered view wil be 300 x 300 pixels.
     # The eye point will be at 0,0,-15. At z=0, the scene will be scanned from
     # -5 to 5 on both the X and Y axis.
 
-    view = view_create(scene, -15, 
-                       {'left': 0,
-                        'right': 300,
-                        'top': 0,
-                        'bottom': 300},
-                       {'left': -5,
-                        'right': 5,
-                        'top': -5,
-                        'bottom': 5})
-    view_set_output(view, PIL_Output())
-    view_set_multiprocessing(view, True)
-    
-    # Add the view to the scene
-    scene.add_view(view, 'view')
 
     # Data to define a polymesh teapot
     pot_data = {
@@ -5780,12 +5766,29 @@ if __name__ == '__main__':
 
     shape_set_transform(teapot_shape,
                         Transform({
-                            'scale': {'x': 1.0, 'y': 1.0, 'z': 1.0},
-                            'translate': {'x': 0, 'y': 0, 'z': 0}
-                                }))
+                            'scale': {'x': 1.0, 'y': 2.0, 'z': 1.0},
+                            'translate': {'x': 0, 'y': 1.5, 'z': 0},
+                            'rotate':{'vector': ('c', 0, 0, 1), 'angle': 180}
+                            }))
 
+
+    view = view_create(scene, -15, 
+                       {'left': 0,
+                        'right': 300,
+                        'top': 0,
+                        'bottom': 300},
+                       {'left': -5,
+                        'right': 5,
+                        'top': -5,
+                        'bottom': 5})
+    view_set_output(view, PIL_Output())
+    view_set_multiprocessing(view, True) 
+        # Add the view to the scene
+    view_set_lighting_model (view, view[VIEW_LIGHTINGMODEL],
+        {'NoShadows': False, 'NoDiffuse': False, 'NoReflections': False})        
+    scene.add_view(view, 'view')
+    
     # Add the polymesh to the scene.
-
     scene.add_shape(teapot_shape, 'triMesh')
 
     # Add a point light to the scene
@@ -5794,8 +5797,6 @@ if __name__ == '__main__':
             cartesian_create(0, 0, -10),
             colour_create(1, 1, 1)),
             'light1')
-
-    view_set_multiprocessing(view, True)
     
     # Render the scene. The returned image is in PIL format.
     image = scene.render('view')

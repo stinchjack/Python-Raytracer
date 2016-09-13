@@ -327,3 +327,6 @@ def triangle_map_to_rect (intersect_result):
         intersect_result['raw_point'])
     
     return (coords[0], coords[1])
+
+def capped_cylinder_map_to_rect (intersect_result):
+    pass

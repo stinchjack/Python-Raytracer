@@ -69,10 +69,7 @@ A view is stored as a list with the following elements:
         'a_view_step_x': The horizontal step distance to use for sub sampling
         'a_view_step_y': The vertical step distance to use for sub sampling
 
-
-    * The current X-position during rendering (intended for internal use)
-
-    * The current Y-position during rendering (intended for internal use)"""
+"""
 
 VIEW_LIGHTINGMODEL = 1
 VIEW_OUTPUT = 2
@@ -607,7 +604,9 @@ def view_process_queue(view, queue):
 
 def view_process_queue_multiprocess(view, queue):
 
-    # Seems to unable to pass
+    #import pdb; pdb.set_trace();
+
+    # Seems to unable to pass PIL object 
     output = view[VIEW_OUTPUT]
     pool = view[VIEW_MULTIPROCESS_POOL]
     view[VIEW_OUTPUT] = None
