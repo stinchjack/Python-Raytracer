@@ -24,7 +24,7 @@ def shape_disc_intersect(shape, ray):
     if ray[RAY_VECTOR][3] == 0:
         return False
     t = (0 - ray[RAY_START][3]) / (ray[RAY_VECTOR])[3]
-    if t < zero():
+    if t <=0:
         return False
     point = ray_calc_pt(ray, t)
     if not(point[1] * point[1]) + (point[2] * point[2]) <= mpfr(1):
@@ -32,7 +32,7 @@ def shape_disc_intersect(shape, ray):
 
     return {'t': t,
             'raw_point': point,
-            'raw_normal': ('cartesian', zero(), zero(), mpfr(-1))
+            'raw_normal': ('cartesian', 0, 0, mpfr(-1))
             }
 
 
@@ -359,20 +359,13 @@ def shape_triangle_diffuse_colour(shape, intersect_result):
     if not shape[SHAPE_DATA]['colorShade']:
         return shape[SHAPE_DIFFUSECOLOUR]
 
-    di0 = cartesian_len(cartesian_substract(
-        intersectResult['point'], shape[SHAPE_DATA]['p0']))
-    di1 = cartesian_len(cartesian_substract(
-        intersectResult['point'], shape[SHAPE_DATA]['p1']))
-    di2 = cartesian_len(cartesian_substract(
-        intersectResult['point'], shape[SHAPE_DATA]['p2']))
-
-    cp0 = colour_scale(shape[SHAPE_DATA]['c0'], (mpfr(
-        1.0) - (di0 / shape[SHAPE_DATA]['max_l'])))
-    cp1 = colour_scale(shape[SHAPE_DATA]['c1'], (mpfr(
-        1.0) - (di1 / shape[SHAPE_DATA]['max_l'])))
-    cp2 = colour_scale(shape[SHAPE_DATA]['c2'], (mpfr(
-        1.0) - (di2 / shape[SHAPE_DATA]['max_l'])))
-
+    barycentric = shape_triangle_barycentric_coords(
+        intersect_result['shape'], intersect_result['point'])
+    
+    cp0 = colour_scale(shape[SHAPE_DATA]['c0'], barycentric[0])
+    cp1 = colour_scale(shape[SHAPE_DATA]['c1'], barycentric[1])
+    cp2 = colour_scale(shape[SHAPE_DATA]['c2'], barycentric[2])
+    
     return colour_add(colour_add(cp0, cp1), cp2)
 
 
@@ -391,20 +384,13 @@ def shape_triangle_specular_colour(shape, intersect_result):
     if not shape[SHAPE_DATA]['reflectShade']:
         return shape[SHAPE_SPECULARCOLOUR]
 
-    di0 = cartesian_len(cartesian_substract(
-        intersectResult['point'], shape[SHAPE_DATA]['p0']))
-    di1 = cartesian_len(cartesian_substract(
-        intersectResult['point'], shape[SHAPE_DATA]['p1']))
-    di2 = cartesian_len(cartesian_substract(
-        intersectResult['point'], shape[SHAPE_DATA]['p2']))
-
-    cp0 = colour_scale(shape[SHAPE_DATA]['r0'], (mpfr(
-        1.0) - (di0 / shape[SHAPE_DATA]['max_l'])))
-    cp1 = colour_scale(shape[SHAPE_DATA]['r1'], (mpfr(
-        1.0) - (di1 / shape[SHAPE_DATA]['max_l'])))
-    cp2 = colour_scale(shape[SHAPE_DATA]['r2'], (mpfr(
-        1.0) - (di2 / shape[SHAPE_DATA]['max_l'])))
-
+    barycentric = shape_triangle_barycentric_coords(
+        intersect_result['shape'], intersect_result['point'])
+    
+    cp0 = colour_scale(shape[SHAPE_DATA]['r0'], barycentric[0])
+    cp1 = colour_scale(shape[SHAPE_DATA]['r1'], barycentric[1])
+    cp2 = colour_scale(shape[SHAPE_DATA]['r2'], barycentric[2])
+    
     return colour_add(colour_add(cp0, cp1), cp2)
 
 
@@ -417,6 +403,10 @@ def shape_triangle_intersect(shape, ray):
     :return: False if no intersection, or a dictionary of results when
             there is an intersection
     """
+    
+    
+    #if cartesian_dot(shape[SHAPE_DATA]['normal'], ray[RAY_DIR]) == 0:
+    #   return false
 
     # p = ray[2].cross(self.e2)
     p = cartesian_cross(ray[2], shape[SHAPE_DATA]['e2'])

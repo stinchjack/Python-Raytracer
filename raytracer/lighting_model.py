@@ -133,7 +133,9 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
 
     for l in lights:
         light = lights[l]
-
+        
+        
+        
         if ('NoShadows' in lighting_model[LIGHTINGMODEL_OPTIONS] and
                 lighting_model[LIGHTINGMODEL_OPTIONS]['NoShadows'] is True):
             r = False
@@ -156,13 +158,16 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
                 light_ray = cartesian_normalise(cartesian_sub(
                     light[LIGHT_POINT_POINT], result['point']))
 
+                costh = abs(cartesian_dot(light_ray, result['normal']))
+                
+                #if costh>=0:
                 diff = colour_scale(
                     light[LIGHT_POINT_COLOUR],
-                    abs(cartesian_dot(light_ray, result['normal'])))
+                    costh)
 
                 end_colour = colour_add(
                         end_colour, colour_mul(diffuse_colour, diff))
-
+        
     if end_colour[1] < 0 or end_colour[2] <0  or end_colour[3] < 0:
 
         ec = [None, None, None, None]        

@@ -54,8 +54,6 @@ class Texture:
 class CircularRampTexture(Texture):
     """ A texture of concentric blended colours
     """
-    __colour_array__ = []
-    __colour_dist__ = None
 
     def __init__(self, colour_array):
         """
@@ -86,12 +84,139 @@ class CircularRampTexture(Texture):
 
         return colour_add(colour_scale(clr1, 1 - p1), colour_scale(clr2, p1))
 
+class ColourBandsTexture(Texture):
 
+    def __init__(self, colour_array):
+        self.colour_array = colour_array
+        self.band_width = mpfr(1.0)/len(colour_array)
+        
+    def colour(self, uv_tuple):    
+        return self.bands[int(u/self.band_width)]
+
+
+class ColourRampTexture(Texture):
+
+    def __init__(self, colour_array):
+        self.colour_array = colour_array
+        self.band_width = mpfr(1.0)/(len(colour_array)-1)
+        
+    def colour(self, uv_tuple):
+        
+        band1 = int(u/self.band_width)
+        band2 = int(u/self.band_width) + 1
+        
+        proportion = (u - (band1 - self.band_width)) / self.band_width
+        
+        return colour_add (
+            colour_scale(self.band[band1], proportion),
+            colour_scale(self.band[band2], 1.0 - proportion))
+        
+        
+class TiledTexture(Texture):
+    def __init__(self, texture, u_repeat, v_repeat):
+        self.texture = texture
+        self.u_repeat = u_repeat
+        self.v_repeat = v_repeat
+        self.u_size =  1.0 / u_repeat
+        self.v_size =  1.0 / v_repeat
+        
+    def colour(self, uv_tuple):
+    
+        u_pos = (uv_tuple[0] - (int(uv_tuple[0] / self.u_size) * self.u_size )) / self.u_size
+        v_pos = (uv_tuple[1] - (int(uv_tuple[1] / self.v_size) * self.v_size )) / self.v_size
+        
+        return self.texture.colour((u_pos, v_pos))
+
+class FlipTexture(Texture):
+    def __init__(self, texture, flip_u, flip_v):
+        self.texture = texture
+        self.flip_u = flip_u
+        self.flip_v = flip_v
+    
+    def colour(self, uv_tuple):
+        
+        if self.flip_u:
+            u = mpfr(1.0 - uv_tuple[0])
+        else:
+            u = uv_tuple[0]
+
+        if self.flip_u:
+            v = mpfr(1.0 - uv_tuple[1])
+        else:
+            v = uv_tuple[1]
+        
+        return self.texture.colour((u, v))
+    
+class Rotate90Texture(Texture):
+    def __init__(self, texture, left = False):
+        self.texture = texture
+        self.left = left
+    
+    def colour(self, uv_tuple):
+        if self.left:
+            v = 1.0 - uv_tuple[0]
+            u = uv_tuple[1]
+            
+        else:
+            v =  uv_tuple[0]
+            u = 1.0 - uv_tuple[1]
+
+        return self.texture.colour((v, u))
+
+class MosiacTexture (Texture):
+    """
+        {layer: [(Texture, u_offset, v_offset, u_scale, v_scale)], etc}
+        
+        layer: 0 = top
+    
+    """
+    def __init__(self, mosiac_data, default_colour):
+        self.default_colour = default_colour
+        self.ordered_layers = sorted(list(mosiac_data))
+        
+        mosiac = {}
+
+        for layer_index in self.ordered_layers:
+            layer = mosiac_data[layer_index]
+            processed_layer = []
+            for mosiac_item in layer:
+                processed_layer.append ({
+                    'texture': mosiac_item[0],
+                    'u_min': mosiac_item[1],
+                    'u_max': mosiac_item[1] + mosiac_item[3],
+                    'v_min': mosiac_item[2],
+                    'v_max': mosiac_item[2] + mosiac_item[4],                
+                    'u_scale': mosiac_item[3],
+                    'v_scale': mosiac_item[4]
+                })
+            
+            mosiac[layer_index] = processed_layer
+        
+        self.mosiac = mosiac
+       
+    def colour(self, uv_tuple):
+       u = uv_tuple[0]
+       v = uv_tuple[1]
+        
+       for layer_index in self.ordered_layers:
+            layer = self.mosiac[layer_index]   
+            for item in layer:
+                
+                if u <= item['u_max'] and v <= item['v_max'] and \
+                    u >= item['u_min'] and v >= item['v_min']:
+                        
+                        u = (u - item['u_min'])/ item['u_scale']
+                        v = (v - item['v_min'])/ item['v_scale']   
+                       
+                        
+                        return item['texture'].colour((u,v))
+                        
+       return self.default_colour 
+    
+    
 class BandedSprialTexture(Texture):
     """ A texture of spirally banded colours
     """
-    __colour_array__ = []
-    __colour_dist__ = None
 
     def __init__(self, colour_array, twists=5):
         """
@@ -189,37 +314,9 @@ class PILImageTexture(Texture):
         return ('colour', clr[0] / 255.0, clr[1] / 255.0, clr[2] / 255.0)
 
 
-def cylinder_map_to_rect(intersect_result):
-    """
-    Maps an intersection result for a cylinder to a UV pair.
-
-            :return: tuple (u, v)
-            :param intersect_result: the intersection result dictionary
-    """
-    p = intersect_result['raw_point']
-
-    x = p[1]
-
-    if x < -1:
-        x = -1
-    if x > 1:
-        x = 1
-
-    a1 = math.degrees(asin(x))
-    a1 = a1 + 90
-    if (p[3] >= 0):
-        a1 = 180 + (180 - a1)
-
-    u = a1 / mpfr(360.0)
-    v = (p[2]) + 0.5
-
-    return (u, v)
-
-
 def sphere_map_to_rect(intersect_result):
     """
     Maps an intersection result for a sphere to a UV pair.
-
             :return: tuple (u, v)
             :param intersect_result: the intersection result dictionary
     """
@@ -252,6 +349,60 @@ def sphere_map_to_rect(intersect_result):
     a2 = a2 + 90
 
     v = a2 / mpfr(180.0)
+
+    return (u, v)
+
+
+def cylinder_map_to_rect(intersect_result):
+    """
+    Maps an intersection result for a cylinder to a UV pair.
+            :return: tuple (u, v)
+            :param intersect_result: the intersection result dictionary
+    """
+    p = intersect_result['raw_point']
+
+    x = p[1]
+
+    if x < -1:
+        x = -1
+    if x > 1:
+        x = 1
+
+    a1 = math.degrees(asin(x))
+    a1 = a1 + 90
+    if (p[3] >= 0):
+        a1 = 180 + (180 - a1)
+
+    u = a1 / mpfr(360.0)
+    v = (p[2]) + 0.5
+
+    return (u, v)
+
+def cone_map_to_rect(intersect_result):
+    """
+    Maps an intersection result for a cylinder to a UV pair.
+
+            :return: tuple (u, v)
+            :param intersect_result: the intersection result dictionary
+    """
+    p = intersect_result['raw_point']
+    p[2] = 0
+    p = cartesian_normalise(p)
+
+    x = p[1]
+
+    if x < -1:
+        x = -1
+    if x > 1:
+        x = 1
+
+    a1 = math.degrees(asin(x))
+    a1 = a1 + 90
+    if (p[3] >= 0):
+        a1 = 180 + (180 - a1)
+
+    u = a1 / mpfr(360.0)
+    v = (p[2] - shape[SHAPE_DATA]['y_top']) / shape[SHAPE_DATA]['y_height']
 
     return (u, v)
 

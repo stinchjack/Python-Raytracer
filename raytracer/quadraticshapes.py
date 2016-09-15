@@ -112,33 +112,34 @@ def shape_cylinder_intersect(shape, ray):
     sqroot = sqrt(discriminant)
 
     two_a = two * a
-    t1 = ((zero - b) + sqroot) / (two_a)
-    t2 = ((zero - b) - sqroot) / (two_a)
-    t = None
+    ts = [((zero - b) + sqroot) / (two_a),
+        ((zero - b) - sqroot) / (two_a)]
+        
+    t_final = None
+    raw_point_final = None
+    for t in ts:
+        if t <= zero:
+            continue
+        
+        raw_point = ray_calc_pt(ray, t)
 
-    if t1 < zero and t2 < zero:
+        if (raw_point[2] > mpfr(0.5) or
+            raw_point[2] < mpfr(-0.5)):    
+            continue
+        
+        if t_final is None or t_final > t:
+            t_final = t
+            raw_point_final = raw_point
+            
+    if t_final is None:
         return False
-    elif t1 < zero and t2 >= zero:
-        t = t2
-    elif t1 >= zero and t2 < zero:
-        t = t1
-    else:
-        if t1 < t2:
-            t = t1
-        else:
-            t = t2
 
-    result = {'t': t, 
-        'raw_point': ray_calc_pt(ray, t) }
-
-    if(result is not False):
-
-        if(result['raw_point'][2] > mpfr(0.5) or
-           result['raw_point'][2] < mpfr(-0.5)):
-            result = False
-
-    result['raw_normal'] = cartesian_create(
-        result['raw_point'][1], 0, result['raw_point'][3])
+    result = {
+        't': t_final, 
+        'raw_point': raw_point_final,
+        'raw_normal':
+            cartesian_create(
+                raw_point_final[1], 0, raw_point_final[3]) }
     
     return result
 
@@ -328,9 +329,7 @@ def shape_cone_test_point(shape, point):
     :return: Boolean
     """
 
-    r1 = point[2] > shape[SHAPE_DATA]['y_bottom']
-    r2 = point[2] < shape[SHAPE_DATA]['y_top']
-    return not(r1 or r2)
+
 
 
 def shape_cone_intersect(shape, ray):
@@ -380,47 +379,41 @@ def shape_cone_intersect(shape, ray):
     sqroot = sqrt(discriminant)
 
     two_a = two * a
-    t_vals = {'t1': [((zero - b) + sqroot) / (two_a), None],
-              't2': [((zero - b) - sqroot) / (two_a), None]}
+    t_vals = {'t1': ((zero - b) + sqroot) / (two_a),
+              't2': ((zero - b) - sqroot) / (two_a)}
+
+    final_t = None
+    final_raw_point = None
 
     for t_key in t_vals:
-        if t_vals[t_key][0] <= 0:
-            t_vals[t_key] = False
+        if t_vals[t_key] <= 0:
+            continue
         else:
-            raw_point = ray_calc_pt(ray, t_vals[t_key][0])
-            t_vals[t_key][1] = raw_point
-            if not shape_cone_test_point(shape, raw_point):
-                t_vals[t_key] = False
+            if final_t is None or t_vals[t_key] < final_t:
+                
+                raw_point = ray_calc_pt(ray, t_vals[t_key])
+                if raw_point[2] <= (shape[SHAPE_DATA]['y_bottom']):
+                #and \
+                #    raw_point[2] >= (shape[SHAPE_DATA]['y_top']):
 
-    t = None
-    if t_vals['t1'] is False and t_vals['t2'] is False:
+                #    pass
+                #if True:
+                    final_t = t_vals[t_key]
+                    final_raw_point = raw_point
+
+    if final_t is None:
         return False
-    if t_vals['t1'] is False and t_vals['t2'] is not False:
-        t = t_vals['t2'][0]
-        raw_point = t_vals['t2'][1]
-    if t_vals['t2'] is False and t_vals['t1'] is not False:
-        t = t_vals['t1'][0]
-        raw_point = t_vals['t1'][1]
-    if t_vals['t2'] is not False and t_vals['t1'] is not False:
-        if t_vals['t2'][0] < t_vals['t1'][0]:
-            t = t_vals['t2'][0]
-            raw_point = t_vals['t2'][1]
-        else:
-            t = t_vals['t1'][0]
-            raw_point = t_vals['t1'][1]
 
-    result = {'t': t}
-    result['raw_point'] = ray_calc_pt(ray, t)
-
-    # result['raw_normal'] = cartesian_normalise(cartesian_create(
-    # result['raw_point'][1], 0, result['raw_point'][3]))
-    result['raw_normal'] = cartesian_create(
-        result['raw_point'][1], 0, result['raw_point'][3])
+    result = {'t': final_t,
+        'raw_point': final_raw_point,
+        'raw_normal': 
+            cartesian_create(final_raw_point[1], 0, final_raw_point[3])
+        }
 
     return result
 
 
-def shape_cone_create(colour, specular, y_top=None, y_bottom=None,
+def shape_cone_create(colour, specular, y_top=0, y_bottom=1,
                       transform=None):
     """Creates a tuple with the necessary data for rendering a cone.  An
     untransformed cone is in parallel to the Y axis, having a radius
@@ -445,25 +438,23 @@ def shape_cone_create(colour, specular, y_top=None, y_bottom=None,
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_DATA] = {}
-    if y_top is not None:
-        print(type(y_top))
-        shape[SHAPE_DATA]['y_top'] = mpfr(y_top)
-    else:
-        shape[SHAPE_DATA]['y_top'] = 0
 
-    if y_bottom is not None:
-        shape[SHAPE_DATA]['y_bottom'] = mpfr(y_bottom)
-    else:
-        shape[SHAPE_DATA]['y_bottom'] = 1
+    shape[SHAPE_DATA]['y_top'] = y_top
+    shape[SHAPE_DATA]['y_bottom'] = y_bottom
 
+    
     if shape[SHAPE_DATA]['y_top'] > shape[SHAPE_DATA]['y_bottom']:
         j = shape[SHAPE_DATA]['y_bottom']
         shape[SHAPE_DATA]['y_bottom'] = shape[SHAPE_DATA]['y_top']
         shape[SHAPE_DATA]['y_top'] = j
+    
+    shape[SHAPE_DATA]['y_height'] = y_bottom - y_top
+        
     shape[SHAPE_INTERSECT_FUNC] = shape_cone_intersect
     shape_set_transform(shape, transform)
+    
     shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
-        -1.0, 1.0, -1.0, 1.0,-1.0, 1.0)
+        -1.0, y_top, -1.0, 1.0, y_bottom, 1.0)
     return shape
 
 
