@@ -34,6 +34,8 @@ SHAPE_TRANSFORM = 8
 SHAPE_DATA = 9
 SHAPE_BOUNDING_BOX_SHAPESPACE = 10
 SHAPE_BOUNDING_BOX_WORLDSPACE = 11
+SHAPE_TRANSPARENTCOLOUR = 12
+SHAPE_TRANSPARENTCOLOUR_FUNC = 13
 
 def shape_bounding_box(shape):
     if shape[SHAPE_BOUNDING_BOX_SHAPESPACE] is None:
@@ -125,6 +127,20 @@ def shape_specular_colour(shape, intersect_result=None):
         return shape[SHAPE_SPECULARCOLOUR]
     else:
         return None
+    
+def shape_transparency_colour(shape, intersect_result=None):
+    """Returns the transparency colour for a shape that is stored in the shape
+    tuple.
+    :param shape: a shape
+    :param intersect_result: a dictionary of intersection results. This
+    parameter is not used. """
+    if(type(shape[SHAPE_TRANSPARENTCOLOUR]) is tuple and
+            ('colour' in shape[SHAPE_TRANSPARENTCOLOUR] or
+             'colour_mapping' in shape[SHAPE_TRANSPARENTCOLOUR])):
+
+        return shape[SHAPE_TRANSPARENTCOLOUR]
+    else:
+        return None    
 
 
 def shape_empty_shape():
@@ -134,7 +150,7 @@ def shape_empty_shape():
              shape_specular_colour, None, {}, None, None]"""
 
     return ['shape', None, None, None, None, None, None,
-            None, None, {}, None, None]
+            None, None, {}, None, None, None, None]
 
 
 def shape_point_inside(shape, cartesian):
@@ -195,3 +211,6 @@ def shape_reverse_transform(intersect_result):
             intersect_result['point'] = intersect_result['raw_point']
 
     return intersect_result
+
+def shape_set_transparency(shape, colour):
+    shape[SHAPE_TRANSPARENTCOLOUR] = colour

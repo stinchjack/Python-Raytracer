@@ -175,7 +175,8 @@ class Scene(object):
         else:
             shapes =  list(self.__shapes__.values())
         
-        return self.test_intersect_list (ray, shapes, exclude_shapes)
+        return self.test_intersect_list_all_results (
+            ray, shapes, exclude_shapes)
         
         
     def test_intersect_list(self, ray, list, exclude_shapes=[]):
@@ -204,3 +205,33 @@ class Scene(object):
         if curr_intersect_result is None:
             return False
         return curr_intersect_result
+
+    def test_intersect_list_all_results (self, ray, list, exclude_shapes=[]):
+        """Tests intersection of a ray with all the shapes in the scene. Returns
+        a dictionary of results, indexed by t
+        :param ray: the ray to test against the shapes
+        :param exclude_shapes: a list of shapes to exclude from the
+        intersection test
+        """
+        all_results = {}
+        curr_t = None
+        for sh in list:
+            if sh not in exclude_shapes:
+                intersect_result = shape_test_intersect(sh, ray)
+                if type(intersect_result) is dict:
+                    t = intersect_result['t']
+                    if t > 0:
+                        if (curr_t is None or t < curr_t):
+                            curr_t = t
+                        intersect_result['shape'] = sh
+                        intersect_result['ray'] = ray
+                        all_results[t] = intersect_result
+
+        if len(all_results) == 0:
+            return False
+        
+        result = all_results[curr_t]
+        del(all_results[curr_t])
+        result['all_results'] = all_results
+        
+        return result

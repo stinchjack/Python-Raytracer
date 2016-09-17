@@ -7,7 +7,7 @@ from raytracer.cartesian import *
 from raytracer.colour import *
 from PIL import Image
 from raytracer.planarshapes import shape_triangle_barycentric_coords
-
+import raytracer.shape
 
 """
 Basic classes and functions for texture mapping.
@@ -97,20 +97,33 @@ class ColourBandsTexture(Texture):
 class ColourRampTexture(Texture):
 
     def __init__(self, colour_array):
-        self.colour_array = colour_array
+        self.band = colour_array
         self.band_width = mpfr(1.0)/(len(colour_array)-1)
         
     def colour(self, uv_tuple):
         
+        u = uv_tuple[0]
+        
         band1 = int(u/self.band_width)
         band2 = int(u/self.band_width) + 1
         
-        proportion = (u - (band1 - self.band_width)) / self.band_width
+        proportion = ((u/self.band_width)-int(u/self.band_width))
+
+ 
+#        if u>.8:
+#            import pdb;pdb.set_trace();
         
         return colour_add (
-            colour_scale(self.band[band1], proportion),
-            colour_scale(self.band[band2], 1.0 - proportion))
-        
+            colour_scale(self.band[band1], 1.0 - proportion),
+            colour_scale(self.band[band2], proportion))
+
+class PlainTexture(Texture):        
+     
+    def __init__(self,  colour):
+        self.__colour__ = colour
+   
+    def colour(self, uv_tuple):
+        return self.__colour__
         
 class TiledTexture(Texture):
     def __init__(self, texture, u_repeat, v_repeat):
@@ -161,7 +174,7 @@ class Rotate90Texture(Texture):
             v =  uv_tuple[0]
             u = 1.0 - uv_tuple[1]
 
-        return self.texture.colour((v, u))
+        return self.texture.colour((u, v))
 
 class MosiacTexture (Texture):
     """
@@ -385,8 +398,9 @@ def cone_map_to_rect(intersect_result):
             :return: tuple (u, v)
             :param intersect_result: the intersection result dictionary
     """
+    shape = intersect_result['shape']
     p = intersect_result['raw_point']
-    p[2] = 0
+    p = ('cartesian', p[1], 0, p[3])
     p = cartesian_normalise(p)
 
     x = p[1]
@@ -402,7 +416,8 @@ def cone_map_to_rect(intersect_result):
         a1 = 180 + (180 - a1)
 
     u = a1 / mpfr(360.0)
-    v = (p[2] - shape[SHAPE_DATA]['y_top']) / shape[SHAPE_DATA]['y_height']
+    v = (p[2] - shape[raytracer.shape.SHAPE_DATA]['y_top']) / \
+        shape[raytracer.shape.SHAPE_DATA]['y_height']
 
     return (u, v)
 

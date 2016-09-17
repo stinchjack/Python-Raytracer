@@ -378,13 +378,17 @@ def shape_cone_intersect(shape, ray):
         return False
     sqroot = sqrt(discriminant)
 
+    if a == 0:
+        return False
     two_a = two * a
     t_vals = {'t1': ((zero - b) + sqroot) / (two_a),
               't2': ((zero - b) - sqroot) / (two_a)}
 
+
     final_t = None
     final_raw_point = None
 
+ 
     for t_key in t_vals:
         if t_vals[t_key] <= 0:
             continue
@@ -392,13 +396,12 @@ def shape_cone_intersect(shape, ray):
             if final_t is None or t_vals[t_key] < final_t:
                 
                 raw_point = ray_calc_pt(ray, t_vals[t_key])
-                if raw_point[2] <= (shape[SHAPE_DATA]['y_bottom']):
-                #and \
-                #    raw_point[2] >= (shape[SHAPE_DATA]['y_top']):
+                if raw_point[2] <= (shape[SHAPE_DATA]['y_bottom']) and \
+                    raw_point[2] >= (shape[SHAPE_DATA]['y_top']):
 
                 #    pass
-                #if True:
-                    final_t = t_vals[t_key]
+                # if True:
+                    final_t = t_vals[t_key] - .0001
                     final_raw_point = raw_point
 
     if final_t is None:

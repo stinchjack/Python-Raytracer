@@ -26,8 +26,8 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, 0, -22.5), ## eye point,
-                            ('cartesian', 0,0,-4 ), ## look at
+                            ('cartesian', 2, 0, -4), ## eye point,
+                            ('cartesian', 0,-18,0), ## look at
                             .333,
                            0)
 
@@ -41,11 +41,24 @@ if __name__ == '__main__':
                             20,
                             ('cartesian', 0, 3.95, 7), ## eye point,
                             ('cartesian', 0, -20, -20 ), ## look at
-                            .2,
+                            .5,
                            180)
 
+    view = view_create_look_at(scene,
+                            
+                            {'left': 0,
+                                'right': 300,
+                                'top': 0,
+                                'bottom': 300},
+                            10,
+                            20,
+                            ('cartesian', 0, -10, -20), ## eye point,
+                            ('cartesian', 0, -10, 0 ), ## look at
+                            .5,
+                           0)
+
                        
-    view_set_antialias (view, False, 3, 3,  False, False)
+    view_set_antialias (view, True, 3, 3,  False, False)
     view_set_output(view, PIL_Output())
     view_set_multiprocessing(view, True)
     view_set_lighting_model (
@@ -60,7 +73,7 @@ if __name__ == '__main__':
     
     ##########################
     scene.add_light(light_point_light_create(cartesian_create(
-        0, -20, -20), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light1')
+        0, -30, -30), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light1')
 
     scene.add_light(light_point_light_create(cartesian_create(
         0, -4, 45), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light2')    
@@ -72,39 +85,79 @@ if __name__ == '__main__':
             0: [(PILImageTexture("examples/rusty-iron-tileable.jpg"), .16, .6, .15, .15)],
             1: [(TiledTexture(
                     PILImageTexture("examples/stone-tileable.jpg"),
-                    6.28318530, 5), 0, 0, 1, 1)]
+                    6.28318530, 15), 0, 0, 1, 1)]
             },
             ('colour', 1,1,1)
         )
- 
-    
+
+
+    refl = ('colour_mapping',
+            cylinder_map_to_rect,
+            MosiacTexture (
+                {
+                0: [(PlainTexture(('colour', .5, .5, .5)),.2, .2, .15, .07)],
+                1: [(PlainTexture(('colour', 0,0,0)),1,1,1,1)]
+                },
+                ('colour', 0,0,0)
+            )
+        )
+
     cyl = shape_cylinder_create(
         ('colour_mapping', cylinder_map_to_rect,
             textr),
-        colour_create(0,0,0))
+        refl)
     
 
     shape_set_transform(cyl, Transform({
-        'scale': {'x': 2, 'y': 5, 'z': 2},
-        'translate': {'x': 0, 'y':0, 'z': 0}
+        'scale': {'x': 2, 'y': 15, 'z': 2},
+        'translate': {'x': 0, 'y':-8, 'z': 0}
     }))
            
+    shape_set_transparency(
+        cyl, 
+        ('colour_mapping',
+            cylinder_map_to_rect,
+            MosiacTexture (
+                {
+                0: [(PlainTexture(('colour', 1, 1, 1)),.2, .2, .15, .07)],
+                1: [(Rotate90Texture(
+                        ColourRampTexture(
+                            [
+                                ('colour', 0, 0, 0),
+                                ('colour', .3, .3, .3),
+                                ('colour', 1, 1, 1)
+                            ]),
+                        True
+                        ), 0, 0 ,1, 1)
+                    ]
+                },
+                ('colour', 1, 1, 1)
+            )
+        )
+    )
+    
+
     
     scene.add_shape(cyl, 'tower')     
     ###############################
     
     cone = shape_cone_create(
-        colour_create(1,.2,0),
+        ('colour_mapping', cone_map_to_rect,
+            TiledTexture(
+                PILImageTexture("examples/red-brick-tileable.jpg"),
+                1, 1
+            )
+        ),
         colour_create(0,0,0),
-        0, 1)
+        0, 1.33)
     
     
     shape_set_transform(cone, Transform({
-        # 'scale': {'x': 2.5, 'y': 2, 'z': 2.5},
-        'translate': {'x': 0, 'y':-5.5, 'z': 0}
+        'scale': {'x': 2.5, 'y': 3.2, 'z': 2.5},
+        'translate': {'x': 0, 'y':-18.25, 'z': 0}
         }))
 
-    #scene.add_shape(cone, 'towerTop')
+    scene.add_shape(cone, 'towerTop')
     ###############################
 
     disc = shape_disc_create(
@@ -115,7 +168,7 @@ if __name__ == '__main__':
         ('colour_mapping', disc_map_to_rect_cookie,
             TiledTexture(
                 PILImageTexture("examples/water_rippled_reflection.jpg"),
-                30, 60))         
+                1, 2))         
     )
 
     shape_set_transform(disc, Transform({
@@ -130,7 +183,9 @@ if __name__ == '__main__':
     ###################################
     
     sky = shape_sphere_create(
-                        ('colour_mapping', sphere_map_to_rect, PILImageTexture("examples/nightsky.jpeg")),
+                        ('colour_mapping', 
+                            sphere_map_to_rect,
+                            PILImageTexture("examples/nightsky.jpeg")),
                         #colour_create(1,1,0),
                         colour_create(0,0,0))   
 

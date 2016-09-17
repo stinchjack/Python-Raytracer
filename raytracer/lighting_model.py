@@ -103,9 +103,11 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
 
     if cartesian_dot (result['ray'][RAY_DIR], result['normal']) < 0:
         shift = lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
+        # result['normal'] = cartesian_sub(('c',0,0,0), result['normal'])
     else:
+
         shift = mpfr(0) - lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
-        
+    
     rs = cartesian_add(
         result['point'], cartesian_scale(result['normal'], shift))
              
@@ -118,8 +120,6 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
         if reflect_result is False:
             doReflections = False
 
-  
-    
     if (doReflections):
         reflect_result['ray'] = reflected_ray
         reflect_result['reflect_count'] = result['reflect_count']
@@ -129,7 +129,50 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
         end_colour = colour_add(end_colour,
                                 colour_mul(reflect_colour, specular_colour))
 
+    doTransparency = True
+    
+    
+    
+    if not 'all_results' in result or len(result['all_results']) == 0:
+        doTransparency = False
+
+    if doTransparency:
+
+        if result['shape'][SHAPE_TRANSPARENTCOLOUR_FUNC] is not None:
+            transparency = result['shape'][
+                SHAPE_TRANSPARENTCOLOUR_FUNC](result['shape'], result)
+        else:
+            transparency = \
+                shape_transparency_colour(result['shape'], result)
+        transparency_colour = get_colour_from_mapping(transparency, result)
+        if transparency_colour is None or \
+            (transparency_colour[1] <= 0 and \
+            transparency_colour[2] <= 0 and \
+            transparency_colour[3] <= 0):
+            doTransparency = False
+
+    if doTransparency:
+ 
+        next_result_t = sorted(result['all_results'].keys()).pop(0)
+        next_result = result['all_results'][next_result_t]
+        del (result['all_results'][next_result_t])
+        next_result_colour = lightingmodel_basic_calculate(
+            lighting_model, scene_obj, next_result)
+        transparency_colour_inv = ('colour',
+            1.0 - transparency_colour[1],
+            1.0 - transparency_colour[2],
+            1.0 - transparency_colour[3])
+            
+        end_colour = colour_add(
+                        end_colour,
+                        colour_mul(
+                            next_result_colour,
+                            transparency_colour)
+                        )            
+            
     lights = scene_obj.get_lights()
+
+    diffuse_colour_total = ('colour', 0, 0, 0)
 
     for l in lights:
         light = lights[l]
@@ -158,15 +201,25 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
                 light_ray = cartesian_normalise(cartesian_sub(
                     light[LIGHT_POINT_POINT], result['point']))
 
-                costh = abs(cartesian_dot(light_ray, result['normal']))
-                
-                #if costh>=0:
-                diff = colour_scale(
-                    light[LIGHT_POINT_COLOUR],
-                    costh)
+                costh = cartesian_dot(light_ray, result['normal'])
+                if shift < 0: 
+                    costh = 0 - costh
+                if costh >= 0:
+                    diff = colour_scale(
+                        light[LIGHT_POINT_COLOUR],
+                        costh)
 
-                end_colour = colour_add(
-                        end_colour, colour_mul(diffuse_colour, diff))
+                    diffuse_colour_total = colour_add(
+                        diffuse_colour_total, colour_mul(diffuse_colour, diff))
+
+    if doTransparency:
+        diffuse_colour_total = colour_mul (
+                diffuse_colour_total,
+                transparency_colour_inv
+            )
+
+    end_colour = colour_add(
+            end_colour, diffuse_colour_total)
         
     if end_colour[1] < 0 or end_colour[2] <0  or end_colour[3] < 0:
 
