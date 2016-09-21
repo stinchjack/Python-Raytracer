@@ -226,7 +226,15 @@ class Scene(object):
                         intersect_result['shape'] = sh
                         intersect_result['ray'] = ray
                         all_results[t] = intersect_result
-
+                        
+                        if 'all_results' in intersect_result:
+                            for result_key in intersect_result['all_results']:
+                                result = intersect_result['all_results']
+                                intersect_result['all_results'][result_key]['shape'] = sh
+                                intersect_result['all_results'][result_key]['ray'] = ray
+                                
+                            all_results.update(intersect_result['all_results'])
+                            del (intersect_result['all_results'])
         if len(all_results) == 0:
             return False
         

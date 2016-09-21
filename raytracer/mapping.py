@@ -19,25 +19,6 @@ Todo:
     * Add more documentation
 """
 
-def get_colour_from_mapping(colour_mapping, intersect_result):
-    """
-        Returns a colour from a Texture object. If a colour_mapping is a
-        colour tuple, then the colour tuple will be returned
-
-            :param colour_mapping: a colour mapping tuple or colour tuple
-            :param intersect_result: an intersection result dictionary
-    """
-    if colour_mapping is None:
-        return ('colour', 0, 0, 0)
-
-    if 'colour' in colour_mapping:
-        return colour_mapping
-
-    if 'colour_mapping' not in colour_mapping:
-        return None
-
-    uv_pair = colour_mapping[1](intersect_result)
-    return colour_mapping[2].colour(uv_pair)
 
 class Texture:
     """ Base class for all textures"""
@@ -98,6 +79,8 @@ class ColourRampTexture(Texture):
 
     def __init__(self, colour_array):
         self.band = colour_array
+        if len(colour_array) == 1:
+            colour_array.append(colour_array[0])
         self.band_width = mpfr(1.0)/(len(colour_array)-1)
         
     def colour(self, uv_tuple):
@@ -373,7 +356,7 @@ def cylinder_map_to_rect(intersect_result):
             :param intersect_result: the intersection result dictionary
     """
     p = intersect_result['raw_point']
-
+    shape = intersect_result['shape']
     x = p[1]
 
     if x < -1:
@@ -400,6 +383,7 @@ def cone_map_to_rect(intersect_result):
     """
     shape = intersect_result['shape']
     p = intersect_result['raw_point']
+    p2 = p[2]
     p = ('cartesian', p[1], 0, p[3])
     p = cartesian_normalise(p)
 
@@ -416,7 +400,7 @@ def cone_map_to_rect(intersect_result):
         a1 = 180 + (180 - a1)
 
     u = a1 / mpfr(360.0)
-    v = (p[2] - shape[raytracer.shape.SHAPE_DATA]['y_top']) / \
+    v = (p2 - shape[raytracer.shape.SHAPE_DATA]['y_top']) / \
         shape[raytracer.shape.SHAPE_DATA]['y_height']
 
     return (u, v)

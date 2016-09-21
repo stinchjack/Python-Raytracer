@@ -76,8 +76,21 @@ if __name__ == '__main__':
         0, -30, -30), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light1')
 
     scene.add_light(light_point_light_create(cartesian_create(
-        0, -4, 45), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light2')    
+        0, -4, 45), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light2')
         
+    scene.add_light(
+        light_point_light_create(
+            cartesian_create(0, -10, 0),
+            colour_create(0,.7,0)),
+            'light3'
+        )
+        
+    scene.add_light(
+        light_point_light_create(
+            cartesian_create(0, 49, 0),
+            colour_create(1,1,1)),
+            'light3'
+        )        
     ############################33
     textr = \
         MosiacTexture (
@@ -95,7 +108,7 @@ if __name__ == '__main__':
             cylinder_map_to_rect,
             MosiacTexture (
                 {
-                0: [(PlainTexture(('colour', .5, .5, .5)),.2, .2, .15, .07)],
+                0: [(PlainTexture(('colour', .8, .8, .8)),.2, .2, .15, .07)],
                 1: [(PlainTexture(('colour', 0,0,0)),1,1,1,1)]
                 },
                 ('colour', 0,0,0)
@@ -145,7 +158,7 @@ if __name__ == '__main__':
         ('colour_mapping', cone_map_to_rect,
             TiledTexture(
                 PILImageTexture("examples/red-brick-tileable.jpg"),
-                1, 1
+                math.pi*9, 9
             )
         ),
         colour_create(0,0,0),
@@ -160,6 +173,37 @@ if __name__ == '__main__':
     scene.add_shape(cone, 'towerTop')
     ###############################
 
+    cone = shape_cone_create(
+        colour_create((192.0/512.0), (83.0/512.0), (210.0/512.0)),
+        colour_create(0,0,0),
+        .75, 1)
+
+    shape_set_transparency(
+        cone,
+            ('colour_mapping', cone_map_to_rect,
+                Rotate90Texture(
+                    ColourRampTexture(
+                        [
+                            ('colour', 1,1,1),
+                            ('colour', 0,0,0),
+                            ('colour', 1,1,1)
+                        ]),
+                    True)
+            ),        
+        )
+
+    shape_set_transform(cone, Transform({
+        'scale': {'x': 50, 'y': 25, 'z': 50},
+        'translate': {'x': 0, 'y':(48-25), 'z': 0},
+        'rotate':{ 
+            'vector': ('c', 1.0, 0 ,0),
+            'angle': 180}        
+        }))
+
+
+    scene.add_shape(cone, 'mist');
+    
+    ##############################
     disc = shape_disc_create(
         ('colour_mapping', disc_map_to_rect_cookie,
             TiledTexture(

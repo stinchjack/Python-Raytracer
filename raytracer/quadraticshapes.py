@@ -114,9 +114,9 @@ def shape_cylinder_intersect(shape, ray):
     two_a = two * a
     ts = [((zero - b) + sqroot) / (two_a),
         ((zero - b) - sqroot) / (two_a)]
-        
-    t_final = None
-    raw_point_final = None
+    
+    results = {}
+    
     for t in ts:
         if t <= zero:
             continue
@@ -127,19 +127,25 @@ def shape_cylinder_intersect(shape, ray):
             raw_point[2] < mpfr(-0.5)):    
             continue
         
-        if t_final is None or t_final > t:
-            t_final = t
-            raw_point_final = raw_point
+        results[t] = \
+            {'t': t,
+            'raw_point': raw_point,
+            'raw_normal':
+                cartesian_create(
+                    raw_point[1], 0, raw_point[3])            
+            }
+        
+
             
-    if t_final is None:
+    if len(results) == 0:
         return False
 
-    result = {
-        't': t_final, 
-        'raw_point': raw_point_final,
-        'raw_normal':
-            cartesian_create(
-                raw_point_final[1], 0, raw_point_final[3]) }
+    final_t = sorted(results.keys()).pop(0)
+    
+
+    result = results[final_t]
+    del(results[final_t])
+    result['all_results'] = results
     
     return result
 
