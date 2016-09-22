@@ -56,13 +56,229 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
     if not isinstance(scene_obj, scene.Scene):
         return None
 
+    # type checking
     end_colour = lighting_model[LIGHTINGMODEL_AMBIENT]
 
+    #convert result into scene co-ordinates
     result = shape_reverse_transform(result)
 
-    diffuse_colour = shape_get_colour(result, SHAPE_DIFFUSECOLOUR)
+
+    if cartesian_dot (result['ray'][RAY_DIR], result['normal']) < 0:
+        shift = lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
+        # result['normal'] = cartesian_sub(('c',0,0,0), result['normal'])
+    else:
+
+        shift = mpfr(0) - lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
     
-    doReflections = ('NoReflections' not in lighting_model[LIGHTINGMODEL_OPTIONS] or
+    if not 'point' in result:
+        result['point'] = ray_calc_pt(result['ray'], result['t'] )
+    
+    rs = cartesian_add(
+        result['point'], cartesian_scale(result['normal'], shift))
+
+    reflected_colour = \
+        lightingmodel_basic_reflections(lighting_model, scene_obj, result, rs)
+
+    if reflected_colour is not None:
+        end_colour = colour_add(end_colour, reflected_colour)
+
+
+
+    lights = scene_obj.get_lights()
+
+
+    diffuse_colour = shape_get_colour(result, SHAPE_DIFFUSECOLOUR)
+    diffuse_colour_total = ('colour', 0, 0, 0)
+
+    for l in lights:
+        light = lights[l]
+        
+        
+            
+        #shadow calculation
+        
+        if ('NoShadows' in lighting_model[LIGHTINGMODEL_OPTIONS] and
+                lighting_model[LIGHTINGMODEL_OPTIONS]['NoShadows'] is True):
+            r = False
+        else:
+            #import pdb; pdb.set_trace();
+            shadow_ray = ray_create(rs, cartesian_sub(
+                light[LIGHT_POINT_POINT], rs), True)            
+            shadow_result = scene_obj.test_intersect(shadow_ray)
+
+        has_shadow = (type(shadow_result) is dict and
+            't' in shadow_result and
+            shadow_result['t'] <= 1)
+    
+        in_complete_shadow = False
+        shadow_factor = ('colour', 1,1,1)
+        if has_shadow:    
+            all_shadow_results = {shadow_result['t']: shadow_result}
+
+            if 'all_results' in shadow_result:
+                all_shadow_results.update(shadow_result['all_results'])
+                del (shadow_result['all_results'])
+
+            for result_key in sorted(all_shadow_results.keys()):
+                shadow_result_item = \
+                        all_shadow_results[result_key]
+
+                if shadow_result_item['t'] <= 1:
+
+                    shadow_result_item_transparency_colour = \
+                        shape_get_colour(shadow_result_item, 'transparency')
+
+                    shadow_factor = \
+                        colour_mul(
+                            shadow_factor,
+                            shadow_result_item_transparency_colour
+                        )
+
+                    if (shadow_factor[1] <=0 and \
+                        shadow_factor[2] <=0 and \
+                        shadow_factor[3] <=0):
+                        in_complete_shadow = True
+                        
+            
+                
+            if (shadow_factor[1] >=1 and \
+                shadow_factor[2] >=1 and \
+                shadow_factor[3] >=1):
+                has_shadow = False
+
+        if not has_shadow:
+            in_complete_shadow = False
+
+
+        #diffuse calucation
+        if not in_complete_shadow:
+            # shadow_factor = ('colour' ,0,0,0)
+            diffuse_colour_total = colour_add(
+                diffuse_colour_total,
+                lightingmodel_basic_calc_diffuse (
+                    lighting_model, scene_obj,
+                    result, shift, shadow_factor, light,
+                    diffuse_colour, has_shadow)
+                )
+
+    diffuse_transparency_results = \
+             lightingmodel_basic_transparency_diffuse(
+                lighting_model, scene_obj, result
+            ) 
+    if diffuse_transparency_results is not None:
+        diffuse_transparency_effect = diffuse_transparency_results[0]
+        transparency_colour_inv = diffuse_transparency_results[1] 
+        end_colour = \
+            colour_add(
+                end_colour,
+                diffuse_transparency_effect
+            )
+
+        # apply transparency effect to diffuse colour                    
+        diffuse_colour_total = colour_mul (
+                diffuse_colour_total,
+                transparency_colour_inv
+            )
+
+    end_colour = colour_add(
+            end_colour, diffuse_colour_total)
+    
+        
+    # Sanity check    
+    if end_colour[1] < 0 or end_colour[2] <0  or end_colour[3] < 0:
+
+        ec = [None, None, None, None]        
+        for i in range (1,4):
+            if end_colour[i] < 0:
+                ec[i] = 0
+            else:
+                ec[i] = end_colour[i]
+
+        end_colour = ('colour', ec[1], ec[2], ec[3]); 
+                        
+                    
+    return end_colour
+
+def lightingmodel_basic_transparency_diffuse(lighting_model, scene_obj, result):
+    
+    doTransparency = True
+    
+    if not 'all_results' in result or len(result['all_results']) == 0:
+        doTransparency = False
+
+    if doTransparency:
+        
+        transparency_colour = shape_get_colour(result, 'transparency')
+        
+        if transparency_colour is None or \
+            (transparency_colour[1] <= 0 and \
+            transparency_colour[2] <= 0 and \
+            transparency_colour[3] <= 0):
+            doTransparency = False
+    
+    else:
+        return None
+
+    if doTransparency:
+ 
+        next_result_t = sorted(result['all_results'].keys()).pop(0)
+        next_result = result['all_results'][next_result_t]
+        del (result['all_results'][next_result_t])
+        next_result['all_results'] = result['all_results']
+        next_result_colour = lightingmodel_basic_calculate(
+            lighting_model, scene_obj, next_result)
+        transparency_colour_inv = ('colour',
+            1.0 - transparency_colour[1],
+            1.0 - transparency_colour[2],
+            1.0 - transparency_colour[3])   
+       
+        return (
+            colour_mul(next_result_colour, transparency_colour),
+            ('colour',
+                1.0 - transparency_colour[1],
+                1.0 - transparency_colour[2],
+                1.0 - transparency_colour[3]))
+            
+    else:
+        return None            
+                      
+
+def lightingmodel_basic_calc_diffuse (
+                    lighting_model, scene_obj,
+                    result, shift, shadow_factor, light,
+                    diffuse_colour, has_shadow):
+
+    if ('NoDiffuse' in lighting_model[LIGHTINGMODEL_OPTIONS] and
+            lighting_model[LIGHTINGMODEL_OPTIONS]['NoDiffuse']):
+        return colour_scale(diffuse_colour, mpfr(0.5))
+    else:
+        light_ray = cartesian_normalise(cartesian_sub(
+            light[LIGHT_POINT_POINT], result['point']))
+
+        costh = cartesian_dot(light_ray, result['normal'])
+        if shift < 0: 
+            costh = 0 - costh
+        if costh >= 0:
+            diff = colour_scale(
+                light[LIGHT_POINT_COLOUR],
+                costh)
+            this_light_diffuse_colour = colour_mul(diffuse_colour, diff)
+
+            if has_shadow:
+                this_light_diffuse_colour = \
+                    colour_mul(
+                        this_light_diffuse_colour,
+                        shadow_factor
+                    )
+            return this_light_diffuse_colour
+        else:
+            return ('colour', 0, 0, 0)
+
+
+def lightingmodel_basic_reflections(lighting_model, scene_obj, result, rs):
+    # work out reflection, if any
+    doReflections = ('NoReflections' not in 
+            lighting_model[LIGHTINGMODEL_OPTIONS] or
         ('NoReflections' in lighting_model[LIGHTINGMODEL_OPTIONS] and
         lighting_model[LIGHTINGMODEL_OPTIONS]['NoReflections'] is False))
         
@@ -84,21 +300,6 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
             specular_colour[2] <= 0 and \
             specular_colour[3] <= 0:
             doReflections = False   
-
-    #import pdb; pdb.set_trace();
-
-    if cartesian_dot (result['ray'][RAY_DIR], result['normal']) < 0:
-        shift = lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
-        # result['normal'] = cartesian_sub(('c',0,0,0), result['normal'])
-    else:
-
-        shift = mpfr(0) - lighting_model[LIGHTINGMODEL_OPTIONS]['NormalOffset']
-    
-    if not 'point' in result:
-        result['point'] = ray_calc_pt(result['ray'], result['t'] )
-    
-    rs = cartesian_add(
-        result['point'], cartesian_scale(result['normal'], shift))
              
     if (doReflections):
         reflected_dir = ray_reflect_vector(result['ray'], result['normal'])
@@ -114,164 +315,10 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
         reflect_result['reflect_count'] = result['reflect_count']
         reflect_colour = lightingmodel_basic_calculate(
            lighting_model, scene_obj, reflect_result)
-
-        end_colour = colour_add(end_colour,
-                                colour_mul(reflect_colour, specular_colour))
-
-    doTransparency = True
+        
+        return colour_mul(reflect_colour, specular_colour)
     
-    
-    
-    if not 'all_results' in result or len(result['all_results']) == 0:
-        doTransparency = False
-
-    if doTransparency:
-        
-        transparency_colour = shape_get_colour(result, 'transparency')
-        
-        if transparency_colour is None or \
-            (transparency_colour[1] <= 0 and \
-            transparency_colour[2] <= 0 and \
-            transparency_colour[3] <= 0):
-            doTransparency = False
-
-    if doTransparency:
- 
-        next_result_t = sorted(result['all_results'].keys()).pop(0)
-        next_result = result['all_results'][next_result_t]
-        del (result['all_results'][next_result_t])
-        next_result['all_results'] = result['all_results']
-        next_result_colour = lightingmodel_basic_calculate(
-            lighting_model, scene_obj, next_result)
-        transparency_colour_inv = ('colour',
-            1.0 - transparency_colour[1],
-            1.0 - transparency_colour[2],
-            1.0 - transparency_colour[3])
-            
-        end_colour = colour_add(
-                        end_colour,
-                        colour_mul(
-                            next_result_colour,
-                            transparency_colour)
-                        )            
-            
-    lights = scene_obj.get_lights()
-
-    diffuse_colour_total = ('colour', 0, 0, 0)
-
-    for l in lights:
-        light = lights[l]
-        
-        
-        
-        if ('NoShadows' in lighting_model[LIGHTINGMODEL_OPTIONS] and
-                lighting_model[LIGHTINGMODEL_OPTIONS]['NoShadows'] is True):
-            r = False
-        else:
-            #import pdb; pdb.set_trace();
-            shadow_ray = ray_create(rs, cartesian_sub(
-                light[LIGHT_POINT_POINT], rs), True)            
-            shadow_result = scene_obj.test_intersect(shadow_ray)
-
-        has_shadow = (type(shadow_result) is dict and
-            't' in shadow_result and
-            shadow_result['t'] <= 1)
-    
-        in_complete_shadow = False
-    
-        if has_shadow:    
-            all_shadow_results = {shadow_result['t']: shadow_result}
-
-            if 'all_results' in shadow_result:
-                all_shadow_results.update(shadow_result['all_results'])
-                del (shadow_result['all_results'])
-         
-            shadow_factor = ('colour', 1.0, 1.0, 1.0)
-
-            for result_key in sorted(all_shadow_results.keys()):
-                shadow_result_item = \
-                        all_shadow_results[result_key]
-
-                if shadow_result_item['t'] <= 1:
-
-                    shadow_result_item_transparency_colour = \
-                        shape_get_colour(shadow_result_item, 'transparency')
-
-                    shadow_factor = \
-                        colour_mul(
-                            shadow_factor,
-                            shadow_result_item_transparency_colour
-                        )
-
-                    if shadow_factor is None or \
-                        (shadow_factor[1] <=0 and \
-                        shadow_factor[2] <=0 and \
-                        shadow_factor[3] <=0):
-                        in_complete_shadow = True
-                        
-            
-                
-            if (shadow_factor[1] >=1 and \
-                shadow_factor[2] >=1 and \
-                shadow_factor[3] >=1):
-                has_shadow = False
-
-        if not has_shadow:
-            in_complete_shadow = False
-
-
-
-        if not in_complete_shadow:
-
-            if ('NoDiffuse' in lighting_model[LIGHTINGMODEL_OPTIONS] and
-                    lighting_model[LIGHTINGMODEL_OPTIONS]['NoDiffuse']):
-                end_colour = colour_add(
-                    end_colour, colour_scale(diffuse_colour, mpfr(0.5)))
-            else:
-                light_ray = cartesian_normalise(cartesian_sub(
-                    light[LIGHT_POINT_POINT], result['point']))
-
-                costh = cartesian_dot(light_ray, result['normal'])
-                if shift < 0: 
-                    costh = 0 - costh
-                if costh >= 0:
-                    diff = colour_scale(
-                        light[LIGHT_POINT_COLOUR],
-                        costh)
-                    this_light_diffuse_color = colour_mul(diffuse_colour, diff)
-                    
-                    if has_shadow:
-                        this_light_diffuse_color = \
-                            colour_mul(
-                                this_light_diffuse_color,
-                                shadow_factor
-                            )
-                    
-                    diffuse_colour_total = colour_add(
-                        diffuse_colour_total, this_light_diffuse_color)
-
-    if doTransparency:
-        diffuse_colour_total = colour_mul (
-                diffuse_colour_total,
-                transparency_colour_inv
-            )
-
-    end_colour = colour_add(
-            end_colour, diffuse_colour_total)
-        
-    if end_colour[1] < 0 or end_colour[2] <0  or end_colour[3] < 0:
-
-        ec = [None, None, None, None]        
-        for i in range (1,4):
-            if end_colour[i] < 0:
-                ec[i] = 0
-            else:
-                ec[i] = end_colour[i]
-
-        end_colour = ('colour', ec[1], ec[2], ec[3]); 
-                        
-                    
-    return end_colour
+    return None
 
 
 def lightingmodel_basic_create(

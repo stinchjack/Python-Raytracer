@@ -58,7 +58,7 @@ if __name__ == '__main__':
                            0)
 
                        
-    view_set_antialias (view, True, 3, 3,  False, False)
+    view_set_antialias (view, True, 3,3 ,  False, False)
     view_set_output(view, PIL_Output())
     view_set_multiprocessing(view, True)
     view_set_lighting_model (
@@ -80,17 +80,11 @@ if __name__ == '__main__':
         
     scene.add_light(
         light_point_light_create(
-            cartesian_create(0, -10, 0),
-            colour_create(0,.7,0)),
+            cartesian_create(0, -13, 0),
+            colour_create(0, 1,0)),
             'light3'
         )
-        
-    scene.add_light(
-        light_point_light_create(
-            cartesian_create(0, 49, 0),
-            colour_create(1,1,1)),
-            'light3'
-        )        
+             
     ############################33
     textr = \
         MosiacTexture (
@@ -171,6 +165,22 @@ if __name__ == '__main__':
         }))
 
     scene.add_shape(cone, 'towerTop')
+    #########################################
+    disc = shape_disc_create(
+        ('colour', 0,0,0),    
+        ('colour', 0,0,0)
+        
+    )
+
+    shape_set_transform(disc, Transform({
+        'scale': {'x':2, 'y': 2.0, 'z': 1},
+        'translate': {'x': 0, 'y':-11.5, 'z': 0},
+        'rotate':{'vector': ('c', 1.0, 0 ,0),
+                    'angle': 90}
+        }))
+    
+    scene.add_shape(disc, 'towerInternalDisk') 
+    
     ###############################
 
     cone = shape_cone_create(
