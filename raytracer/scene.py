@@ -20,7 +20,7 @@ against each shape in the scene
 
 
 class Scene(object):
-    def __init__(self, use_octtree = True, oct_tree_threshold = 20):
+    def __init__(self, use_octtree = True, oct_tree_threshold = 10):
         self.__lights__ = {}
         self.__shapes__ = {}
         self.__views__ = {}
@@ -175,7 +175,8 @@ class Scene(object):
         else:
             shapes =  list(self.__shapes__.values())
         
-        return self.test_intersect_list (ray, shapes, exclude_shapes)
+        return self.test_intersect_list_all_results (
+            ray, shapes, exclude_shapes)
         
         
     def test_intersect_list(self, ray, list, exclude_shapes=[]):
@@ -184,7 +185,6 @@ class Scene(object):
         :param exclude_shapes: a list of shapes to exclude from the
         intersection test
         """
-        curr_sh = None
         curr_t = None
         curr_intersect_result = None
         for sh in list:
@@ -194,14 +194,52 @@ class Scene(object):
                 if type(intersect_result) is dict:
                     t = intersect_result['t']
                     if t > 0 and (curr_t is None or t < curr_t):
-                        curr_sh = sh
+        
                         curr_t = t
                         curr_intersect_result = intersect_result
                         curr_intersect_result['shape'] = sh
 
-                        if ray[RAY_ISSHADOW]:
+                        if ray[RAY_ISSHADOW] and t <= 1:
                             return curr_intersect_result
 
         if curr_intersect_result is None:
             return False
         return curr_intersect_result
+
+    def test_intersect_list_all_results (self, ray, list, exclude_shapes=[]):
+        """Tests intersection of a ray with all the shapes in the scene. Returns
+        a dictionary of results, indexed by t
+        :param ray: the ray to test against the shapes
+        :param exclude_shapes: a list of shapes to exclude from the
+        intersection test
+        """
+        all_results = {}
+        curr_t = None
+        for sh in list:
+            if sh not in exclude_shapes:
+                intersect_result = shape_test_intersect(sh, ray)
+                if type(intersect_result) is dict:
+                    t = intersect_result['t']
+                    if t > 0:
+                        if (curr_t is None or t < curr_t):
+                            curr_t = t
+                        intersect_result['shape'] = sh
+                        intersect_result['ray'] = ray
+                        all_results[t] = intersect_result
+                        
+                        if 'all_results' in intersect_result:
+                            for result_key in intersect_result['all_results']:
+                                result = intersect_result['all_results']
+                                intersect_result['all_results'][result_key]['shape'] = sh
+                                intersect_result['all_results'][result_key]['ray'] = ray
+                                
+                            all_results.update(intersect_result['all_results'])
+                            del (intersect_result['all_results'])
+        if len(all_results) == 0:
+            return False
+        
+        result = all_results[curr_t]
+        del(all_results[curr_t])
+        result['all_results'] = all_results
+        
+        return result

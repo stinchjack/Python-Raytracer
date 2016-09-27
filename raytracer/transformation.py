@@ -93,7 +93,7 @@ class Transform:
             o 'y': the amount to scale in the Y dimension
             o 'z': the amount to scale in the Z dimension
 
-        * 'rotation': a dictionary with the following elements:
+        * 'rotate': a dictionary with the following elements:
             o 'vector': a cartesian vector to use as an axis to rotate about
             o 'angle': the angle to rotate about the vector, in degrees
         """

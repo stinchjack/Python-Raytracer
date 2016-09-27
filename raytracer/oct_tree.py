@@ -1,5 +1,6 @@
 import raytracer.shape
 from raytracer.cartesian import *
+
 import textwrap
 # import raytracer.scene as scene
 
@@ -72,6 +73,7 @@ class OctTreeNode(object):
     def __init__(
             self, parent_branch, split_threshold,
             min_x, max_x, min_y, max_y, min_z, max_z):
+        self.margin = mpfr (".0001")
         self.parent_branch = parent_branch
         self.shapes = []
         self.split_threshold =  split_threshold
@@ -100,10 +102,17 @@ class OctTreeNode(object):
                             tuple[3])
 
         return str
-            
-class OctTreeLeaf(OctTreeNode):
- 
 
+    def get_shapes_by_ray(self, ray):
+      return self.shapes
+
+    def get_leaves_by_ray(self, ray):
+      return None            
+
+    def set_margin(self, margin):
+        self.margin = mpfr (margin)
+
+class OctTreeLeaf(OctTreeNode):
  
     def add_shape(self, new_shape):
             
@@ -114,11 +123,14 @@ class OctTreeLeaf(OctTreeNode):
         
         self.shapes.append(new_shape)
         if len(self.shapes) > self.split_threshold and self.can_split():
+            
             new_branch = OctTreeBranch(
                 self.parent_branch, self.split_threshold,
                 self.bounding_box.min_x, self.bounding_box.max_x,
                 self.bounding_box.min_y, self.bounding_box.max_y,
                 self.bounding_box.min_z, self.bounding_box.max_z)   
+            
+            new_branch.set_margin(self.margin)
                       
             for shape in self.shapes:
                 new_branch.add_shape(shape)
@@ -126,7 +138,13 @@ class OctTreeLeaf(OctTreeNode):
             self.shapes = []
             
             if self.parent_branch is not None:
-                self.parent_branch.replace_node(self, new_branch)
+                if hasattr (self.parent_branch, 'replace_node'):
+                    self.parent_branch.replace_node(self, new_branch)
+                elif (type(self.parent_branch) is dict or
+                    type(self.parent_branch) is list) and \
+                    'polymesh' in self.parent_branch:
+                    
+                    self.parent_branch[9]['octtree'] = new_branch;
 
             return True
 
@@ -148,13 +166,7 @@ class OctTreeLeaf(OctTreeNode):
          
         return shape_dict
             
-          
-    def get_shapes_by_ray(self, ray):
-      return self.shapes
 
-    def get_nodes_by_ray(self, ray):
-      return None
-      
     def __str__(self):
         str = "OctTreeLeaf ID: %d "%id(self)
         str = str + " Bounding box: %s " % self.bounding_box.__str__()
@@ -200,7 +212,6 @@ class OctTreeBranch(OctTreeNode):
     def ___str__(self):
         str = "-----------------------------------------------------------------------------------\n"
         for j in range(0,2):
-            left = self.str_break(self.children[0][j][0].__str__())
             str = "%s| %s | %s |\n" % (str, self.str_break(self.children[0][j][0].__str__()),
                     self.str_break(self.children[1][j][0].__str__() ))
             str = "%s%s" % \
@@ -223,29 +234,22 @@ class OctTreeBranch(OctTreeNode):
         list_p = []
         for line in list:
             list_p.append(line.ljust(width))
+
+    def set_margin (self, margin):
+        self.margin = mpfr(margin)
+        for i in range(0,2):
+            for j in range(0,2):
+                for k in range(0,2):
+                    self.children[i][j][k].set_margin(margin)        
             
     def add_shape (self, shape):
           
         self.__added_shapes__[id(shape)] = []  
-          
-        stop = False
-        # if shape[raytracer.shape.SHAPE_TRANSFORM] is not None:
-        #    trans_opt = shape[raytracer.shape.SHAPE_TRANSFORM].__options__
-        #    if 'scale' in trans_opt and \
-        #        trans_opt['scale']['x'] > trans_opt['scale']['y'] and \
-        #        type(self.parent_branch) is not raytracer.scene.Scene:
-        #        stop = True
-        #        import pdb; pdb.set_trace()        
-                
-        
-        stop = False
-        
+
+
         self.shape_count += 1        
         
         shape_box = raytracer.shape.shape_bounding_box(shape)
-        #print ("---- %s" % shape_box.__str__()) 
-
-        #print (self.bounding_box)
 
         if shape_box is None or not self.can_split():
             self.shapes.append(shape)
@@ -341,11 +345,11 @@ class OctTreeBranch(OctTreeNode):
             
     
     def get_shapes_by_ray(self, ray):
-        nodes = self.get_nodes_by_ray(ray)
+        leaves = self.get_leaves_by_ray(ray)
 
         shapes = []
-        for node in nodes:
-            shapes += node.shapes
+        for leaf in leaves:
+            shapes += leaf.shapes
 
         shapes += self.shapes
         
@@ -353,7 +357,7 @@ class OctTreeBranch(OctTreeNode):
                     
         return shapes
 
-    def get_nodes_by_ray(self, ray):
+    def get_leaves_by_ray(self, ray):
         
         if ((ray[RAY_START][1]<self.bounding_box.min_x and ray[RAY_DIR][1]<0)
             or (ray[RAY_START][2]<self.bounding_box.min_y and ray[RAY_DIR][2]<0)
@@ -382,40 +386,57 @@ class OctTreeBranch(OctTreeNode):
             t[3]['mid'] = (self.bounding_box.mid_z - ray[RAY_START][3]) / ray[RAY_DIR][3]
             t[3]['max'] = (self.bounding_box.max_z - ray[RAY_START][3]) / ray[RAY_DIR][3]
         
-        for dim in range (1,4):
+        for dim in range (1, 4):
                 
             for aspect in t[dim]:
+                if (t[dim][aspect] < 0):
+                    continue
+                
+                margin = self.margin
+                    
                 point = ray_calc_pt(ray, t[dim][aspect])
-                if (point[1] > self.bounding_box.max_x or
-                    point[1] < self.bounding_box.min_x or
-                    point[2] > self.bounding_box.max_y or
-                    point[2] < self.bounding_box.min_y or
-                    point[3] > self.bounding_box.max_z or
-                    point[3] < self.bounding_box.min_z or
-                    t<0):
+                
+                if (point[1] - margin > self.bounding_box.max_x or
+                    point[1] + margin < self.bounding_box.min_x or
+                    point[2] - margin > self.bounding_box.max_y or
+                    point[2] + margin < self.bounding_box.min_y or
+                    point[3] - margin > self.bounding_box.max_z or
+                    point[3] + margin < self.bounding_box.min_z):
                     continue
                 
                 
+                if abs (point[1] - self.bounding_box.mid_x) < margin:
+                    x = [0, 1]
+                else:
+                    if point[1] < self.bounding_box.mid_x:
+                        x = [0]
+                    else:
+                        x = [1]
+                        
+                if abs (point[2] - self.bounding_box.mid_y) < margin:
+                    y = [0, 1]
+                else:
+                    if point[2]<self.bounding_box.mid_y:
+                        y = [0]
+                    else:
+                        y = [1]
+                        
+                if abs (point[3] - self.bounding_box.mid_z) < margin:
+                    z = [0, 1]
+                else:
+                    if point[3]<self.bounding_box.mid_z:
+                        z = [0]
+                    else:
+                        z = [1]                        
                 
-                if point[1]<=self.bounding_box.mid_x:
-                    x = 0
-                else:
-                    x = 1
-                    
-                if point[2]<=self.bounding_box.mid_y:
-                    y = 0
-                else:
-                    y = 1                    
-
-                if point[3]<=self.bounding_box.mid_z:
-                    z = 0
-                else:
-                    z = 1  
-
-                node = self.children[x][y][z]
+                for i in x:
+                    for j in y:
+                        for k in z:
+                            
+                            node = self.children[i][j][k]
                 
-                if not node in nodes:
-                    nodes.append(node)
+                            if not node in nodes:
+                                nodes.append(node)
     
         if len(nodes) == 0:
             return []
@@ -424,7 +445,7 @@ class OctTreeBranch(OctTreeNode):
         
         for node in nodes:
             if isinstance(node, OctTreeBranch):
-                leaves += (node.get_nodes_by_ray(ray))
+                leaves += (node.get_leaves_by_ray(ray))
             else:
                 leaves.append(node)
         

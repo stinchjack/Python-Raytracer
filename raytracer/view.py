@@ -69,10 +69,7 @@ A view is stored as a list with the following elements:
         'a_view_step_x': The horizontal step distance to use for sub sampling
         'a_view_step_y': The vertical step distance to use for sub sampling
 
-
-    * The current X-position during rendering (intended for internal use)
-
-    * The current Y-position during rendering (intended for internal use)"""
+"""
 
 VIEW_LIGHTINGMODEL = 1
 VIEW_OUTPUT = 2
@@ -237,7 +234,7 @@ def view_set_antialias(
             view_render_pixel_no_antialias
 
 
-def view_set_lighting_model(view, lightingmodel, options=None):
+def view_set_lighting_model(view, lightingmodel, options={}):
     """Sets the lighting model for a view
 
      :param view: The view to change
@@ -245,14 +242,11 @@ def view_set_lighting_model(view, lightingmodel, options=None):
      :param options: optional lighting model  options dictionary
      """
     view[VIEW_LIGHTINGMODEL] = lightingmodel
-    if type(options) is dict:
-        view[VIEW_LIGHTINGMODEL][LIGHTINGMODEL_OPTIONS] = options
-
+    
+    lightingmodel_set_options (lightingmodel, options)
 
 def view_transform_ray (view, ray):
     if view[VIEW_TRANSFORM] is not None:
-
-        # import pdb; pdb.set_trace();
 
         ray_dir = view[VIEW_TRANSFORM].transform_cartesian (ray[RAY_DIR], True)
         ray_start =  view[VIEW_TRANSFORM].transform_point (ray[RAY_START])
@@ -270,20 +264,20 @@ def view_render_pixel(view, view_scan_x, view_scan_y):
      """
 
     clr = view[VIEW_ANTIALIAS_DATA]['antialias_function'](
-        view,view_scan_x, view_scan_y)
+        view, view_scan_x, view_scan_y)
 
     if 'rerender_list' in view[VIEW_ANTIALIAS_DATA]:
         while len(view[VIEW_ANTIALIAS_DATA]['rerender_list']) > 0:
             item = view[VIEW_ANTIALIAS_DATA]['rerender_list'].pop(0)
 
             view_render_pixel_antialias_edge_detect(view, 
-                item[1][0], item[1,1], True)
+                item[1][0], item[1][1], True) # ???
 
     return clr
 
 
 def view_render_pixel_no_antialias(view, view_scan_x, view_scan_y):
-    """
+    """clr
     Performs the current pixel of a render without antialiasing.
 
     :param view: The view to render
@@ -374,10 +368,11 @@ def view_render_pixel_antialias_edge_detect(view, view_scan_x, view_scan_y,
     """
 
     if not force_antialias:
-        clr = view_render_pixel_no_antialias(view)
+        clr = view_render_pixel_no_antialias(view, view_scan_x, view_scan_y)
 
     surrounding_coordinates = \
-        view_render_pixel_antialias_edge_detect_get_surrounding_eight(view)
+        view_render_pixel_antialias_edge_detect_get_surrounding_eight(
+            view, view_scan_x, view_scan_y)
 
     if force_antialias:
         do_antialias = True
@@ -406,10 +401,10 @@ def view_render_pixel_antialias_edge_detect(view, view_scan_x, view_scan_y,
     if do_antialias:
         if view[VIEW_ANTIALIAS]['stochastic']:
             clr_aa = view_render_pixel_antialias_stochastic(
-                view)
+                view, view_scan_x, view_scan_y)
         else:
             clr_aa = view_render_pixel_antialias_grid_pattern(
-                view)
+                view, view_scan_x, view_scan_y)
 
         if force_antialias:
             clr = clr_aa
@@ -557,13 +552,6 @@ def view_render(view):
 
     view[VIEW_ANTIALIAS]['y_step'] = y_step
 
-    if view[VIEW_ANTIALIAS]['on']:
-        a_view_step_x = x_step / mpfr(view[VIEW_ANTIALIAS]['x'])
-        a_view_step_y = y_step / mpfr(view[VIEW_ANTIALIAS]['y'])
-        do_random = view[VIEW_ANTIALIAS]['stochastic']
-
-    zero = mpfr(0)
-
     if ('DoMultiProcessing' in view[VIEW_MULTIPROCESS_OPTIONS] and
         view[VIEW_MULTIPROCESS_OPTIONS]['DoMultiProcessing']):
         queue_func = view_process_queue_multiprocess
@@ -608,13 +596,17 @@ def view_render(view):
 def view_process_queue(view, queue):
     while len(queue)>0:
         item = queue.pop(0)
+        #if (item[3] == 121 and  item[4] == 40):
+        #    import pdb; pdb.set_trace();
         clr = view_render_pixel(item[0], item[1], item[2])
         #clr = view_pp_render_pixel (item)
         view[VIEW_OUTPUT].set_pixel(item[3], item[4], clr)
 
 def view_process_queue_multiprocess(view, queue):
 
-    # Seems to unable to pass
+    #import pdb; pdb.set_trace();
+
+    # Seems to unable to pass PIL object 
     output = view[VIEW_OUTPUT]
     pool = view[VIEW_MULTIPROCESS_POOL]
     view[VIEW_OUTPUT] = None
@@ -632,6 +624,7 @@ def view_process_queue_multiprocess(view, queue):
 def view_pp_render_pixel(queue_item):
     view, view_scan_x, view_scan_y, physical_x, physical_y, force_aa = \
         queue_item
+    
     clr = view_render_pixel(view, view_scan_x, view_scan_y)
 
     return clr
@@ -697,17 +690,15 @@ def view_create_look_at (
                         acos(
                             cartesian_dot(
                                 view_axis_normalised, ('cartesian', 0, 0, 1))))
- 
-    effective_screen_z = eye_point[3] + eye_distance_to_screen
-
-        
+       
     eye_z = 0 - eye_distance_to_screen
 
     
     rotation_z_matrix = RotationZMatrix (0 - z_rotation)
+    # rotation_z_matrix = RotationMatrix(view_axis, z_rotation)
     look_at_matrix = RotationMatrix(rotation_axis,  0 - rotation_angle)
     scale_matrix = ScaleMatrix (1, 1, scale)
-    matrix = rotation_z_matrix * look_at_matrix * scale_matrix 
+    matrix =    look_at_matrix  * scale_matrix * rotation_z_matrix
     transform.set_matrix(matrix)
 
     view_rectangle = {

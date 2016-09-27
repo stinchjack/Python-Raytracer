@@ -110,4 +110,4 @@ def light_tube_is_inside(point):
         return False
     point_r2 = (p[VECTOR_X] * p[VECTOR_X]) + (p[VECTOR_Y] * p[VECTOR_Y])
 
-    return pointr2 < 1.0
+    return point_r2 < 1.0

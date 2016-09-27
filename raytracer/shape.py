@@ -34,6 +34,68 @@ SHAPE_TRANSFORM = 8
 SHAPE_DATA = 9
 SHAPE_BOUNDING_BOX_SHAPESPACE = 10
 SHAPE_BOUNDING_BOX_WORLDSPACE = 11
+SHAPE_TRANSPARENTCOLOUR = 12
+SHAPE_TRANSPARENTCOLOUR_FUNC = 13
+
+def shape_diffuse_colour(intersect_result):
+    """Returns the diffuse colour for a shape that is stored in the shape
+    tuple.
+    :param shape: a shape
+    :param intersect_result: a dictionary of intersection results. This
+    parameter is not used. """    
+    return shape_get_colour(intersect_result, SHAPE_DIFFUSECOLOUR) 
+
+def shape_specular_colour(intersect_result):
+    """Returns the specular colour for a shape that is stored in the shape
+    tuple.
+    :param intersect_result: a dictionary of intersection results"""
+    return shape_get_colour(intersect_result, SHAPE_SPECULARCOLOUR)    
+    
+def shape_transparency_colour(intersect_result):
+    """Returns the tranparency effect colour for an intersection result
+    :param intersect_result: a dictionary of intersection results. """
+    return shape_get_colour(intersect_result, SHAPE_TRANSPARENTCOLOUR)
+
+def shape_get_colour(intersect_result, colour_type):
+    
+    if type(colour_type) is not int:
+        colour_type = colour_type.lower().strip()
+        if colour_type == 'diffuse':
+            colour_type = SHAPE_DIFFUSECOLOUR
+        elif colour_type == 'specular' or \
+            'reflect' in colour_type: 
+            colour_type = SHAPE_SPECULARCCOLOUR
+        elif 'transp' in colour_type:
+            colour_type= SHAPE_TRANSPARENTCOLOUR
+        else:
+            return None
+
+            
+    if colour_type == SHAPE_DIFFUSECOLOUR:
+        function_index = SHAPE_DIFFUSECOLOUR_FUNC
+    elif colour_type == SHAPE_SPECULARCOLOUR:
+        function_index = SHAPE_SPECULARCOLOUR_FUNC    
+    elif colour_type == SHAPE_TRANSPARENTCOLOUR:
+        function_index = SHAPE_TRANSPARENTCOLOUR_FUNC
+    else: 
+        return None
+        
+    shape = intersect_result['shape']
+    if shape[function_index] is not None:
+        tuple = shape[function_index](shape, intersect_result)
+    else:
+        tuple = shape[colour_type]
+    
+    if tuple is None:
+        return ('colour', 0, 0, 0)
+    
+    if 'colour' in tuple:
+        return tuple
+    elif 'colour_mapping' in tuple:
+        uv_pair = tuple[1](intersect_result)
+        return tuple[2].colour(uv_pair)
+
+    return None
 
 def shape_bounding_box(shape):
     if shape[SHAPE_BOUNDING_BOX_SHAPESPACE] is None:
@@ -95,38 +157,6 @@ def shape_set_transform(shape, transform):
     else:
         shape[SHAPE_TRANSFORM] = None
 
-
-def shape_diffuse_colour(shape, intersect_result=None):
-    """Returns the diffuse colour for a shape that is stored in the shape
-    tuple.
-    :param shape: a shape
-    :param intersect_result: a dictionary of intersection results. This
-    parameter is not used.
-    """
-
-    if(type(shape[SHAPE_DIFFUSECOLOUR]) is tuple and
-            ('colour' in shape[SHAPE_DIFFUSECOLOUR] or
-             'colour_mapping' in shape[SHAPE_DIFFUSECOLOUR])):
-        return shape[SHAPE_DIFFUSECOLOUR]
-    else:
-        return None
-
-
-def shape_specular_colour(shape, intersect_result=None):
-    """Returns the specular colour for a shape that is stored in the shape
-    tuple.
-    :param shape: a shape
-    :param intersect_result: a dictionary of intersection results. This
-    parameter is not used. """
-    if(type(shape[SHAPE_SPECULARCOLOUR]) is tuple and
-            ('colour' in shape[SHAPE_SPECULARCOLOUR] or
-             'colour_mapping' in shape[SHAPE_SPECULARCOLOUR])):
-
-        return shape[SHAPE_SPECULARCOLOUR]
-    else:
-        return None
-
-
 def shape_empty_shape():
     """"Returns a list with some starting elements necessary for a shape.
 
@@ -134,12 +164,14 @@ def shape_empty_shape():
              shape_specular_colour, None, {}, None, None]"""
 
     return ['shape', None, None, None, None, None, None,
-            None, None, {}, None, None]
+            None, None, {}, None, None, None, None]
 
 
 def shape_point_inside(shape, cartesian):
     if shape[SHAPE_INSIDE_FUNC] is not None:
         return shape[SHAPE_INSIDE_FUNC](cartesian)
+    else:
+        return False
 
 
 def shape_test_intersect(shape, ray):
@@ -193,3 +225,6 @@ def shape_reverse_transform(intersect_result):
             intersect_result['point'] = intersect_result['raw_point']
 
     return intersect_result
+
+def shape_set_transparency(shape, colour):
+    shape[SHAPE_TRANSPARENTCOLOUR] = colour
