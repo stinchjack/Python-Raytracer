@@ -10,6 +10,9 @@ and polygon meshes.
 ..to do: complete docstrings, retest all functions."""
 
 
+def shape_planar_is_inside(shape, shape_space_point):
+    return False
+
 def shape_disc_intersect(shape, ray):
     """Intersection test function for a disc. An untranslated disc is
         located at X=0, Y=0, Z=0, sits on the XY plane, and has a radius\
@@ -51,6 +54,7 @@ def shape_disc_create(colour, specular, transform=None):
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_INTERSECT_FUNC] = shape_disc_intersect
+    shape[SHAPE_INSIDE_FUNC] = shape_planar_is_inside
     shape_set_transform(shape, transform)
     shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
         -1, 1, -1, 1, -.0001, .0001)
@@ -101,6 +105,7 @@ def shape_rectangle_create(colour, specular, bounds, transform=None):
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_INTERSECT_FUNC] = shape_rectangle_intersect
+    shape[SHAPE_INSIDE_FUNC] = shape_planar_is_inside
     shape_set_transform(shape, transform)
 
     if('left' not in bounds or 'right' not in bounds or
@@ -202,7 +207,7 @@ def shape_polygon_create(data={}):
     """
     shape = shape_empty_shape()
     shape[SHAPE_INTERSECT_FUNC] = shape_polygon_intersect
-
+    shape[SHAPE_INSIDE_FUNC] = shape_planar_is_inside
     colours = data['colour']
     points = data['points']
     if len(points) < 3:
@@ -463,6 +468,7 @@ def shape_triangle_create(points, colours, reflections=None):
     shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'triangle'
     shape[SHAPE_INTERSECT_FUNC] = shape_triangle_intersect
+    shape[SHAPE_INSIDE_FUNC] = shape_planar_is_inside    
     shape[SHAPE_DIFFUSECOLOUR_FUNC] = shape_triangle_diffuse_colour
     shape[SHAPE_SPECULARCOLOUR_FUNC] = shape_triangle_specular_colour
 
@@ -716,15 +722,24 @@ def shape_polymesh_intersect(shape, ray, use_octtree = True):
     
     final_result = False
 
+    results = {}
+
     for polygon in shapes:
         result = polygon[SHAPE_INTERSECT_FUNC](polygon, ray)
-        if result is not False:
-            if final_result is False or result['t'] < final_result['t']:
-                final_result = result
-                final_result['hit_polygon'] = polygon
-            # if ray[3]: return final_result
+        if result is not False and result[t]>0:
+           results[subshape_result['t']] = subshape_result
+           
+ 
+    if len(results) == 0:
+        return False
 
-    return final_result
+    final_t = sorted(results.keys()).pop(0)
+
+    result = results[final_t]
+    del(results[final_t])
+    result['all_results'] = results
+    
+    return result
 
 def shape_polymesh_replace_octtree_node(shape, octree_node):        
         shape[SHAPE_DATA]['octtree']  = octree_node

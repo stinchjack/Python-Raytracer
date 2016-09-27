@@ -32,25 +32,38 @@ def shape_sphere_intersect(shape, ray):
     sqroot = sqrt(discriminant)
 
     two_a = mpfr(2) * a
-    t1 = ((0 - b) + sqroot) / (two_a)
-    t2 = ((0 - b) - sqroot) / (two_a)
 
-    if t1 < 0 and t2 < 0:
+
+    ts = [((0 - b) + sqroot) / (two_a),
+        ((0 - b) - sqroot) / (two_a)]
+    
+    results = {}
+    
+    for t in ts:
+        if t <= zero:
+            continue
+        
+        raw_point = ray_calc_pt(ray, t)
+
+        
+        results[t] = \
+            {'t': t,
+            'raw_point': raw_point,
+            'raw_normal':
+                cartesian_create(
+                    raw_point[1], 0, raw_point[3])            
+            }
+
+    if len(results) == 0:
         return False
-    elif t1 < 0 and t2 >= 0:
-        t = t2
-    elif t1 >= 0 and t2 < 0:
-        t = t1
-    else:
-        if t1 < t2:
-            t = t1
-        else:
-            t = t2
 
-    result = {'t': t,
-        'raw_point': ray_calc_pt(ray, t)}
+    final_t = sorted(results.keys()).pop(0)
+    
 
-    result['raw_normal'] = result['raw_point']
+    result = results[final_t]
+    del(results[final_t])
+    result['all_results'] = results
+    
     return result
 
 
@@ -71,10 +84,15 @@ def shape_sphere_create(colour, specular, transform=None):
     shape[SHAPE_INTERSECT_FUNC] = shape_sphere_intersect
     shape_set_transform(shape, transform)
     
+    shape[SHAPE_INSIDE_FUNC] = shape_sphere_is_inside
     shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
         -1.0, 1.0, -1.0, 1.0,-1.0, 1.0)
     
     return shape
+
+def shape_sphere_is_inside(shape, shape_space_point):
+    p = shape_space_point
+    return ((p[1]**2) + (p[2]**2) + (p[3]**2)) <= mpfr(1.0)
 
 
 def shape_cylinder_intersect(shape, ray):
@@ -149,6 +167,10 @@ def shape_cylinder_intersect(shape, ray):
     
     return result
 
+def shape_cylinder_is_inside(shape, shape_space_point):
+    p = shape_space_point
+    return ((p[1]**2) + (p[3]**2)) <= mpfr(1.0)
+
 
 def shape_cylinder_create(colour, specular, transform=None):
     """Creates a cylinder tuple.
@@ -166,7 +188,11 @@ def shape_cylinder_create(colour, specular, transform=None):
     shape_set_transform(shape, transform)
     shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (
         -1.0, 1.0, -1.0, 1.0,-1.0, 1.0)
+    shape[SHAPE_INSIDE_FUNC] = shape_cylinder_is_inside
+    
     return shape
+
+
 
 
 def shape_capped_cylinder_diffuse_colour(shape, intersect_result):
@@ -390,37 +416,43 @@ def shape_cone_intersect(shape, ray):
     t_vals = {'t1': ((zero - b) + sqroot) / (two_a),
               't2': ((zero - b) - sqroot) / (two_a)}
 
-
-    final_t = None
-    final_raw_point = None
-
- 
+    results = {}
+    
     for t_key in t_vals:
-        if t_vals[t_key] <= 0:
-            continue
-        else:
-            if final_t is None or t_vals[t_key] < final_t:
-                
-                raw_point = ray_calc_pt(ray, t_vals[t_key])
-                if raw_point[2] <= (shape[SHAPE_DATA]['y_bottom']) and \
-                    raw_point[2] >= (shape[SHAPE_DATA]['y_top']):
+        if t_vals[t_key] > 0:
+            raw_point = ray_calc_pt(ray, t)
+            if raw_point[2] <= (shape[SHAPE_DATA]['y_bottom']) and \
+                raw_point[2] >= (shape[SHAPE_DATA]['y_top']):
 
-                #    pass
-                # if True:
-                    final_t = t_vals[t_key] - .0001
-                    final_raw_point = raw_point
+                results[t_vals[t_key]] = \
+                    {'t': t - .0001,
+                    'raw_point': raw_point,
+                    'raw_normal':
+                        cartesian_create(
+                            raw_point[1], 0, raw_point[3])            
+                    }
 
     if final_t is None:
         return False
 
-    result = {'t': final_t,
-        'raw_point': final_raw_point,
-        'raw_normal': 
-            cartesian_create(final_raw_point[1], 0, final_raw_point[3])
-        }
+    result = results[final_t]
+    del(results[final_t])
+    result['all_results'] = results 
 
     return result
 
+def shape_cone_is_inside(shape, shape_space_point):
+    p = shape_space_point
+ 
+    if p[2] >= shape[SHAPE_DATA]['y_bottom'] or \
+        p[2] <= shape[SHAPE_DATA]['y_top']:        
+        return False
+    
+    p = ('cartesian', p[1], 0, p[3])
+    p = cartesian_normalise(p)    
+        
+    
+    return ((p[1]**2) + (p[3]**2)) <= mpfr(1.0)
 
 def shape_cone_create(colour, specular, y_top=0, y_bottom=1,
                       transform=None):
@@ -447,6 +479,7 @@ def shape_cone_create(colour, specular, y_top=0, y_bottom=1,
     shape[SHAPE_DIFFUSECOLOUR] = colour
     shape[SHAPE_SPECULARCOLOUR] = specular
     shape[SHAPE_DATA] = {}
+    
 
     shape[SHAPE_DATA]['y_top'] = y_top
     shape[SHAPE_DATA]['y_bottom'] = y_bottom
@@ -460,6 +493,7 @@ def shape_cone_create(colour, specular, y_top=0, y_bottom=1,
     shape[SHAPE_DATA]['y_height'] = y_bottom - y_top
         
     shape[SHAPE_INTERSECT_FUNC] = shape_cone_intersect
+    shape[SHAPE_INSIDE_FUNC] = shape_cone_is_inside
     shape_set_transform(shape, transform)
     
     shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = BoundingBox (

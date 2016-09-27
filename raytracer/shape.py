@@ -228,3 +228,19 @@ def shape_reverse_transform(intersect_result):
 
 def shape_set_transparency(shape, colour):
     shape[SHAPE_TRANSPARENTCOLOUR] = colour
+
+def shape_is_inside(shape, world_space_point):
+    
+    if shape[SHAPE_INSIDE_FUNC] is None:
+        return None
+    if shape[SHAPE_TRANSFORM] is not None:
+        shape_space_point = \
+            shape[SHAPE_TRANSFORM].transform_cartesian(world_space_point)
+    else:
+        shape_space_point = world_space_point
+
+    shape[SHAPE_INSIDE_FUNC](shape, shape_space_point)
+    
+    
+    
+    
