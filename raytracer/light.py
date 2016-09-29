@@ -6,7 +6,7 @@ except ImportError:
 from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.transformation import *
-
+import random
 """Functions for dealing with lights
 
 A point light is stored as a tuple, with the first two elements being the
@@ -60,54 +60,162 @@ def light_point_calcinfo (light, intersection_result):
     }
 
 
-def light_cone_is_inside(light, point):
-    """Tests if a point is inside a cone. The cone is defined as
-    having a base at x=0, y=0, z=0, having a height of 1, and a radius
-    of 1 at that height.
-
-     light: The cone light
-     point: A cartesian as a point to test
-
-    :return: Boolean"""
-
-    p = light[LIGHT_CONE_TRANSFORM].transform_point(point)
-    if p[3] <= 0:
-        return False
-    r = p[3] * aspect
-
-    point_r2 = (p[1] * p[1]) + (p[2] * p[2])
-
-    return pointr2 < 1.0
+def light_spotlight_create(transform, colour, length = None, samples = 10):
+    return ('light', 'spotlight', colour,
+        transform, light_spotlight_calcinfo,
+        {'samples': samples,
+        'length': length}
+        )
 
 
-def light_conelight_create(colour, transform):
-    """Creates a tuple for a cone-shaped light"""
+def light_spotlight_calcinfo (light, intersection_result):
+    
+    shadow_vectors = []
 
-    return ('light', 'cone', light_cone_is_inside, colour, transform)
+    if light[LIGHT_TRANSFORM] is not None:
+        
+        lightspace_point = light[LIGHT_TRANSFORM].transform_cartesian(
+                intersection_result['point']
+            )
+    else:
+        lightspace_point = intersection_result['point']
+    
+    if lightspace_point[2] < 0:
+        return {'is_inside': False}
+    
+    if (light[LIGHT_DATA]['length'] is not None and 
+        light[LIGHT_DATA]['length'] > 0 and
+        lightspace_point[2] > light[LIGHT_DATA]['length']):
+        return {'is_inside': False}
+    
+    
+    if ((lightspace_point[1] ** 2 + lightspace_point[3] ** 2) > 1.0):
+        
+        return {'is_inside': False}
+        
+    
+    shadow_vectors = []
+    
+    light_direction = ('cartesian', 0, 0, 0)
+    
+    for sample in range(0, light[LIGHT_DATA]['samples']):
+        r = random.uniform(0, 1)
+        angle = random.uniform(0, 1) * pi * 2 
+        x = sin(angle) * r
+        y = cos(angle) * r
+        z = 0
+        
+        if light[LIGHT_TRANSFORM] is not None:
+            worldspace_test_point = \
+                light[LIGHT_TRANSFORM].inverse_transform(
+                    ('cartesian', x, y, z), 
+                    True
+                )
+        else: 
+            worldspace_test_point = ('cartesian', x, y, z)
+            
+        shadow_vector = \
+            cartesian_sub (
+                worldspace_test_point,
+                intersection_result['shifted_point']
+            )
+            
+        light_direction = \
+            cartesian_add (
+                light_direction,
+                shadow_vector
+            )
+        
+        shadow_vectors.append (
+            cartesian_sub (
+                worldspace_test_point,
+                intersection_result['shifted_point']
+                )        
+            )
+        
+    
+    light_direction = \
+        cartesian_scale(
+            light_direction,
+            1.0 / light[LIGHT_DATA]['samples']
+        )
+        
+        
+    return {
+        'shadow_vectors': shadow_vectors,
+        'is_inside': True,
+        'light_direction': light_direction
+    }
 
 
-def light_tubelight_create(colour, transform):
-    """Creates a tube/cylinder shaped light
+def light_conical_create(transform, colour, length = None, samples = 10):
+    return ('light', 'spotlight', colour,
+        transform, light_conical_calcinfo,
+        {'samples': samples,
+        'length': length}
+        )
 
-    :param light: The cone light
-    :param point: A cartesian as a point to test
+def light_conical_calcinfo (light, intersection_result):
+    
+    shadow_vectors = []
 
-    :return: a tuple respresenting a directional light"""
+    if light[LIGHT_TRANSFORM] is not None:
+        
+        lightspace_point = light[LIGHT_TRANSFORM].transform_cartesian(
+                intersection_result['point']
+            )
+    else:
+        lightspace_point = intersection_result['point']
+    
+    if lightspace_point[2] <= 0:
+        return {'is_inside': False}
+    
+    
+    
+    if (light[LIGHT_DATA]['length'] is not None and 
+        light[LIGHT_DATA]['length'] > 0 and
+        lightspace_point[2] > light[LIGHT_DATA]['length']):
+        return {'is_inside': False}
+    
+        
+    r = sqrt (lightspace_point[1]**2 + lightspace_point[3]**2) / \
+        lightspace_point[2]
+    
+    
+    if (r > 1.0):
+        return {'is_inside': False}
+        
+    
+    x = 0
+    y = 0
+    z = 0
 
-    return ('light', 'tube', light_tube_is_inside, colour, transform)
+    if light[LIGHT_TRANSFORM] is not None:
+        worldspace_test_point = \
+            light[LIGHT_TRANSFORM].inverse_transform(
+                ('cartesian', x, y, z), 
+                True
+            )
+    else: 
+        worldspace_test_point = ('cartesian', x, y, z)
+
+    shadow_vector = \
+        cartesian_sub (
+            worldspace_test_point,
+            intersection_result['shifted_point']
+        )
+
+    light_direction =  shadow_vector
+        
 
 
-def light_tube_is_inside(point):
-    """Tests if a point is inside a cone. The cylinder is defined as
-    having a radius of 1, where Y is between 0 and 1.
+        
+        
+    return {
+        'shadow_vectors': [shadow_vector],
+        'is_inside': True,
+        'light_direction': light_direction
+    }
 
-    :param point: A cartesian as a point to test
 
-    :return: Boolean"""
 
-    p = light[LIGHT_CONE_TRANSFORM].transform_point(point)
-    if p[3] <= 0:
-        return False
-    point_r2 = (p[VECTOR_X] * p[VECTOR_X]) + (p[VECTOR_Y] * p[VECTOR_Y])
-
-    return point_r2 < 1.0

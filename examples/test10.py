@@ -31,7 +31,31 @@ if __name__ == '__main__':
                             .333,
                            0)
 
-    view = view_create_look_at(scene,
+    sc_trans =                 Transform({
+                        'scale': {'x':.5, 'y': 1, 'z': 1},
+                        'translate': {'x': 0, 'y':0, 'z': 0},
+                        'rotate':{'vector': ('c', 1.0, 0 ,0),
+                                    'angle': -90}
+                        })
+
+    sc_trans_lt =                 Transform({
+                        'scale': {'x':.5, 'y': 1, 'z': 1},
+                        'translate': {'x': 0, 'y':0, 'z': 0},
+                        'rotate':{'vector': ('c', 1.0, 0 ,0),
+                                    'angle': -00}
+                        })                        
+                        
+
+
+    view = view_create(scene, -150, 
+                        {'left': 0,
+                             'right': 300,
+                             'top': 0,
+                             'bottom': 300},
+                       {'left': -5, 'right': 5, 'top': -5, 'bottom': 5},
+                       sc_trans_lt)
+                       
+    vview = view_create_look_at(scene,
                             
                             {'left': 0,
                                 'right': 300,
@@ -39,8 +63,8 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, 3.95, 7), ## eye point,
-                            ('cartesian', 0, -20, -20 ), ## look at
+                            ('cartesian', 0, 0, 0), ## eye point,
+                            ('cartesian', 0, 0, 20 ), ## look at
                             .5,
                            180)
 
@@ -52,13 +76,13 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, -10, -20), ## eye point,
-                            ('cartesian', 0, -10, 0 ), ## look at
+                            ('cartesian', 0, 00, -20), ## eye point,
+                            ('cartesian', 0, 00, 0 ), ## look at
                             .5,
                            0)
 
                        
-    view_set_antialias (view, True, 3, 3 ,  False, False)
+    view_set_antialias (view, False, 3, 3 ,  False, False)
     view_set_output(view, PIL_Output())
     view_set_multiprocessing(view, True)
     view_set_lighting_model (
@@ -75,13 +99,21 @@ if __name__ == '__main__':
     scene.add_light(light_point_light_create(cartesian_create(
         0, -30, -30), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light1')
 
-    scene.add_light(light_point_light_create(cartesian_create(
+    """scene.add_light(light_point_light_create(cartesian_create(
         0, -4, 45), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light2')
-        
+        """
+    """Transform({
+        'scale': {'x':50, 'y': 50, 'z': 1},
+        'translate': {'x': 0, 'y':0, 'z': -13},
+        'rotate':{'vector': ('c', 1.0, 0 ,0),
+                    'angle': 90}
+        })"""
+    
     scene.add_light(
-        light_point_light_create(
-            cartesian_create(0, -13, 0),
-            colour_create(0, 1,0)),
+        light_spotlight_create(
+                sc_trans,
+                colour_create(1,1,1)
+            ),
             'light3'
         )
              
@@ -145,7 +177,7 @@ if __name__ == '__main__':
     
 
     
-    scene.add_shape(cyl, 'tower')     
+    #scene.add_shape(cyl, 'tower')     
     ###############################
     
     cone = shape_cone_create(
@@ -211,7 +243,7 @@ if __name__ == '__main__':
         }))
 
 
-    scene.add_shape(cone, 'mist');
+    #scene.add_shape(cone, 'mist');
     
     ##############################
     disc = shape_disc_create(
@@ -232,7 +264,7 @@ if __name__ == '__main__':
                     'angle': 90}
         }))
     
-    scene.add_shape(disc, 'water') 
+    #scene.add_shape(disc, 'water') 
     
     ###################################
     
