@@ -3,10 +3,11 @@ from raytracer.colour import *
 from raytracer.matrix import *
 from raytracer.transformation import *
 from raytracer.shape import *
-
+from warning import warn
 
 def shape_create_add (tuple1, tuple2, transform = None):
-      
+    
+    warn("untested code")
     
     shape = shape_empty_shape()
     shape[SHAPE_SHAPE] = 'sphere'
@@ -52,7 +53,7 @@ def shape_create_add (tuple1, tuple2, transform = None):
 
 
 def shape_add_intersect(shape, ray):
-    
+    warn("untested code")
     results = {}
     
     for subshape, transform in shape[SHAPE_DATA]['subshapes']:
@@ -82,7 +83,7 @@ def shape_add_intersect(shape, ray):
     
     
 def shape_add_is_inside(shape, shape_space_point):
-
+    warn("untested code")
     
     for subshape, transform in shape[SHAPE_DATA]['subshapes']:
         sub_is_inside = shape_is_inside (subshape, shape_space_point)
@@ -92,7 +93,7 @@ def shape_add_is_inside(shape, shape_space_point):
     return False
 
 def shape_create_union (tuple1, tuple2, transform = None):
-    
+    warn("untested code")    
    
     
     shape = shape_empty_shape()
@@ -125,7 +126,7 @@ def shape_create_union (tuple1, tuple2, transform = None):
     return shape
 
 def shape_union_is_inside(shape, shape_space_point):
-    
+    warn("untested code")    
     for subshape, transform in shape[SHAPE_DATA]['subshapes']:
         sub_is_inside = shape_is_inside (subshape, shape_space_point)
         if sub_is_inside is False or sub_is_inside is None:
@@ -134,7 +135,7 @@ def shape_union_is_inside(shape, shape_space_point):
     return True
 
 def shape_union_intersect(shape, ray):
-
+    warn("untested code")
     
     sh1 = shape[SHAPE_DATA]['subshapes'][0][0]
     sh2 = shape[SHAPE_DATA]['subshapes'][1][0]   
@@ -185,4 +186,92 @@ def shape_union_intersect(shape, ray):
     del(results[final_t])
     result['all_results'] = results
     
-    return result  
+    return result
+
+
+def shape_create_subtract (tuple1, tuple2, transform = None):
+    warn("untested code")    
+   
+    
+    shape = shape_empty_shape()
+    shape[SHAPE_SHAPE] = 'sphere'
+    
+    shape[SHAPE_DIFFUSECOLOUR] = ('colour', 0, 0, 0)
+    shape[SHAPE_SPECULARCOLOUR] = ('colour', 0, 0, 0)
+    shape[SHAPE_INTERSECT_FUNC] = shape_subtract_intersect
+    shape[SHAPE_INSIDE_FUNC] = shape_subtract_is_inside
+    
+    shape_set_transform(shape, transform)
+    
+    shape[SHAPE_DATA]['subshapes'] = [tuple1, tuple2]
+    
+    shape[SHAPE_BOUNDING_BOX_SHAPESPACE] = shape_bounding_box(tuple1[0])
+    
+    return shape
+
+def shape_subtract_is_inside(shape, shape_space_point):
+    warn("untested code")    
+    
+    sh1_inside = shape_is_inside (shape[SHAPE_DATA]['subshapes'][0][0])
+
+    if sh1_inside is not True:
+        return False
+    
+    sh2_inside = shape_is_inside (shape[SHAPE_DATA]['subshapes'][1][0])
+    
+    return sh2_inside is not True
+    
+
+
+def shape_subtract_intersect(shape, ray):
+    warn("untested code")
+    
+    sh1 = shape[SHAPE_DATA]['subshapes'][0][0]
+    sh2 = shape[SHAPE_DATA]['subshapes'][1][0]   
+
+    tr1 = shape[SHAPE_DATA]['subshapes'][0][1]
+    tr2 = shape[SHAPE_DATA]['subshapes'][1][1]
+   
+    ray_tr1 = tr1.transform(ray)
+    sh1_result = sh1[SHAPE_INTERSECT_FUNC](subshape, ray_tr1)
+    
+    if sh1_result is False:
+        return False
+    
+    ray_tr2 = tr2.transform(ray)
+    sh2_result = sh2[SHAPE_INTERSECT_FUNC](subshape, ray_tr2)
+    if sh2_result is not False:
+        return False    
+
+    results = {}
+    
+    if 'all_results' in sh1_result:
+        sh1_all = sh1_result['all_results']
+        del sh1_result['all_results']
+        sh1_all[sh1_result['t']] = sh1_result
+    
+    if 'all_results' in sh2_result:
+        sh2_all = sh2_result['all_results']
+        del sh1_result['all_results']
+        sh2_all[sh2_result['t']] = sh2_result
+        
+    for result in sh1_result:
+        point = ray_calc_pt(ray, result[t])
+        if not shape_is_inside(sh2, point):
+            results[result['t']] = result
+    
+    for result in sh2_result:
+        point = ray_calc_pt(ray, result[t])
+        if shape_is_inside(sh1, point):
+            results[result['t']] = result
+
+    if len(results) == 0:
+        return False
+
+    final_t = sorted(results.keys()).pop(0)
+    
+    result = results[final_t]
+    del(results[final_t])
+    result['all_results'] = results
+    
+    return result

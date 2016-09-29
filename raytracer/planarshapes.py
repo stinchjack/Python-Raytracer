@@ -725,9 +725,10 @@ def shape_polymesh_intersect(shape, ray, use_octtree = True):
     results = {}
 
     for polygon in shapes:
-        result = polygon[SHAPE_INTERSECT_FUNC](polygon, ray)
-        if result is not False and result[t]>0:
-           results[subshape_result['t']] = subshape_result
+        subshape_result = polygon[SHAPE_INTERSECT_FUNC](polygon, ray)
+        if subshape_result is not False and subshape_result['t']>0:
+            subshape_result['hit_polygon'] = polygon
+            results[subshape_result['t']] = subshape_result
            
  
     if len(results) == 0:

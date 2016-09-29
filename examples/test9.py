@@ -58,7 +58,7 @@ if __name__ == '__main__':
                            0)
 
                        
-    view_set_antialias (view, True, 3,3 ,  False, False)
+    view_set_antialias (view, True, 1, 1 ,  False, False)
     view_set_output(view, PIL_Output())
     view_set_multiprocessing(view, True)
     view_set_lighting_model (

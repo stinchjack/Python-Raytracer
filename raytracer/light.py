@@ -24,18 +24,15 @@ A directional light is also stored as a tuple. The tuple elements are two
 identifying strings as per point lights, a function to test if a point is
 inside the shape, a colour, and a transformation of the shape"""
 
+
 LIGHT_TYPE = 1
-LIGHT_POINT_POINT = 2
-LIGHT_POINT_COLOUR = 3
+LIGHT_COLOUR = 2
+LIGHT_TRANSFORM = 3
+LIGHT_CALCINFO_FUNC = 4
+LIGHT_DATA = 5
 
-LIGHT_DIRECTION_ISINSIDE_FUNC = 2
-LIGHT_CONE_ISINSIDE_FUNC = 2
-LIGHT_CONE_COLOUR = 3
-LIGHT_CONE_TRANSFORM = 4
-LIGHT_TUBE_ISINSIDE_FUNC = 2
-LIGHT_TUBE_COLOUR = 3
-LIGHT_TUBE_TRANSFORM = 4
-
+def light_point_create(point, colour):
+    return light_point_light_create(point, colour)
 
 def light_point_light_create(point, colour):
     """Creates a point light.
@@ -44,20 +41,23 @@ def light_point_light_create(point, colour):
     :param colour: A colour (see cartesian module documentation)
 
     :return: A tuple of light parameters"""
-    return ('light', 'point', point, colour)
+    return ('light', 'point', colour,
+            None, light_point_calcinfo, {'point': point})
 
-
-def light_directional_is_inside(light, point):
-    """Tests if a point is inside the area of a directional light. This
-    calls the function stored in the directional light tuple for testing
-    inside/outside.
-
-    :param light: The directional light
-    :param point: A cartesian as a point to test
-
-    :return: Boolean"""
-
-    return light[2](light, point)
+def light_point_calcinfo (light, intersection_result):
+    return {
+        'shadow_vectors': \
+            [cartesian_sub (
+                light[LIGHT_DATA]['point'],
+                intersection_result['shifted_point']
+                )
+            ],
+        'is_inside': True,
+        'light_direction': cartesian_sub (
+                light[LIGHT_DATA]['point'],
+                intersection_result['point']
+                )
+    }
 
 
 def light_cone_is_inside(light, point):

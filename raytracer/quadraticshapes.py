@@ -40,7 +40,7 @@ def shape_sphere_intersect(shape, ray):
     results = {}
     
     for t in ts:
-        if t <= zero:
+        if t <= mpfr(0):
             continue
         
         raw_point = ray_calc_pt(ray, t)
@@ -419,12 +419,13 @@ def shape_cone_intersect(shape, ray):
     results = {}
     
     for t_key in t_vals:
-        if t_vals[t_key] > 0:
+        t = t_vals[t_key] 
+        if t > 0:
             raw_point = ray_calc_pt(ray, t)
             if raw_point[2] <= (shape[SHAPE_DATA]['y_bottom']) and \
                 raw_point[2] >= (shape[SHAPE_DATA]['y_top']):
 
-                results[t_vals[t_key]] = \
+                results[t] = \
                     {'t': t - .0001,
                     'raw_point': raw_point,
                     'raw_normal':
@@ -432,9 +433,9 @@ def shape_cone_intersect(shape, ray):
                             raw_point[1], 0, raw_point[3])            
                     }
 
-    if final_t is None:
+    if len(results)==0:
         return False
-
+    final_t = sorted(results.keys()).pop(0)
     result = results[final_t]
     del(results[final_t])
     result['all_results'] = results 
