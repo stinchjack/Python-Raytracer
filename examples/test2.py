@@ -69,7 +69,4 @@ if __name__ == '__main__':
     #map_test()    
     image = scene.render('view')
     image.show()
-<<<<<<< HEAD
 
-=======
->>>>>>> b9ff31fdf813ae4eb810023c3c92912338353168

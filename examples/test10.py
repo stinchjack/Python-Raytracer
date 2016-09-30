@@ -32,7 +32,7 @@ if __name__ == '__main__':
                            0)
 
     sc_trans =                 Transform({
-                        'scale': {'x':.5, 'y': 1, 'z': 1},
+                        'scale': {'x':1, 'y': 1, 'z': 1},
                         'translate': {'x': 0, 'y':0, 'z': 0},
                         'rotate':{'vector': ('c', 1.0, 0 ,0),
                                     'angle': -90}
@@ -76,15 +76,15 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, 00, -20), ## eye point,
-                            ('cartesian', 0, 00, 0 ), ## look at
-                            .5,
+                            ('cartesian', 0, 00, 30), ## eye point,
+                            ('cartesian', 0, 00, 50 ), ## look at
+                            1,
                            0)
 
                        
     view_set_antialias (view, False, 3, 3 ,  False, False)
     view_set_output(view, PIL_Output())
-    view_set_multiprocessing(view, True)
+    view_set_multiprocessing(view, False)
     view_set_lighting_model (
         view, view[VIEW_LIGHTINGMODEL],
             {'NoShadows': False,
@@ -96,10 +96,10 @@ if __name__ == '__main__':
     
     
     ##########################
-    scene.add_light(light_point_light_create(cartesian_create(
+    """scene.add_light(light_point_light_create(cartesian_create(
         0, -30, -30), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light1')
 
-    """scene.add_light(light_point_light_create(cartesian_create(
+    scene.add_light(light_point_light_create(cartesian_create(
         0, -4, 45), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light2')
         """
     """Transform({

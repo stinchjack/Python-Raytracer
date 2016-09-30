@@ -6,7 +6,11 @@ except ImportError:
 from raytracer.cartesian import *
 from raytracer.colour import *
 from raytracer.transformation import *
+from raytracer.quadraticshapes import *
 import random
+import copy
+from warnings import *
+
 """Functions for dealing with lights
 
 A point light is stored as a tuple, with the first two elements being the
@@ -41,8 +45,15 @@ def light_point_light_create(point, colour):
     :param colour: A colour (see cartesian module documentation)
 
     :return: A tuple of light parameters"""
-    return ('light', 'point', colour,
-            None, light_point_calcinfo, {'point': point})
+    return (
+            'light',
+            'point',
+            colour,
+            None,
+            light_point_calcinfo,
+            {'point': point}
+
+        )
 
 def light_point_calcinfo (light, intersection_result):
     return {
@@ -60,11 +71,23 @@ def light_point_calcinfo (light, intersection_result):
     }
 
 
-def light_spotlight_create(transform, colour, length = None, samples = 10):
-    return ('light', 'spotlight', colour,
-        transform, light_spotlight_calcinfo,
-        {'samples': samples,
-        'length': length}
+def light_spotlight_create(transform, colour, samples = 10):
+
+    
+    return (
+
+            'light',
+            'spotlight',
+            colour,
+            transform,
+            light_spotlight_calcinfo,
+            {   
+                'samples': samples,
+                'cylinder': shape_cylinder_create(
+                                None,
+                                None,
+                                transform)
+            }
         )
 
 
@@ -80,19 +103,63 @@ def light_spotlight_calcinfo (light, intersection_result):
     else:
         lightspace_point = intersection_result['point']
     
+    is_inside = False
+    
     if lightspace_point[2] < 0:
         return {'is_inside': False}
     
-    if (light[LIGHT_DATA]['length'] is not None and 
-        light[LIGHT_DATA]['length'] > 0 and
-        lightspace_point[2] > light[LIGHT_DATA]['length']):
-        return {'is_inside': False}
+    if ((lightspace_point[1] ** 2 + lightspace_point[3] ** 2) <= 1.0):
+        is_inside = True
+        
+    if not is_inside:
+        
+        # import pdb; pdb. set_trace();
+        
+        #calculate world spacce point to to test ray
+        p_world_space = ('cartesian', 
+            intersection_result['point'][1],
+            intersection_result['point'][2] - mpfr(0.5),
+            intersection_result['point'][3]
+            )
+
+        p_cylinder_space = \
+            light[LIGHT_DATA]['cylinder'][SHAPE_TRANSFORM].transform_cartesian(
+                    p_world_space,
+                    False
+                )
+        
+        #work out point on light source to test
+        
+        p_light_test = \
+            cartesian_normalise (
+                ('cartesian', 
+                0 - p_cylinder_space[1],
+                mpfr(-0.5),
+                0 - p_cylinder_space[3]
+                )
+            )
+
+        
+        direction_test = \
+            cartesian_normalise(
+                cartesian_sub (
+                    p_light_test,
+                    p_cylinder_space
+                )
+            )
+
+        ray = ('ray',  p_cylinder_space, direction_test)
+
+        cylinder_intersect_result = \
+            shape_cylinder_intersect(light[LIGHT_DATA]['cylinder'], ray)
+            
+        if cylinder_intersect_result is False:
+            # import pdb;pdb.set_trace();
+            is_inside = False
     
-    
-    if ((lightspace_point[1] ** 2 + lightspace_point[3] ** 2) > 1.0):
+    if not is_inside:
         
         return {'is_inside': False}
-        
     
     shadow_vectors = []
     

@@ -116,7 +116,9 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
             shadow_count_scale = (mpfr(1.0) / 
                 len (light_calc_info['shadow_vectors']))
             shadow_factor = ('colour', 0, 0, 0)
-                
+            
+            import pdb; pdb.set_trace();
+            
             for shadow_vector in light_calc_info['shadow_vectors']:
 
                 shadow_ray = ray_create(rs, shadow_vector, True)            
