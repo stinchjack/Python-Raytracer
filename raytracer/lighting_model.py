@@ -98,10 +98,9 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
 
         if not light_calc_info['is_inside']:
             continue
-        
             
         #shadow calculation
-        shadow_factor = ('colour', 0, 0, 0)
+        shadow_factor =  ('colour', 0, 0, 0)
         has_shadow = False
         if ('NoShadows' in lighting_model[LIGHTINGMODEL_OPTIONS] and
                 lighting_model[LIGHTINGMODEL_OPTIONS]['NoShadows'] is True):
@@ -116,8 +115,6 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
             shadow_count_scale = (mpfr(1.0) / 
                 len (light_calc_info['shadow_vectors']))
             shadow_factor = ('colour', 0, 0, 0)
-            
-            import pdb; pdb.set_trace();
             
             for shadow_vector in light_calc_info['shadow_vectors']:
 
@@ -139,6 +136,10 @@ def lightingmodel_basic_calculate(lighting_model, scene_obj, result):
                         shadow_factor,
                         shadow_transparency
                     )
+        
+        if 'intensity' in light_calc_info:
+            shadow_factor = \
+                colour_scale (shadow_factor, light_calc_info['intensity'])
         
         in_complete_shadow = (
             shadow_factor[1] <=0 and

@@ -76,15 +76,15 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, 00, 30), ## eye point,
+                            ('cartesian', 0, 00, 0), ## eye point,
                             ('cartesian', 0, 00, 50 ), ## look at
-                            1,
+                            .3,
                            0)
 
                        
     view_set_antialias (view, False, 3, 3 ,  False, False)
     view_set_output(view, PIL_Output())
-    view_set_multiprocessing(view, False)
+    view_set_multiprocessing(view, True)
     view_set_lighting_model (
         view, view[VIEW_LIGHTINGMODEL],
             {'NoShadows': False,

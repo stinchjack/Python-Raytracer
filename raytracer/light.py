@@ -82,11 +82,7 @@ def light_spotlight_create(transform, colour, samples = 10):
             transform,
             light_spotlight_calcinfo,
             {   
-                'samples': samples,
-                'cylinder': shape_cylinder_create(
-                                None,
-                                None,
-                                transform)
+                'samples': samples
             }
         )
 
@@ -105,20 +101,26 @@ def light_spotlight_calcinfo (light, intersection_result):
     
     is_inside = False
     
+    # check that point is 'above' cylinder
     if lightspace_point[2] < 0:
         return {'is_inside': False}
     
+    # check if point is inside radius of cylinder
     if ((lightspace_point[1] ** 2 + lightspace_point[3] ** 2) <= 1.0):
         is_inside = True
+        intensity = mpfr(1.0)
         
     if not is_inside:
         
-        # import pdb; pdb. set_trace();
+        #  test if point interesects with the cylinder - if does then the light
+        # is in complete shadow. if the light is outside the radius of cylider
+        # but is in the outer cone of the light, then the light intensity needs
+        # to be calculated
         
         #calculate world spacce point to to test ray
         p_world_space = ('cartesian', 
             intersection_result['point'][1],
-            intersection_result['point'][2] - mpfr(0.5),
+            intersection_result['point'][2],
             intersection_result['point'][3]
             )
 
@@ -127,14 +129,13 @@ def light_spotlight_calcinfo (light, intersection_result):
                     p_world_space,
                     False
                 )
-        
-        #work out point on light source to test
-        
+
+        #test point direction 
         p_light_test = \
             cartesian_normalise (
                 ('cartesian', 
                 0 - p_cylinder_space[1],
-                mpfr(-0.5),
+                0,
                 0 - p_cylinder_space[3]
                 )
             )
@@ -148,14 +149,18 @@ def light_spotlight_calcinfo (light, intersection_result):
                 )
             )
 
-        ray = ('ray',  p_cylinder_space, direction_test)
+        # if the test point is at more than 45 degrees to y-axis, then the point
+        # is not lit
 
-        cylinder_intersect_result = \
-            shape_cylinder_intersect(light[LIGHT_DATA]['cylinder'], ray)
-            
-        if cylinder_intersect_result is False:
-            # import pdb;pdb.set_trace();
-            is_inside = False
+        cos_theta = abs(direction_test[2])
+
+        light_cutoff = mpfr (0.7071067811865476) 
+        
+        is_inside = (cos_theta >=  light_cutoff)
+        
+        if is_inside: 
+            intensity = (cos_theta - light_cutoff)/ (mpfr(1.0) - light_cutoff)
+
     
     if not is_inside:
         
@@ -164,41 +169,62 @@ def light_spotlight_calcinfo (light, intersection_result):
     shadow_vectors = []
     
     light_direction = ('cartesian', 0, 0, 0)
+
+    if intensity == 1.0:
     
-    for sample in range(0, light[LIGHT_DATA]['samples']):
-        r = random.uniform(0, 1)
-        angle = random.uniform(0, 1) * pi * 2 
-        x = sin(angle) * r
-        y = cos(angle) * r
-        z = 0
-        
-        if light[LIGHT_TRANSFORM] is not None:
-            worldspace_test_point = \
-                light[LIGHT_TRANSFORM].inverse_transform(
-                    ('cartesian', x, y, z), 
-                    True
+        # generate shadow test vectors
+        for sample in range(0, light[LIGHT_DATA]['samples']):
+            r = random.uniform(0, 1)
+            angle = random.uniform(0, 1) * pi * 2 
+            x = sin(angle) * r
+            y = cos(angle) * r
+            z = 0
+
+            if light[LIGHT_TRANSFORM] is not None:
+                worldspace_test_point = \
+                    light[LIGHT_TRANSFORM].inverse_transform(
+                        ('cartesian', x, y, z), 
+                        True
+                    )
+            else: 
+                worldspace_test_point = ('cartesian', x, y, z)
+
+            shadow_vector = \
+                cartesian_sub (
+                    worldspace_test_point,
+                    intersection_result['shifted_point']
                 )
-        else: 
-            worldspace_test_point = ('cartesian', x, y, z)
-            
-        shadow_vector = \
-            cartesian_sub (
-                worldspace_test_point,
-                intersection_result['shifted_point']
-            )
-            
-        light_direction = \
-            cartesian_add (
-                light_direction,
-                shadow_vector
-            )
+
+            light_direction = \
+                cartesian_add (
+                    light_direction,
+                    shadow_vector
+                )
+
+            shadow_vectors.append (
+                cartesian_sub (
+                    worldspace_test_point,
+                    intersection_result['shifted_point']
+                    )        
+                )
+    
+    else: #if intensity < 1.0
+
+        # v. messy to calculate shadow sample rays!
         
-        shadow_vectors.append (
-            cartesian_sub (
-                worldspace_test_point,
-                intersection_result['shifted_point']
-                )        
-            )
+        # calclate the point on the 'cylider' rim to use as in calculating
+        # direction for 'intersection' with 'disc'
+        p_cylinder_test = \ 
+            cartesian_normalise (
+                ('cartesian', 
+                p_cylinder_space[1],
+                1,
+                p_cylinder_space[3]
+                )
+            )                
+
+        incomplete()
+        
         
     
     light_direction = \
@@ -209,6 +235,7 @@ def light_spotlight_calcinfo (light, intersection_result):
         
         
     return {
+        'intensity': intensity, 
         'shadow_vectors': shadow_vectors,
         'is_inside': True,
         'light_direction': light_direction
