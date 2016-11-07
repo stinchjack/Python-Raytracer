@@ -116,51 +116,21 @@ def light_spotlight_calcinfo (light, intersection_result):
         # is in complete shadow. if the light is outside the radius of cylider
         # but is in the outer cone of the light, then the light intensity needs
         # to be calculated
-        
-        #calculate world spacce point to to test ray
-        p_world_space = ('cartesian', 
-            intersection_result['point'][1],
-            intersection_result['point'][2],
-            intersection_result['point'][3]
-            )
 
-        p_cylinder_space = \
-            light[LIGHT_DATA]['cylinder'][SHAPE_TRANSFORM].transform_cartesian(
-                    p_world_space,
-                    False
-                )
+        light_test = cartesian_normalise(lightspace_point)[2]
 
-        #test point direction 
-        p_light_test = \
-            cartesian_normalise (
-                ('cartesian', 
-                0 - p_cylinder_space[1],
-                0,
-                0 - p_cylinder_space[3]
-                )
-            )
-
-        
-        direction_test = \
-            cartesian_normalise(
-                cartesian_sub (
-                    p_light_test,
-                    p_cylinder_space
-                )
-            )
-
-        # if the test point is at more than 45 degrees to y-axis, then the point
+        # if the test point is at more than 26.57 degrees to y-axis, then the point
         # is not lit
 
-        cos_theta = abs(direction_test[2])
+        light_cutoff = mpfr (0.4472135954999579)
 
-        light_cutoff = mpfr (0.7071067811865476) 
         
-        is_inside = (cos_theta >=  light_cutoff)
-        
+        # is_inside = (abs(direction_test[2])>=  light_cutoff)
+        is_inside = light_test >=  light_cutoff
         if is_inside: 
-            intensity = (cos_theta - light_cutoff)/ (mpfr(1.0) - light_cutoff)
-
+            intensity =   pow (((light_test - light_cutoff) /
+                            (1.0 - light_cutoff)), 3)
+        
     
     if not is_inside:
         
@@ -210,21 +180,142 @@ def light_spotlight_calcinfo (light, intersection_result):
     
     else: #if intensity < 1.0
 
+        # import pdb; pdb.set_trace();
+
         # v. messy to calculate shadow sample rays!
         
         # calclate the point on the 'cylider' rim to use as in calculating
         # direction for 'intersection' with 'disc'
-        p_cylinder_test = \ 
-            cartesian_normalise (
-                ('cartesian', 
-                p_cylinder_space[1],
-                1,
-                p_cylinder_space[3]
-                )
-            )                
-
-        incomplete()
         
+        #import pdb; pdb.set_trace();
+
+        
+        p_cylinder_test = \
+            list(
+                cartesian_normalise (
+                    ('cartesian', 
+                    lightspace_point[1],
+                    00,
+                    lightspace_point[3])
+                ) 
+            )
+        p_cylinder_test[2]  = 2.0;
+
+        ray = \
+            (
+                'ray',
+                lightspace_point,
+                cartesian_sub (lightspace_point, p_cylinder_test)
+            )
+
+        disc_t = (0 - ray[RAY_START][2]) / (ray[RAY_VECTOR][2])
+        disc_point = ray_calc_pt(ray, disc_t)
+        
+        if (disc_point[1] == 0 and
+            disc_point[2] == 0 and
+            disc_point[3] == 0):
+            # in this case the only test point available is dead-centre
+            if light[LIGHT_TRANSFORM] is not None:
+                worldspace_test_point = \
+                    light[LIGHT_TRANSFORM].inverse_transform(
+                        disc_point, True
+                    )
+            else: 
+                worldspace_test_point = disc_point            
+
+
+            shadow_vector = \
+                cartesian_sub (
+                    worldspace_test_point,
+                    intersection_result['shifted_point']
+                )
+
+            light_direction = \
+                cartesian_add (
+                    light_direction,
+                    shadow_vector
+                )
+
+            shadow_vectors.append (
+                cartesian_sub (
+                    worldspace_test_point,
+                    intersection_result['shifted_point']
+                    )        
+                )          
+        else:
+            disc_radius_point = cartesian_normalise(disc_point)
+            disc_mid_point = \
+                cartesian_scale(
+                    cartesian_add (
+                    disc_point,
+                    disc_radius_point 
+                    ),
+                    0.5
+                )
+
+            sin_b = cartesian_len(disc_mid_point)
+            len_b = asin(min(1.0, abs(sin_b)))
+
+            mid_line_half_len = sin ((1.5 * pi) - len_b)
+            mid_line_direction = \
+                ('cartesian',  0 - disc_mid_point[3] , 0, disc_mid_point[1])
+
+            mid_line_ray = ('ray', disc_mid_point, mid_line_direction)
+
+
+            for sample in range(0, light[LIGHT_DATA]['samples']):
+
+                mid_line_sample_t = random.uniform (-1, 1)
+                use_alt = random.uniform (-1, 1) > 0
+
+
+
+
+                mid_line_point = ray_calc_pt (mid_line_ray, mid_line_sample_t)
+                mid_line_point_t = cartesian_len(mid_line_point)
+                line_from_ctr_pos = random.uniform (mid_line_point_t, 1.0)
+
+                if use_alt:
+                    disc_sample_point = \
+                        cartesian_scale (
+                            mid_line_point,
+                            line_from_ctr_pos
+                        )
+
+                else:
+                    disc_sample_point = \
+                        cartesian_scale (
+                            mid_line_point,
+                            (line_from_ctr_pos  / mid_line_point_t) 
+                        )
+
+                if light[LIGHT_TRANSFORM] is not None:
+                    worldspace_test_point = \
+                        light[LIGHT_TRANSFORM].inverse_transform(
+                            disc_sample_point, True
+                        )
+                else: 
+                    worldspace_test_point = disc_sample_point            
+
+
+                shadow_vector = \
+                    cartesian_sub (
+                        worldspace_test_point,
+                        intersection_result['shifted_point']
+                    )
+
+                light_direction = \
+                    cartesian_add (
+                        light_direction,
+                        shadow_vector
+                    )
+
+                shadow_vectors.append (
+                    cartesian_sub (
+                        worldspace_test_point,
+                        intersection_result['shifted_point']
+                        )        
+                    )
         
     
     light_direction = \

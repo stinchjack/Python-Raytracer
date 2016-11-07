@@ -16,7 +16,7 @@ from raytracer.lighting_model import *
 if __name__ == '__main__':
     get_context().precision = 32
 
-    scene = Scene(False)
+    scene = Scene()
     
     view = view_create_look_at(scene,
                             
@@ -31,31 +31,7 @@ if __name__ == '__main__':
                             .333,
                            0)
 
-    sc_trans =                 Transform({
-                        'scale': {'x':1, 'y': 1, 'z': 1},
-                        'translate': {'x': 0, 'y':0, 'z': 0},
-                        'rotate':{'vector': ('c', 1.0, 0 ,0),
-                                    'angle': -90}
-                        })
-
-    sc_trans_lt =                 Transform({
-                        'scale': {'x':.5, 'y': 1, 'z': 1},
-                        'translate': {'x': 0, 'y':0, 'z': 0},
-                        'rotate':{'vector': ('c', 1.0, 0 ,0),
-                                    'angle': -00}
-                        })                        
-                        
-
-
-    view = view_create(scene, -150, 
-                        {'left': 0,
-                             'right': 300,
-                             'top': 0,
-                             'bottom': 300},
-                       {'left': -5, 'right': 5, 'top': -5, 'bottom': 5},
-                       sc_trans_lt)
-                       
-    vview = view_create_look_at(scene,
+    view = view_create_look_at(scene,
                             
                             {'left': 0,
                                 'right': 300,
@@ -63,8 +39,8 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, 0, 0), ## eye point,
-                            ('cartesian', 0, 0, 20 ), ## look at
+                            ('cartesian', 0, 3.95, 7), ## eye point,
+                            ('cartesian', 0, -20, -20 ), ## look at
                             .5,
                            180)
 
@@ -76,8 +52,8 @@ if __name__ == '__main__':
                                 'bottom': 300},
                             10,
                             20,
-                            ('cartesian', 0, 00, 0), ## eye point,
-                            ('cartesian', 0, 00, 50 ), ## look at
+                            ('cartesian', 0, -10, -20), ## eye point,
+                            ('cartesian', 0, -8, 0 ), ## look at
                             .3,
                            0)
 
@@ -101,21 +77,30 @@ if __name__ == '__main__':
 
     scene.add_light(light_point_light_create(cartesian_create(
         0, -4, 45), colour_create((192.0/255.0), (83.0/255.0), (210.0/255.0))), 'light2')
-        """
-    """Transform({
-        'scale': {'x':50, 'y': 50, 'z': 1},
-        'translate': {'x': 0, 'y':0, 'z': -13},
-        'rotate':{'vector': ('c', 1.0, 0 ,0),
-                    'angle': 90}
-        })"""
+        
+    scene.add_light(
+        light_point_light_create(
+            cartesian_create(0, -13, 0),
+            colour_create(0, 1,0)),
+            'light3'
+        )"""
+
+    ##########################
+    splt_trans =                 Transform({
+                        'scale': {'x':1, 'y': 1, 'z': 1},
+                        'translate': {'x': 0, 'y':0, 'z': 0},
+                        'rotate':{'vector': ('c', 1.0, 0 ,0),
+                                    'angle': -90}
+                        })
     
     scene.add_light(
         light_spotlight_create(
-                sc_trans,
+                splt_trans,
                 colour_create(1,1,1)
             ),
-            'light3'
+            'lightspot'
         )
+             
              
     ############################33
     textr = \
@@ -196,7 +181,7 @@ if __name__ == '__main__':
         'translate': {'x': 0, 'y':-18.25, 'z': 0}
         }))
 
-    scene.add_shape(cone, 'towerTop')
+    #scene.add_shape(cone, 'towerTop')
     #########################################
     disc = shape_disc_create(
         ('colour', 0,0,0),    
@@ -211,7 +196,7 @@ if __name__ == '__main__':
                     'angle': 90}
         }))
     
-    scene.add_shape(disc, 'towerInternalDisk') 
+    #scene.add_shape(disc, 'towerInternalDisk') 
     
     ###############################
 
